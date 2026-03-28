@@ -168,10 +168,16 @@
 	  background: #050505;
 	  border: 1px solid rgba(255,255,255,.06);
 	  will-change: transform;
-	  cursor: pointer;
+	  cursor: grab;
 	  display: block;
 	  text-decoration: none;
 	  transition: border-color .2s ease, box-shadow .2s ease;
+	  user-select: none;
+	}
+	.media-card.dragging {
+	  cursor: grabbing;
+	  border-color: rgba(255,255,255,.3);
+	  box-shadow: var(--panel-shadow), 0 0 0 1px rgba(255,255,255,.18), 0 0 40px rgba(255,255,255,.06);
 	}
 
 	.media-card:hover {
@@ -645,6 +651,54 @@
 
 	renderMedia();
 	buildDepthLines();
+
+	/* ── Drag to reposition cards ── */
+	let dragState = null;
+
+	field.addEventListener('mousedown', onDragStart);
+	field.addEventListener('touchstart', onDragStart, { passive: false });
+	window.addEventListener('mousemove', onDragMove, { passive: false });
+	window.addEventListener('touchmove', onDragMove, { passive: false });
+	window.addEventListener('mouseup', onDragEnd);
+	window.addEventListener('touchend', onDragEnd);
+
+	function onDragStart(e) {
+	  const card = e.target.closest('.media-card');
+	  if (!card) return;
+	  e.preventDefault();
+	  const pt = e.touches ? e.touches[0] : e;
+	  dragState = {
+	    card,
+	    startX:    pt.clientX,
+	    startY:    pt.clientY,
+	    startLeft: parseFloat(card.style.left),
+	    startTop:  parseFloat(card.style.top),
+	    moved:     false,
+	  };
+	  card.classList.add('dragging');
+	  document.body.style.cursor = 'grabbing';
+	}
+
+	function onDragMove(e) {
+	  if (!dragState) return;
+	  e.preventDefault();
+	  const pt = e.touches ? e.touches[0] : e;
+	  const dx = pt.clientX - dragState.startX;
+	  const dy = pt.clientY - dragState.startY;
+	  if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragState.moved = true;
+	  dragState.card.style.left = (dragState.startLeft + (dx / window.innerWidth)  * 100) + '%';
+	  dragState.card.style.top  = (dragState.startTop  + (dy / window.innerHeight) * 100) + '%';
+	}
+
+	function onDragEnd(e) {
+	  if (!dragState) return;
+	  dragState.card.classList.remove('dragging');
+	  document.body.style.cursor = '';
+	  if (dragState.moved) {
+	    dragState.card.addEventListener('click', ev => ev.preventDefault(), { once: true });
+	  }
+	  dragState = null;
+	}
 
 	/* Center brand entrance */
 	setTimeout(() => document.getElementById('centerBrand').classList.add('visible'), 700);

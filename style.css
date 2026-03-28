@@ -544,6 +544,11 @@ a{
   font-weight: 600;
 }
 
+[data-page="production"] .project-title,
+[data-page="production"] .project-sub {
+  text-transform: uppercase;
+}
+
 .project-views{
   display: block;
   margin: 5px 0 0;

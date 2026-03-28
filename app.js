@@ -421,8 +421,15 @@ function countUp(el) {
    VERTICAL LINES + GRAIN OVERLAY (injected via JS to bypass CSS cache)
 ============================================= */
 (function () {
+  // Force header fixed — overrides any cached CSS
+  const hdr = document.querySelector('.site-header');
+  if (hdr) {
+    hdr.style.cssText += ';position:fixed!important;top:0!important;left:0!important;width:100%!important;z-index:1000!important;background:transparent!important;';
+  }
+
   const s = document.createElement('style');
   s.textContent = `
+    .site-header { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; background: transparent !important; }
     .cf-lines {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image: repeating-linear-gradient(

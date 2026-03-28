@@ -904,6 +904,15 @@ body::after{
   height: 44px;
   opacity: .65;
 }
+.press-outlet-logo {
+  width: auto;
+  height: 48px;
+  max-width: 70%;
+  object-fit: contain;
+  opacity: .85;
+  display: block;
+}
+
 .press-pub-logo {
   font-size: 15px;
   font-weight: 900;

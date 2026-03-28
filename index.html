@@ -5,494 +5,662 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Capital Flight NY</title>
   <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+	html, body {
+	  margin: 0;
+	  height: 100%;
+	  overflow: hidden;
+	  background: #000;
+	  font-family: Arial, Helvetica, sans-serif;
+	}
 
-    * { box-sizing: border-box; }
+	* {
+	  box-sizing: border-box;
+	}
 
-    :root {
-      --logo-width: 340px;
-      --panel-shadow: 0 18px 50px rgba(0,0,0,.45);
-      --wire: rgba(255,255,255,.18);
-      --wire-soft: rgba(255,255,255,.08);
-    }
+	:root {
+	  --logo-width: 340px;
+	  --panel-shadow: 0 18px 50px rgba(0,0,0,.45);
+	  --wire: rgba(255,255,255,.18);
+	  --wire-soft: rgba(255,255,255,.08);
+	}
 
-    .scene {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: #000;
-    }
+	.scene {
+	  position: relative;
+	  width: 100vw;
+	  height: 100vh;
+	  overflow: hidden;
+	  background: #000;
+	}
 
-    /* ---- BG VIDEO ---- */
-    .bg-video-wrap {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 0;
-      background: #000;
-    }
+	/* =========================
+	   BG VIDEO
+	========================= */
+	.bg-video-wrap {
+	  position: absolute;
+	  inset: 0;
+	  overflow: hidden;
+	  z-index: 0;
+	  background: #000;
+	}
 
-    .bg-video-wrap iframe {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 177.77777778vh;
-      height: 56.25vw;
-      min-width: 100vw;
-      min-height: 100vh;
-      transform: translate(-50%, -50%) scale(1.15);
-      pointer-events: none;
-      border: 0;
-      opacity: .42;
-      filter: contrast(1.05) brightness(.55) saturate(.85);
-    }
+	.bg-video-wrap iframe {
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  width: 177.77777778vh;
+	  height: 56.25vw;
+	  min-width: 100vw;
+	  min-height: 100vh;
+	  transform: translate(-50%, -50%) scale(1.15);
+	  pointer-events: none;
+	  border: 0;
+	  opacity: .42;
+	  filter: contrast(1.05) brightness(.55) saturate(.85);
+	}
 
-    /* ---- STARS ---- */
-    .space-overlay,
-    .space-overlay::before,
-    .space-overlay::after {
-      position: absolute;
-      inset: 0;
-      content: "";
-      pointer-events: none;
-    }
+	/* =========================
+	   STAR CANVAS (animated)
+	========================= */
+	#starCanvas {
+	  position: absolute;
+	  inset: 0;
+	  z-index: 1;
+	  pointer-events: none;
+	}
 
-    .space-overlay {
-      z-index: 1;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,.95) 0 1px, transparent 2px),
-        radial-gradient(circle at 75% 20%, rgba(255,255,255,.9)  0 1.5px, transparent 3px),
-        radial-gradient(circle at 60% 70%, rgba(255,255,255,.8)  0 1px, transparent 2px),
-        radial-gradient(circle at 85% 60%, rgba(255,255,255,.85) 0 1px, transparent 2px),
-        radial-gradient(circle at 40% 85%, rgba(255,255,255,.8)  0 1.5px, transparent 3px);
-      opacity: .7;
-      mix-blend-mode: screen;
-    }
+	.vignette {
+	  position: absolute;
+	  inset: 0;
+	  z-index: 2;
+	  pointer-events: none;
+	  background:
+		radial-gradient(circle at center, transparent 38%, rgba(0,0,0,.15) 58%, rgba(0,0,0,.5) 100%);
+	}
 
-    .space-overlay::before {
-      background-image: radial-gradient(rgba(255,255,255,.9) 0.9px, transparent 1px);
-      background-size: 28px 28px;
-      opacity: .28;
-    }
+	/* =========================
+	   3D STAGE
+	========================= */
+	.tunnel-stage {
+	  position: absolute;
+	  inset: 0;
+	  z-index: 3;
+	  perspective: 1200px;
+	  perspective-origin: 50% 50%;
+	  transform-style: preserve-3d;
+	}
 
-    .space-overlay::after {
-      background-image: radial-gradient(rgba(255,255,255,.65) 0.6px, transparent 1px);
-      background-size: 14px 14px;
-      opacity: .18;
-    }
+	.wire-room {
+	  position: absolute;
+	  inset: 0;
+	  transform-style: preserve-3d;
+	}
 
-    .vignette {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      background: radial-gradient(circle at center, transparent 38%, rgba(0,0,0,.15) 58%, rgba(0,0,0,.5) 100%);
-    }
+	.wire-grid {
+	  position: absolute;
+	  inset: 0;
+	  pointer-events: none;
+	  opacity: .55;
+	}
 
-    /* ---- 3D STAGE ---- */
-    .tunnel-stage {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      perspective: 1200px;
-      perspective-origin: 50% 50%;
-      transform-style: preserve-3d;
-    }
+	.wire-grid.floor {
+	  transform: rotateX(90deg) translateZ(-180px);
+	  transform-origin: center center;
+	  background-image:
+		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+	  background-size: 80px 80px;
+	}
 
-    .wire-room {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
-    }
+	.wire-grid.ceiling {
+	  transform: rotateX(90deg) translateZ(180px);
+	  transform-origin: center center;
+	  background-image:
+		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+	  background-size: 80px 80px;
+	}
 
-    .wire-grid {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: .55;
-    }
+	.wire-grid.back {
+	  inset: 12% 14%;
+	  border: 1px solid var(--wire);
+	  background-image:
+		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+	  background-size: 92px 92px;
+	}
 
-    .wire-grid.floor {
-      transform: rotateX(90deg) translateZ(-180px);
-      transform-origin: center center;
-      background-image:
-        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
-      background-size: 80px 80px;
-    }
+	.wire-frame {
+	  position: absolute;
+	  left: 50%;
+	  top: 50%;
+	  border: 1px solid rgba(255,255,255,.14);
+	  transform: translate(-50%, -50%);
+	  pointer-events: none;
+	}
 
-    .wire-grid.ceiling {
-      transform: rotateX(90deg) translateZ(180px);
-      transform-origin: center center;
-      background-image:
-        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
-      background-size: 80px 80px;
-    }
+	.depth-lines {
+	  position: absolute;
+	  inset: 0;
+	  pointer-events: none;
+	}
 
-    .wire-grid.back {
-      inset: 12% 14%;
-      border: 1px solid var(--wire);
-      background-image:
-        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
-      background-size: 92px 92px;
-    }
+	.depth-lines span {
+	  position: absolute;
+	  background: rgba(255,255,255,.12);
+	  transform-origin: top left;
+	}
 
-    .wire-frame {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border: 1px solid rgba(255,255,255,.14);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
+	/* =========================
+	   FLOATING PANELS
+	========================= */
+	.media-field {
+	  position: absolute;
+	  inset: 0;
+	  transform-style: preserve-3d;
+	  z-index: 4;
+	}
 
-    .depth-lines {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
+	.media-card {
+	  position: absolute;
+	  transform-style: preserve-3d;
+	  box-shadow: var(--panel-shadow);
+	  overflow: hidden;
+	  background: #050505;
+	  border: 1px solid rgba(255,255,255,.06);
+	  will-change: transform;
+	  cursor: pointer;
+	  display: block;
+	  text-decoration: none;
+	  transition: border-color .2s ease, box-shadow .2s ease;
+	}
 
-    .depth-lines span {
-      position: absolute;
-      background: rgba(255,255,255,.12);
-      transform-origin: top left;
-    }
+	.media-card:hover {
+	  border-color: rgba(255,255,255,.24);
+	  box-shadow: var(--panel-shadow), 0 0 0 1px rgba(255,255,255,.14);
+	}
 
-    /* ---- MEDIA CARDS ---- */
-    .media-field {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
-      z-index: 4;
-    }
+	.media-card img,
+	.media-card video {
+	  display: block;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  pointer-events: none;
+	}
 
-    .media-card {
-      position: absolute;
-      transform-style: preserve-3d;
-      box-shadow: var(--panel-shadow);
-      overflow: hidden;
-      background: #050505;
-      border: 1px solid rgba(255,255,255,.06);
-      will-change: transform;
-      border-radius: 6px;
-    }
+	/* play-hint on hover */
+	.media-card::after {
+	  content: '▶';
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 28px;
+	  color: rgba(255,255,255,.9);
+	  background: rgba(0,0,0,0);
+	  opacity: 0;
+	  transition: opacity .2s ease, background .2s ease;
+	  display: grid;
+	  place-items: center;
+	}
+	.media-card:hover::after {
+	  opacity: 1;
+	  background: rgba(0,0,0,.3);
+	}
 
-    .media-card img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-    }
+	/* =========================
+	   CENTER BRAND
+	========================= */
+	.center-brand {
+	  position: absolute;
+	  left: 50%;
+	  top: 50%;
+	  z-index: 6;
+	  transform: translate(-50%, -50%);
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  gap: 12px;
+	  text-align: center;
+	}
 
-    /* ---- CENTER BRAND ---- */
-    .center-brand {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 6;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      text-align: center;
-    }
+	.center-brand img {
+	  width: min(var(--logo-width), 52vw);
+	  max-width: 100%;
+	  filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+	}
 
-    .center-brand img {
-      width: min(var(--logo-width), 52vw);
-      max-width: 100%;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
-    }
+	.enter-btn {
+	  appearance: none;
+	  border: 0;
+	  border-radius: 999px;
+	  padding: 9px 28px 10px;
+	  background: #bfc2c8;
+	  color: #0c0c0c;
+	  font-weight: 800;
+	  letter-spacing: .08em;
+	  font-size: clamp(14px, 1.4vw, 18px);
+	  text-transform: uppercase;
+	  cursor: pointer;
+	  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+	  transition: transform .18s ease, filter .18s ease;
+	  text-decoration: none;
+	  display: inline-block;
+	}
 
-    .enter-btn {
-      display: inline-block;
-      text-decoration: none;
-      border-radius: 999px;
-      padding: 10px 32px 11px;
-      background: #bfc2c8;
-      color: #0c0c0c;
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: 800;
-      letter-spacing: .08em;
-      font-size: clamp(13px, 1.4vw, 17px);
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,.35);
-      transition: transform .18s ease, filter .18s ease;
-    }
+	.enter-btn:hover {
+	  transform: translateY(-1px) scale(1.02);
+	  filter: brightness(1.03);
+	}
 
-    .enter-btn:hover {
-      transform: translateY(-2px) scale(1.03);
-      filter: brightness(1.06);
-    }
+	/* =========================
+	   SOCIAL / ICONS
+	========================= */
+	.floating-icon {
+	  position: absolute;
+	  z-index: 6;
+	  filter: drop-shadow(0 12px 24px rgba(0,0,0,.45));
+	  user-select: none;
+	  display: block;
+	  transition: transform .18s ease, filter .18s ease;
+	}
 
-    /* ---- SOCIAL ICONS ---- */
-    .floating-icon {
-      position: absolute;
-      z-index: 6;
-      filter: drop-shadow(0 12px 24px rgba(0,0,0,.45));
-      user-select: none;
-      display: block;
-    }
+	.floating-icon:hover {
+	  filter: drop-shadow(0 12px 24px rgba(0,0,0,.45)) brightness(1.1);
+	}
 
-    .floating-icon img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
+	.floating-icon img {
+	  display: block;
+	  width: 100%;
+	  height: auto;
+	}
 
-    .icon-instagram {
-      left: 25%;
-      bottom: 26%;
-      width: clamp(36px, 4vw, 68px);
-      transform: rotate(-8deg);
-    }
+	.icon-instagram {
+	  left: 25%;
+	  bottom: 26%;
+	  width: clamp(40px, 4vw, 72px);
+	  transform: rotate(-8deg);
+	}
 
-    .icon-youtube {
-      right: 32%;
-      top: 36%;
-      width: clamp(48px, 4.5vw, 80px);
-      transform: rotate(2deg);
-    }
+	.icon-youtube {
+	  right: 32%;
+	  top: 36%;
+	  width: clamp(52px, 4.5vw, 82px);
+	  transform: rotate(2deg);
+	}
 
-    .scanlines {
-      position: absolute;
-      inset: 0;
-      z-index: 7;
-      pointer-events: none;
-      background: linear-gradient(to bottom, rgba(255,255,255,.035), rgba(255,255,255,0) 2px);
-      background-size: 100% 4px;
-      opacity: .18;
-      mix-blend-mode: soft-light;
-    }
+	.icon-envelope {
+	  top: 34%;
+	  left: 50%;
+	  width: clamp(34px, 3vw, 54px);
+	  transform: translateX(-50%) rotate(2deg);
+	}
 
-    .hud-rail {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 34px;
-      z-index: 7;
-      color: rgba(255,255,255,.75);
-      font-size: 11px;
-      letter-spacing: .2em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      writing-mode: vertical-rl;
-      text-transform: uppercase;
-      opacity: .6;
-      pointer-events: none;
-    }
+	.scanlines {
+	  position: absolute;
+	  inset: 0;
+	  z-index: 7;
+	  pointer-events: none;
+	  background:
+		linear-gradient(to bottom, rgba(255,255,255,.035), rgba(255,255,255,0) 2px);
+	  background-size: 100% 4px;
+	  opacity: .18;
+	  mix-blend-mode: soft-light;
+	}
 
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 900px) {
-      :root { --logo-width: 240px; }
+	.hud-rail {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  height: 100%;
+	  width: 34px;
+	  z-index: 7;
+	  color: rgba(255,255,255,.75);
+	  font-size: 12px;
+	  letter-spacing: .2em;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  justify-content: center;
+	  writing-mode: vertical-rl;
+	  text-transform: uppercase;
+	  opacity: .7;
+	  pointer-events: none;
+	}
 
-      .bg-video-wrap iframe {
-        transform: translate(-50%, -50%) scale(1.35);
-      }
+	@media (max-width: 900px) {
+	  :root {
+		--logo-width: 240px;
+	  }
 
-      .icon-instagram { left: 16%; bottom: 24%; }
-      .icon-youtube   { right: 15%; top: 38%; }
-    }
+	  .bg-video-wrap iframe {
+		transform: translate(-50%, -50%) scale(1.35);
+	  }
 
-    @media (max-width: 600px) {
-      :root { --logo-width: 200px; }
+	  .icon-instagram {
+		left: 15%;
+		bottom: 24%;
+	  }
 
-      .icon-instagram { left: 8%;  bottom: 18%; width: 34px; }
-      .icon-youtube   { right: 8%; top: 42%;    width: 44px; }
-      .hud-rail { display: none; }
+	  .icon-youtube {
+		right: 14%;
+		top: 38%;
+	  }
 
-      /* tighten tunnel frames on small screens */
-      .wire-frame { display: none; }
-      .wire-frame:nth-child(1),
-      .wire-frame:nth-child(2) { display: block; }
-    }
+	  .icon-envelope {
+		top: 31%;
+	  }
+	}
 
-    @media (max-width: 400px) {
-      :root { --logo-width: 170px; }
-      .icon-instagram { display: none; }
-      .icon-youtube   { display: none; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .media-card { animation: none !important; }
-    }
+	@media (max-width: 600px) {
+	  :root { --logo-width: 200px; }
+	  .icon-envelope { display: none; }
+	  .hud-rail { display: none; }
+	}
   </style>
 </head>
 <body>
   <div class="scene">
 
-    <!-- Background video — swap UNOmaFs6KaY for your preferred video ID -->
-    <div class="bg-video-wrap">
-      <iframe
-        src="https://www.youtube.com/embed/UNOmaFs6KaY?autoplay=1&mute=1&controls=0&loop=1&playlist=UNOmaFs6KaY&playsinline=1&modestbranding=1&rel=0"
-        title="Background video"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin"
-      ></iframe>
-    </div>
+	<!-- background video — swap video ID to whichever CF video you want behind the tunnel -->
+	<div class="bg-video-wrap">
+	  <iframe
+		src="https://www.youtube.com/embed/UNOmaFs6KaY?autoplay=1&mute=1&controls=0&loop=1&playlist=UNOmaFs6KaY&playsinline=1&modestbranding=1&rel=0"
+		title="Background video"
+		allow="autoplay; encrypted-media; picture-in-picture"
+		referrerpolicy="strict-origin-when-cross-origin"
+	  ></iframe>
+	</div>
 
-    <div class="space-overlay"></div>
-    <div class="vignette"></div>
+	<!-- animated star canvas -->
+	<canvas id="starCanvas"></canvas>
 
-    <div class="tunnel-stage">
-      <div class="wire-room">
-        <div class="wire-grid floor"></div>
-        <div class="wire-grid ceiling"></div>
-        <div class="wire-grid back"></div>
+	<div class="vignette"></div>
 
-        <div class="depth-lines" id="depthLines"></div>
+	<div class="tunnel-stage">
+	  <div class="wire-room">
+		<div class="wire-grid floor"></div>
+		<div class="wire-grid ceiling"></div>
+		<div class="wire-grid back"></div>
 
-        <div class="wire-frame" style="width:72vw;height:58vh;"></div>
-        <div class="wire-frame" style="width:56vw;height:44vh;"></div>
-        <div class="wire-frame" style="width:42vw;height:32vh;"></div>
-        <div class="wire-frame" style="width:30vw;height:22vh;"></div>
-        <div class="wire-frame" style="width:20vw;height:15vh;"></div>
+		<div class="depth-lines" id="depthLines"></div>
 
-        <div class="media-field" id="mediaField"></div>
-      </div>
-    </div>
+		<div class="wire-frame" style="width:72vw;height:58vh;"></div>
+		<div class="wire-frame" style="width:56vw;height:44vh;"></div>
+		<div class="wire-frame" style="width:42vw;height:32vh;"></div>
+		<div class="wire-frame" style="width:30vw;height:22vh;"></div>
+		<div class="wire-frame" style="width:20vw;height:15vh;"></div>
 
-    <!-- Update hrefs with your real social URLs -->
-    <a href="#" class="floating-icon icon-instagram" target="_blank" rel="noopener" aria-label="Instagram">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="">
-    </a>
+		<div class="media-field" id="mediaField"></div>
+	  </div>
+	</div>
 
-    <a href="#" class="floating-icon icon-youtube" target="_blank" rel="noopener" aria-label="YouTube">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="">
-    </a>
+	<!-- social icons — fill in your real URLs -->
+	<a href="#"
+	   class="floating-icon icon-instagram"
+	   target="_blank" rel="noopener" aria-label="Instagram">
+	  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+	</a>
 
-    <div class="center-brand">
-      <img
-        src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
-        alt="Capital Flight NY"
-      >
-      <a href="production.html" class="enter-btn">Enter</a>
-    </div>
+	<a href="#"
+	   class="floating-icon icon-youtube"
+	   target="_blank" rel="noopener" aria-label="YouTube">
+	  <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube">
+	</a>
 
-    <div class="scanlines"></div>
-    <div class="hud-rail">Capital Flight</div>
+	<a href="contact.html"
+	   class="floating-icon icon-envelope"
+	   aria-label="Contact">
+	  <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Contact">
+	</a>
+
+	<div class="center-brand">
+	  <img
+		src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
+		alt="Capital Flight NY"
+	  >
+	  <a href="production.html" class="enter-btn">Enter</a>
+	</div>
+
+	<div class="scanlines"></div>
+	<div class="hud-rail">Capital Flight</div>
   </div>
 
   <script>
-    /* Real Capital Flight thumbnails pulled from app.js videoData */
-    const mediaItems = [
-      { src: "https://i.ytimg.com/vi/C0dv7kjX1Sk/hqdefault.jpg", x: 11, y: 23, z: 220, w: 360, h: 200, rx: 0,   ry: 24,  rz: -3 },
-      { src: "https://i.ytimg.com/vi/WeCos4aCC60/hqdefault.jpg", x: 18, y: 51, z: 140, w: 250, h: 150, rx: 0,   ry: 18,  rz: 0  },
-      { src: "https://i.ytimg.com/vi/iCCYnAwPcvI/hqdefault.jpg", x: 34, y: 16, z: 180, w: 260, h: 150, rx: -6,  ry: 8,   rz: -1 },
-      { src: "https://i.ytimg.com/vi/q5w12XA2Cmw/hqdefault.jpg", x: 47, y: 78, z: 110, w: 280, h: 160, rx: 10,  ry: -4,  rz: -8 },
-      { src: "https://i.ytimg.com/vi/vrZiFXlE-Vg/hqdefault.jpg", x: 57, y: 24, z: 90,  w: 180, h: 220, rx: 0,   ry: -10, rz: 0  },
-      { src: "https://i.ytimg.com/vi/MwFC7trjEXM/hqdefault.jpg", x: 64, y: 53, z: 160, w: 220, h: 130, rx: 0,   ry: -18, rz: 0  },
-      { src: "https://i.ytimg.com/vi/_j55M6SC8Pw/hqdefault.jpg", x: 74, y: 20, z: 215, w: 250, h: 150, rx: 0,   ry: -28, rz: 2  },
-      { src: "https://i.ytimg.com/vi/3d_cGjvZNTA/hqdefault.jpg", x: 82, y: 61, z: 120, w: 260, h: 200, rx: 0,   ry: -16, rz: 1  },
-      { src: "https://i.ytimg.com/vi/f0ogsEtb0IY/hqdefault.jpg", x: 50, y: 10, z: 140, w: 220, h: 120, rx: -12, ry: 0,   rz: 0  },
-      { src: "https://i.ytimg.com/vi/RCjhJi7VFmQ/hqdefault.jpg", x: 54, y: 86, z: 160, w: 240, h: 140, rx: 18,  ry: 0,   rz: 0  },
-      { src: "https://i.ytimg.com/vi/ZcHTpqWcWFY/hqdefault.jpg", x: 70, y: 78, z: 85,  w: 250, h: 145, rx: 12,  ry: -18, rz: 0  },
-      { src: "https://i.ytimg.com/vi/cC47jPDezss/hqdefault.jpg", x: 29, y: 70, z: 70,  w: 280, h: 150, rx: 14,  ry: 22,  rz: -4 }
-    ];
+	/* =============================================
+	   ANIMATED STAR CANVAS
+	============================================= */
+	(function () {
+	  const canvas = document.getElementById('starCanvas');
+	  const ctx    = canvas.getContext('2d');
+	  let W, H, stars = [];
+	  const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
-    /* Scale card pixel dimensions to viewport */
-    function cardScale() {
-      const vw = window.innerWidth;
-      if (vw < 400) return 0.38;
-      if (vw < 600) return 0.50;
-      if (vw < 900) return 0.68;
-      return 1;
-    }
+	  function resize() {
+		W = window.innerWidth;
+		H = window.innerHeight;
+		canvas.width  = W * DPR;
+		canvas.height = H * DPR;
+		canvas.style.width  = W + 'px';
+		canvas.style.height = H + 'px';
+		ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+		init();
+	  }
 
-    const field = document.getElementById("mediaField");
+	  function init() {
+		const n = Math.min(350, Math.floor(W * H / 3400));
+		stars = Array.from({ length: n }, () => ({
+		  x: Math.random() * W,
+		  y: Math.random() * H,
+		  r: Math.random() * 1.2 + 0.2,
+		  base: Math.random() * 0.4 + 0.15,
+		  amp:  Math.random() * 0.5 + 0.1,
+		  freq: Math.random() * 1.5 + 0.3,
+		  phase: Math.random() * Math.PI * 2,
+		  vx: (Math.random() - 0.5) * 0.01,
+		  vy: (Math.random() - 0.5) * 0.01,
+		}));
+	  }
 
-    function renderMedia() {
-      field.innerHTML = "";
-      const scale = cardScale();
-      /* Show fewer cards on small screens to avoid clutter */
-      const visible = window.innerWidth < 600 ? mediaItems.slice(0, 7) : mediaItems;
+	  let last = 0;
+	  function draw(ts) {
+		const dt = Math.min((ts - last) * 0.001, 0.05);
+		last = ts;
+		ctx.clearRect(0, 0, W, H);
+		for (const s of stars) {
+		  s.phase += s.freq * dt;
+		  s.x = (s.x + s.vx + W) % W;
+		  s.y = (s.y + s.vy + H) % H;
+		  const a = Math.max(0, s.base + s.amp * Math.sin(s.phase));
+		  ctx.beginPath();
+		  ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+		  ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
+		  ctx.fill();
+		}
+		requestAnimationFrame(draw);
+	  }
 
-      visible.forEach(item => {
-        const el = document.createElement("div");
-        el.className = "media-card";
-        el.style.left    = `${item.x}%`;
-        el.style.top     = `${item.y}%`;
-        el.style.width   = `${item.w * scale}px`;
-        el.style.height  = `${item.h * scale}px`;
-        el.style.transform = `
-          translate3d(-50%, -50%, ${item.z}px)
-          rotateX(${item.rx}deg)
-          rotateY(${item.ry}deg)
-          rotateZ(${item.rz}deg)
-        `;
-        el.innerHTML = `<img src="${item.src}" alt="" loading="lazy">`;
-        field.appendChild(el);
-      });
-    }
+	  window.addEventListener('resize', () => {
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		resize();
+	  }, { passive: true });
+	  resize();
+	  requestAnimationFrame(draw);
+	})();
 
-    function buildDepthLines() {
-      const wrap = document.getElementById("depthLines");
-      const corners = [
-        ["12%","12%","50%","50%"], ["88%","12%","50%","50%"],
-        ["12%","88%","50%","50%"], ["88%","88%","50%","50%"],
-        ["24%","6%", "50%","50%"], ["94%","26%","50%","50%"],
-        ["6%", "70%","50%","50%"], ["82%","94%","50%","50%"]
-      ];
 
-      corners.forEach(([x1, y1, x2, y2]) => {
-        const line = document.createElement("span");
-        const ax = parseFloat(x1), ay = parseFloat(y1);
-        const bx = parseFloat(x2), by = parseFloat(y2);
-        const dx = bx - ax, dy = by - ay;
-        const len = Math.sqrt(dx * dx + dy * dy);
-        const ang = Math.atan2(dy, dx) * 180 / Math.PI;
-        line.style.left      = x1;
-        line.style.top       = y1;
-        line.style.width     = `${len}%`;
-        line.style.height    = "1px";
-        line.style.transform = `rotate(${ang}deg)`;
-        wrap.appendChild(line);
-      });
-    }
+	/* =============================================
+	   MEDIA CARDS
+	   Same positions as reference splash.
+	   type:'video' → local mp4 autoplay
+	   type:'image' → YT thumbnail or local JPG
+	   link → click destination
+	============================================= */
 
-    renderMedia();
-    buildDepthLines();
+	const YT  = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+	const YTL = id => `https://www.youtube.com/watch?v=${id}`;
 
-    /* Gentle float animation */
-    let t = 0;
-    function animate() {
-      t += 0.01;
-      document.querySelectorAll(".media-card").forEach((card, i) => {
-        const item = mediaItems[i];
-        if (!item) return;
-        const offset = Math.sin(t + i * 0.55) * 6;
-        const tilt   = Math.cos(t * 0.8 + i * 0.4) * 1.5;
-        card.style.transform = `
-          translate3d(-50%, -50%, ${item.z + offset}px)
-          rotateX(${item.rx + tilt}deg)
-          rotateY(${item.ry}deg)
-          rotateZ(${item.rz}deg)
-        `;
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
+	const mediaItems = [
+	  // Left side — local videos (autoplay in card)
+	  {
+		type: 'video', src: 'videos/quavo.mp4',
+		link: 'production.html',
+		x: 11, y: 23, z: 220, w: 360, h: 200, rx: 0, ry: 24, rz: -3
+	  },
+	  {
+		type: 'video', src: 'videos/fetty.mp4',
+		link: 'production.html',
+		x: 18, y: 51, z: 140, w: 250, h: 150, rx: 0, ry: 18, rz: 0
+	  },
 
-    /* Re-render on resize so card scale updates */
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderMedia, 120);
-    }, { passive: true });
+	  // Center-top / ceiling area — YT thumbnails
+	  {
+		type: 'image', src: YT('C0dv7kjX1Sk'),
+		link: YTL('C0dv7kjX1Sk'),
+		x: 34, y: 16, z: 180, w: 260, h: 150, rx: -6, ry: 8, rz: -1
+	  },
+	  {
+		type: 'image', src: YT('WeCos4aCC60'),
+		link: YTL('WeCos4aCC60'),
+		x: 47, y: 78, z: 110, w: 280, h: 160, rx: 10, ry: -4, rz: -8
+	  },
+
+	  // Right side — local videos
+	  {
+		type: 'video', src: 'videos/diljit.mp4',
+		link: 'production.html',
+		x: 57, y: 24, z: 90, w: 180, h: 220, rx: 0, ry: -10, rz: 0
+	  },
+	  {
+		type: 'image', src: YT('iCCYnAwPcvI'),
+		link: YTL('iCCYnAwPcvI'),
+		x: 64, y: 53, z: 160, w: 220, h: 130, rx: 0, ry: -18, rz: 0
+	  },
+	  {
+		type: 'video', src: 'videos/kai.mp4',
+		link: 'production.html',
+		x: 74, y: 20, z: 215, w: 250, h: 150, rx: 0, ry: -28, rz: 2
+	  },
+	  {
+		type: 'video', src: 'videos/orry.mp4',
+		link: 'production.html',
+		x: 82, y: 61, z: 120, w: 260, h: 200, rx: 0, ry: -16, rz: 1
+	  },
+
+	  // Top + bottom — YT thumbnails
+	  {
+		type: 'image', src: YT('f0ogsEtb0IY'),
+		link: YTL('f0ogsEtb0IY'),
+		x: 50, y: 10, z: 140, w: 220, h: 120, rx: -12, ry: 0, rz: 0
+	  },
+	  {
+		type: 'image', src: YT('MwFC7trjEXM'),
+		link: YTL('MwFC7trjEXM'),
+		x: 54, y: 86, z: 160, w: 240, h: 140, rx: 18, ry: 0, rz: 0
+	  },
+
+	  // Lower area — local video + local image
+	  {
+		type: 'video', src: 'videos/fetty.mp4',
+		link: 'production.html',
+		x: 70, y: 78, z: 85, w: 250, h: 145, rx: 12, ry: -18, rz: 0
+	  },
+	  {
+		type: 'image', src: 'images/no-more-friends.jpg',
+		link: 'production.html',
+		x: 29, y: 70, z: 70, w: 280, h: 150, rx: 14, ry: 22, rz: -4
+	  },
+	];
+
+	const field = document.getElementById('mediaField');
+
+	function renderMedia() {
+	  field.innerHTML = '';
+
+	  mediaItems.forEach((item, i) => {
+		const el = document.createElement('a');
+		el.className = 'media-card';
+		el.href = item.link;
+		if (item.link.startsWith('http')) {
+		  el.target = '_blank';
+		  el.rel = 'noopener noreferrer';
+		}
+		el.style.left   = `${item.x}%`;
+		el.style.top    = `${item.y}%`;
+		el.style.width  = `${item.w}px`;
+		el.style.height = `${item.h}px`;
+		el.style.transform = cardTf(item, 0, 0);
+
+		if (item.type === 'video') {
+		  el.innerHTML = `<video src="${item.src}" autoplay muted loop playsinline preload="metadata"></video>`;
+		} else {
+		  el.innerHTML = `<img src="${item.src}" alt="" loading="lazy">`;
+		}
+
+		el.dataset.z  = item.z;
+		el.dataset.rx = item.rx;
+		el.dataset.ry = item.ry;
+		el.dataset.rz = item.rz;
+
+		field.appendChild(el);
+	  });
+	}
+
+	function cardTf(item, dz, dtilt) {
+	  const z  = +item.z  + dz;
+	  const rx = +item.rx + dtilt;
+	  return `translate3d(-50%,-50%,${z}px) rotateX(${rx}deg) rotateY(${item.ry}deg) rotateZ(${item.rz}deg)`;
+	}
+
+	function buildDepthLines() {
+	  const wrap = document.getElementById('depthLines');
+	  const points = [
+		['12%','12%','50%','50%'],
+		['88%','12%','50%','50%'],
+		['12%','88%','50%','50%'],
+		['88%','88%','50%','50%'],
+		['24%','6%','50%','50%'],
+		['94%','26%','50%','50%'],
+		['6%','70%','50%','50%'],
+		['82%','94%','50%','50%'],
+	  ];
+
+	  points.forEach(([x1,y1,x2,y2]) => {
+		const line = document.createElement('span');
+		const ax = parseFloat(x1), ay = parseFloat(y1);
+		const bx = parseFloat(x2), by = parseFloat(y2);
+		const dx = bx - ax, dy = by - ay;
+		const len = Math.sqrt(dx*dx + dy*dy);
+		const ang = Math.atan2(dy,dx) * 180 / Math.PI;
+		line.style.left      = x1;
+		line.style.top       = y1;
+		line.style.width     = `${len}%`;
+		line.style.height    = '1px';
+		line.style.transform = `rotate(${ang}deg)`;
+		wrap.appendChild(line);
+	  });
+	}
+
+	renderMedia();
+	buildDepthLines();
+
+	/* gentle drift — identical to original splash.html */
+	let t = 0;
+	function animate() {
+	  t += 0.01;
+	  document.querySelectorAll('.media-card').forEach((card, i) => {
+		const z  = parseFloat(card.dataset.z);
+		const rx = parseFloat(card.dataset.rx);
+		const ry = parseFloat(card.dataset.ry);
+		const rz = parseFloat(card.dataset.rz);
+		const offset = Math.sin(t + i * 0.55) * 6;
+		const tilt   = Math.cos(t * 0.8 + i * 0.4) * 1.5;
+		card.style.transform = `translate3d(-50%,-50%,${z + offset}px) rotateX(${rx + tilt}deg) rotateY(${ry}deg) rotateZ(${rz}deg)`;
+	  });
+	  requestAnimationFrame(animate);
+	}
+	animate();
   </script>
 </body>
 </html>

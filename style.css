@@ -1179,8 +1179,9 @@ body::after{
     grid-template-columns: 1fr;
   }
 
+  /* Stats stay 3-col on tablet, collapse on phones below */
   .about-stats{
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .footer-inner{
@@ -1213,6 +1214,15 @@ body::after{
     width: 42px;
     height: 42px;
   }
+
+  /* Reduce page top padding to match smaller header */
+  .page{
+    padding-top: 90px;
+  }
+
+  .contact-shell{
+    margin-top: 40px;
+  }
 }
 
 @media (max-width: 560px){
@@ -1233,6 +1243,21 @@ body::after{
   .footer-socials svg{
     width: 28px;
     height: 28px;
+  }
+
+  /* Stats collapse to 1 column on phones */
+  .about-stats{
+    grid-template-columns: 1fr;
+  }
+
+  .year-label{
+    font-size: 24px;
+  }
+
+  /* Lightbox close button stays inside frame on very small screens */
+  .video-close{
+    top: -8px;
+    right: 0;
   }
 }
 

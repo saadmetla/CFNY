@@ -3,42 +3,496 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capital Flight — Index</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <title>Capital Flight NY</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    :root {
+      --logo-width: 340px;
+      --panel-shadow: 0 18px 50px rgba(0,0,0,.45);
+      --wire: rgba(255,255,255,.18);
+      --wire-soft: rgba(255,255,255,.08);
+    }
+
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* ---- BG VIDEO ---- */
+    .bg-video-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      background: #000;
+    }
+
+    .bg-video-wrap iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 177.77777778vh;
+      height: 56.25vw;
+      min-width: 100vw;
+      min-height: 100vh;
+      transform: translate(-50%, -50%) scale(1.15);
+      pointer-events: none;
+      border: 0;
+      opacity: .42;
+      filter: contrast(1.05) brightness(.55) saturate(.85);
+    }
+
+    /* ---- STARS ---- */
+    .space-overlay,
+    .space-overlay::before,
+    .space-overlay::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+    }
+
+    .space-overlay {
+      z-index: 1;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.95) 0 1px, transparent 2px),
+        radial-gradient(circle at 75% 20%, rgba(255,255,255,.9)  0 1.5px, transparent 3px),
+        radial-gradient(circle at 60% 70%, rgba(255,255,255,.8)  0 1px, transparent 2px),
+        radial-gradient(circle at 85% 60%, rgba(255,255,255,.85) 0 1px, transparent 2px),
+        radial-gradient(circle at 40% 85%, rgba(255,255,255,.8)  0 1.5px, transparent 3px);
+      opacity: .7;
+      mix-blend-mode: screen;
+    }
+
+    .space-overlay::before {
+      background-image: radial-gradient(rgba(255,255,255,.9) 0.9px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .28;
+    }
+
+    .space-overlay::after {
+      background-image: radial-gradient(rgba(255,255,255,.65) 0.6px, transparent 1px);
+      background-size: 14px 14px;
+      opacity: .18;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 38%, rgba(0,0,0,.15) 58%, rgba(0,0,0,.5) 100%);
+    }
+
+    /* ---- 3D STAGE ---- */
+    .tunnel-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+      transform-style: preserve-3d;
+    }
+
+    .wire-room {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+
+    .wire-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    .wire-grid.floor {
+      transform: rotateX(90deg) translateZ(-180px);
+      transform-origin: center center;
+      background-image:
+        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    .wire-grid.ceiling {
+      transform: rotateX(90deg) translateZ(180px);
+      transform-origin: center center;
+      background-image:
+        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    .wire-grid.back {
+      inset: 12% 14%;
+      border: 1px solid var(--wire);
+      background-image:
+        linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+      background-size: 92px 92px;
+    }
+
+    .wire-frame {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border: 1px solid rgba(255,255,255,.14);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .depth-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .depth-lines span {
+      position: absolute;
+      background: rgba(255,255,255,.12);
+      transform-origin: top left;
+    }
+
+    /* ---- MEDIA CARDS ---- */
+    .media-field {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      z-index: 4;
+    }
+
+    .media-card {
+      position: absolute;
+      transform-style: preserve-3d;
+      box-shadow: var(--panel-shadow);
+      overflow: hidden;
+      background: #050505;
+      border: 1px solid rgba(255,255,255,.06);
+      will-change: transform;
+      border-radius: 6px;
+    }
+
+    .media-card img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* ---- CENTER BRAND ---- */
+    .center-brand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 6;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .center-brand img {
+      width: min(var(--logo-width), 52vw);
+      max-width: 100%;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+    }
+
+    .enter-btn {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 10px 32px 11px;
+      background: #bfc2c8;
+      color: #0c0c0c;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 800;
+      letter-spacing: .08em;
+      font-size: clamp(13px, 1.4vw, 17px);
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+      transition: transform .18s ease, filter .18s ease;
+    }
+
+    .enter-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.06);
+    }
+
+    /* ---- SOCIAL ICONS ---- */
+    .floating-icon {
+      position: absolute;
+      z-index: 6;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.45));
+      user-select: none;
+      display: block;
+    }
+
+    .floating-icon img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .icon-instagram {
+      left: 25%;
+      bottom: 26%;
+      width: clamp(36px, 4vw, 68px);
+      transform: rotate(-8deg);
+    }
+
+    .icon-youtube {
+      right: 32%;
+      top: 36%;
+      width: clamp(48px, 4.5vw, 80px);
+      transform: rotate(2deg);
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,.035), rgba(255,255,255,0) 2px);
+      background-size: 100% 4px;
+      opacity: .18;
+      mix-blend-mode: soft-light;
+    }
+
+    .hud-rail {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 34px;
+      z-index: 7;
+      color: rgba(255,255,255,.75);
+      font-size: 11px;
+      letter-spacing: .2em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      :root { --logo-width: 240px; }
+
+      .bg-video-wrap iframe {
+        transform: translate(-50%, -50%) scale(1.35);
+      }
+
+      .icon-instagram { left: 16%; bottom: 24%; }
+      .icon-youtube   { right: 15%; top: 38%; }
+    }
+
+    @media (max-width: 600px) {
+      :root { --logo-width: 200px; }
+
+      .icon-instagram { left: 8%;  bottom: 18%; width: 34px; }
+      .icon-youtube   { right: 8%; top: 42%;    width: 44px; }
+      .hud-rail { display: none; }
+
+      /* tighten tunnel frames on small screens */
+      .wire-frame { display: none; }
+      .wire-frame:nth-child(1),
+      .wire-frame:nth-child(2) { display: block; }
+    }
+
+    @media (max-width: 400px) {
+      :root { --logo-width: 170px; }
+      .icon-instagram { display: none; }
+      .icon-youtube   { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .media-card { animation: none !important; }
+    }
+  </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="index.html" aria-label="Capital Flight home">
-        <img
-          class="site-logo"
-          src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
-          alt="Capital Flight"
-        >
-      </a>
+  <div class="scene">
 
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="production.html">Production</a>
-        <a href="marketing.html">Marketing</a>
-        <a href="label.html">Label</a>
-        <a href="about.html">About</a>
-      </nav>
+    <!-- Background video — swap UNOmaFs6KaY for your preferred video ID -->
+    <div class="bg-video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/UNOmaFs6KaY?autoplay=1&mute=1&controls=0&loop=1&playlist=UNOmaFs6KaY&playsinline=1&modestbranding=1&rel=0"
+        title="Background video"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
     </div>
-  </header>
-  <main class="home-main">
-    <h1 class="home-title">Capital Flight</h1>
-    <p class="home-copy">Use this index page to click through and sanity check each section before you wire it into your real site.</p>
-    <nav class="home-nav">
-      <a class="home-link" href="production.html"><span class="home-link-title">Production</span><span class="home-link-sub">Video archive page</span></a>
-      <a class="home-link" href="marketing.html"><span class="home-link-title">Marketing</span><span class="home-link-sub">Video archive page</span></a>
-      <a class="home-link" href="label.html"><span class="home-link-title">Label</span><span class="home-link-sub">Video archive page</span></a>
-      <a class="home-link" href="about.html"><span class="home-link-title">About</span><span class="home-link-sub">Bio and contact page</span></a>
-    </nav>
-  </main>
+
+    <div class="space-overlay"></div>
+    <div class="vignette"></div>
+
+    <div class="tunnel-stage">
+      <div class="wire-room">
+        <div class="wire-grid floor"></div>
+        <div class="wire-grid ceiling"></div>
+        <div class="wire-grid back"></div>
+
+        <div class="depth-lines" id="depthLines"></div>
+
+        <div class="wire-frame" style="width:72vw;height:58vh;"></div>
+        <div class="wire-frame" style="width:56vw;height:44vh;"></div>
+        <div class="wire-frame" style="width:42vw;height:32vh;"></div>
+        <div class="wire-frame" style="width:30vw;height:22vh;"></div>
+        <div class="wire-frame" style="width:20vw;height:15vh;"></div>
+
+        <div class="media-field" id="mediaField"></div>
+      </div>
+    </div>
+
+    <!-- Update hrefs with your real social URLs -->
+    <a href="#" class="floating-icon icon-instagram" target="_blank" rel="noopener" aria-label="Instagram">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="">
+    </a>
+
+    <a href="#" class="floating-icon icon-youtube" target="_blank" rel="noopener" aria-label="YouTube">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="">
+    </a>
+
+    <div class="center-brand">
+      <img
+        src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
+        alt="Capital Flight NY"
+      >
+      <a href="production.html" class="enter-btn">Enter</a>
+    </div>
+
+    <div class="scanlines"></div>
+    <div class="hud-rail">Capital Flight</div>
+  </div>
+
+  <script>
+    /* Real Capital Flight thumbnails pulled from app.js videoData */
+    const mediaItems = [
+      { src: "https://i.ytimg.com/vi/C0dv7kjX1Sk/hqdefault.jpg", x: 11, y: 23, z: 220, w: 360, h: 200, rx: 0,   ry: 24,  rz: -3 },
+      { src: "https://i.ytimg.com/vi/WeCos4aCC60/hqdefault.jpg", x: 18, y: 51, z: 140, w: 250, h: 150, rx: 0,   ry: 18,  rz: 0  },
+      { src: "https://i.ytimg.com/vi/iCCYnAwPcvI/hqdefault.jpg", x: 34, y: 16, z: 180, w: 260, h: 150, rx: -6,  ry: 8,   rz: -1 },
+      { src: "https://i.ytimg.com/vi/q5w12XA2Cmw/hqdefault.jpg", x: 47, y: 78, z: 110, w: 280, h: 160, rx: 10,  ry: -4,  rz: -8 },
+      { src: "https://i.ytimg.com/vi/vrZiFXlE-Vg/hqdefault.jpg", x: 57, y: 24, z: 90,  w: 180, h: 220, rx: 0,   ry: -10, rz: 0  },
+      { src: "https://i.ytimg.com/vi/MwFC7trjEXM/hqdefault.jpg", x: 64, y: 53, z: 160, w: 220, h: 130, rx: 0,   ry: -18, rz: 0  },
+      { src: "https://i.ytimg.com/vi/_j55M6SC8Pw/hqdefault.jpg", x: 74, y: 20, z: 215, w: 250, h: 150, rx: 0,   ry: -28, rz: 2  },
+      { src: "https://i.ytimg.com/vi/3d_cGjvZNTA/hqdefault.jpg", x: 82, y: 61, z: 120, w: 260, h: 200, rx: 0,   ry: -16, rz: 1  },
+      { src: "https://i.ytimg.com/vi/f0ogsEtb0IY/hqdefault.jpg", x: 50, y: 10, z: 140, w: 220, h: 120, rx: -12, ry: 0,   rz: 0  },
+      { src: "https://i.ytimg.com/vi/RCjhJi7VFmQ/hqdefault.jpg", x: 54, y: 86, z: 160, w: 240, h: 140, rx: 18,  ry: 0,   rz: 0  },
+      { src: "https://i.ytimg.com/vi/ZcHTpqWcWFY/hqdefault.jpg", x: 70, y: 78, z: 85,  w: 250, h: 145, rx: 12,  ry: -18, rz: 0  },
+      { src: "https://i.ytimg.com/vi/cC47jPDezss/hqdefault.jpg", x: 29, y: 70, z: 70,  w: 280, h: 150, rx: 14,  ry: 22,  rz: -4 }
+    ];
+
+    /* Scale card pixel dimensions to viewport */
+    function cardScale() {
+      const vw = window.innerWidth;
+      if (vw < 400) return 0.38;
+      if (vw < 600) return 0.50;
+      if (vw < 900) return 0.68;
+      return 1;
+    }
+
+    const field = document.getElementById("mediaField");
+
+    function renderMedia() {
+      field.innerHTML = "";
+      const scale = cardScale();
+      /* Show fewer cards on small screens to avoid clutter */
+      const visible = window.innerWidth < 600 ? mediaItems.slice(0, 7) : mediaItems;
+
+      visible.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "media-card";
+        el.style.left    = `${item.x}%`;
+        el.style.top     = `${item.y}%`;
+        el.style.width   = `${item.w * scale}px`;
+        el.style.height  = `${item.h * scale}px`;
+        el.style.transform = `
+          translate3d(-50%, -50%, ${item.z}px)
+          rotateX(${item.rx}deg)
+          rotateY(${item.ry}deg)
+          rotateZ(${item.rz}deg)
+        `;
+        el.innerHTML = `<img src="${item.src}" alt="" loading="lazy">`;
+        field.appendChild(el);
+      });
+    }
+
+    function buildDepthLines() {
+      const wrap = document.getElementById("depthLines");
+      const corners = [
+        ["12%","12%","50%","50%"], ["88%","12%","50%","50%"],
+        ["12%","88%","50%","50%"], ["88%","88%","50%","50%"],
+        ["24%","6%", "50%","50%"], ["94%","26%","50%","50%"],
+        ["6%", "70%","50%","50%"], ["82%","94%","50%","50%"]
+      ];
+
+      corners.forEach(([x1, y1, x2, y2]) => {
+        const line = document.createElement("span");
+        const ax = parseFloat(x1), ay = parseFloat(y1);
+        const bx = parseFloat(x2), by = parseFloat(y2);
+        const dx = bx - ax, dy = by - ay;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        const ang = Math.atan2(dy, dx) * 180 / Math.PI;
+        line.style.left      = x1;
+        line.style.top       = y1;
+        line.style.width     = `${len}%`;
+        line.style.height    = "1px";
+        line.style.transform = `rotate(${ang}deg)`;
+        wrap.appendChild(line);
+      });
+    }
+
+    renderMedia();
+    buildDepthLines();
+
+    /* Gentle float animation */
+    let t = 0;
+    function animate() {
+      t += 0.01;
+      document.querySelectorAll(".media-card").forEach((card, i) => {
+        const item = mediaItems[i];
+        if (!item) return;
+        const offset = Math.sin(t + i * 0.55) * 6;
+        const tilt   = Math.cos(t * 0.8 + i * 0.4) * 1.5;
+        card.style.transform = `
+          translate3d(-50%, -50%, ${item.z + offset}px)
+          rotateX(${item.rx + tilt}deg)
+          rotateY(${item.ry}deg)
+          rotateZ(${item.rz}deg)
+        `;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* Re-render on resize so card scale updates */
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderMedia, 120);
+    }, { passive: true });
+  </script>
 </body>
 </html>

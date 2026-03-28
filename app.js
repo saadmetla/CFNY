@@ -392,7 +392,7 @@ function countUp(el) {
   const s = document.createElement('style');
   s.textContent = `
     .cf-lines {
-      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image: repeating-linear-gradient(
         to right,
         rgba(255,255,255,.18) 0px,

@@ -84,11 +84,7 @@
 	  </div>
 
 	  <!-- FORM -->
-	  <form
-		class="contact-form"
-		action="https://formspree.io/f/mdapalzz"
-		method="POST"
-	  >
+	  <form class="contact-form" id="contactForm">
 
 		<div class="form-row">
 		  <input type="text" name="name" placeholder="Name" required>
@@ -116,11 +112,48 @@
 		  <textarea name="message" placeholder="Tell us about the project" required></textarea>
 		</div>
 
-		<button type="submit" class="form-submit">
+		<button type="submit" class="form-submit" id="formSubmitBtn">
 		  Send Inquiry
 		</button>
 
+		<p id="formStatus" style="display:none;margin-top:14px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;"></p>
+
 	  </form>
+
+	  <script>
+		document.getElementById('contactForm').addEventListener('submit', async function(e) {
+		  e.preventDefault();
+		  const btn    = document.getElementById('formSubmitBtn');
+		  const status = document.getElementById('formStatus');
+		  btn.textContent = 'Sending…';
+		  btn.disabled = true;
+		  status.style.display = 'none';
+
+		  try {
+			const res = await fetch('https://formspree.io/f/mdapalzz', {
+			  method: 'POST',
+			  headers: { 'Accept': 'application/json' },
+			  body: new FormData(this)
+			});
+			const data = await res.json();
+			if (res.ok) {
+			  status.style.color = 'rgba(255,255,255,0.7)';
+			  status.textContent = 'Message sent — we\'ll be in touch.';
+			  status.style.display = 'block';
+			  this.reset();
+			  btn.textContent = 'Sent';
+			} else {
+			  throw new Error(data.error || 'submission failed');
+			}
+		  } catch (err) {
+			status.style.color = '#ff6b6b';
+			status.textContent = 'Something went wrong. Email us directly at production@capitalflightny.com';
+			status.style.display = 'block';
+			btn.textContent = 'Send Inquiry';
+			btn.disabled = false;
+		  }
+		});
+	  </script>
 
 	</section>
 

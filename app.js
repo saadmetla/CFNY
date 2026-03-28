@@ -13,6 +13,7 @@ const videoData = {
     { year: '2024', title: 'AHMED KHAN FT PDNY', subtitle: 'Attention', youtubeUrl: 'https://www.youtube.com/watch?v=gd4__EYRXOg' },
 
     { year: '2023', title: 'RAF SAPERRA', subtitle: 'Ranjha', youtubeUrl: 'https://www.youtube.com/watch?v=MwFC7trjEXM' },
+    { year: '2023', title: 'TRA-V THE SHOOTA', subtitle: 'I Wanna Be', youtubeUrl: 'https://www.youtube.com/watch?v=3liNCRTa4-s' },
     { year: '2023', title: 'SHEROZ, HENNY, G HOUR', subtitle: 'Mission', youtubeUrl: 'https://www.youtube.com/watch?v=-Zc135mSu7I' },
     { year: '2023', title: 'Heems', subtitle: 'RAPS AT PUNJABI DELI', youtubeUrl: 'https://www.youtube.com/watch?v=0TzZYaM9IDM' },
     { year: '2023', title: 'Heems', subtitle: 'RAPS IN JACKSON HEIGHTS', youtubeUrl: 'https://www.youtube.com/watch?v=Bg0gEo-xuOE' },

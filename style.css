@@ -175,7 +175,7 @@ a{
   width: 100%;
   z-index: 1000;
   background: var(--header-bg);
-  border-bottom: 1px solid var(--header-border);
+  border-bottom: none;
   backdrop-filter: blur(var(--header-blur));
   -webkit-backdrop-filter: blur(var(--header-blur));
 }

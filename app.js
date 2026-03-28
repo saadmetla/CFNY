@@ -395,10 +395,10 @@ function countUp(el) {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image: repeating-linear-gradient(
         to right,
-        rgba(255,255,255,.18) 0px,
-        rgba(255,255,255,.18) 1px,
+        rgba(255,255,255,.10) 0px,
+        rgba(255,255,255,.10) 1px,
         transparent 1px,
-        transparent calc(100% / 6)
+        transparent calc(100% / 9)
       );
     }
     .cf-grain {

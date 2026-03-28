@@ -99,34 +99,54 @@
 	  position: absolute;
 	  inset: 0;
 	  pointer-events: none;
-	  opacity: .55;
+	  opacity: .85;
 	}
 
 	.wire-grid.floor {
-	  transform: rotateX(90deg) translateZ(-180px);
+	  transform: rotateX(90deg) translateZ(-200px);
 	  transform-origin: center center;
 	  background-image:
-		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+		linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
 	  background-size: 80px 80px;
 	}
 
 	.wire-grid.ceiling {
-	  transform: rotateX(90deg) translateZ(180px);
+	  transform: rotateX(90deg) translateZ(200px);
 	  transform-origin: center center;
 	  background-image:
-		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
+		linear-gradient(to right, rgba(255,255,255,.14) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.14) 1px, transparent 1px);
 	  background-size: 80px 80px;
 	}
 
 	.wire-grid.back {
-	  inset: 12% 14%;
-	  border: 1px solid var(--wire);
+	  inset: 10% 12%;
+	  border: 1px solid rgba(255,255,255,.22);
 	  background-image:
-		linear-gradient(to right, var(--wire-soft) 1px, transparent 1px),
-		linear-gradient(to bottom, var(--wire-soft) 1px, transparent 1px);
-	  background-size: 92px 92px;
+		linear-gradient(to right, rgba(255,255,255,.13) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.13) 1px, transparent 1px);
+	  background-size: 88px 88px;
+	}
+
+	.wire-grid.left-wall {
+	  top: 0; bottom: 0; left: 0; width: 20%;
+	  transform-origin: left center;
+	  transform: rotateY(-90deg);
+	  background-image:
+		linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px);
+	  background-size: 80px 80px;
+	}
+
+	.wire-grid.right-wall {
+	  top: 0; bottom: 0; right: 0; width: 20%;
+	  transform-origin: right center;
+	  transform: rotateY(90deg);
+	  background-image:
+		linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px);
+	  background-size: 80px 80px;
 	}
 
 	.wire-frame {
@@ -227,79 +247,80 @@
 	  display: flex;
 	  flex-direction: column;
 	  align-items: center;
-	  gap: 10px;
+	  gap: 12px;
 	  text-align: center;
 	  opacity: 0;
 	  transition: opacity .9s ease .5s;
 	}
 	.center-brand.visible { opacity: 1; }
 
-	.center-brand img {
+	.center-brand .brand-logo {
 	  width: min(var(--logo-width), 52vw);
 	  max-width: 100%;
-	  filter: drop-shadow(0 8px 28px rgba(0,0,0,.65));
+	  filter: drop-shadow(0 8px 28px rgba(0,0,0,.7));
+	  transition: transform .22s ease, filter .22s ease;
+	  cursor: pointer;
+	  display: block;
 	}
-
-	.brand-tagline {
-	  margin: 4px 0 8px;
-	  color: rgba(255,255,255,.55);
-	  font-size: clamp(9px, 1vw, 12px);
-	  font-weight: 700;
-	  letter-spacing: .25em;
-	  text-transform: uppercase;
-	  font-family: Arial, Helvetica, sans-serif;
+	.center-brand .brand-logo:hover {
+	  transform: scale(1.07);
+	  filter: drop-shadow(0 12px 36px rgba(0,0,0,.8)) brightness(1.08);
 	}
 
 	.cta-row {
 	  display: flex;
 	  align-items: center;
-	  gap: 12px;
+	  gap: 10px;
 	  flex-wrap: wrap;
 	  justify-content: center;
 	}
 
-	/* Primary CTA — drives leads to contact */
+	/* Primary CTA */
 	.btn-primary {
 	  display: inline-block;
 	  text-decoration: none;
 	  border-radius: 999px;
-	  padding: 11px 30px 12px;
-	  background: #bfc2c8;
+	  padding: 10px 28px 11px;
+	  background: rgba(200,202,208,.92);
 	  color: #0c0c0c;
 	  font-family: Arial, Helvetica, sans-serif;
 	  font-weight: 800;
-	  letter-spacing: .09em;
-	  font-size: clamp(11px, 1.2vw, 14px);
+	  letter-spacing: .12em;
+	  font-size: clamp(11px, 1.1vw, 13px);
 	  text-transform: uppercase;
-	  box-shadow: 0 8px 24px rgba(0,0,0,.45);
-	  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+	  box-shadow: 0 6px 20px rgba(0,0,0,.5);
+	  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease, background .18s ease;
+	  border: 1px solid rgba(255,255,255,.25);
 	}
 	.btn-primary:hover {
-	  transform: translateY(-2px) scale(1.03);
-	  filter: brightness(1.06);
-	  box-shadow: 0 14px 34px rgba(0,0,0,.5);
+	  transform: translateY(-3px) scale(1.05);
+	  filter: brightness(1.08);
+	  box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.3);
+	  background: rgba(220,222,228,1);
 	}
 
-	/* Secondary CTA — view work */
+	/* Secondary CTA */
 	.btn-secondary {
 	  display: inline-block;
 	  text-decoration: none;
 	  border-radius: 999px;
-	  padding: 10px 26px 11px;
+	  padding: 9px 24px 10px;
 	  background: transparent;
-	  color: rgba(255,255,255,.8);
-	  border: 1px solid rgba(255,255,255,.3);
+	  color: rgba(255,255,255,.85);
+	  border: 1px solid rgba(255,255,255,.35);
 	  font-family: Arial, Helvetica, sans-serif;
 	  font-weight: 700;
-	  letter-spacing: .09em;
-	  font-size: clamp(11px, 1.2vw, 14px);
+	  letter-spacing: .12em;
+	  font-size: clamp(11px, 1.1vw, 13px);
 	  text-transform: uppercase;
-	  transition: transform .16s ease, border-color .16s ease, color .16s ease;
+	  transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease, box-shadow .18s ease;
 	}
 	.btn-secondary:hover {
-	  transform: translateY(-2px);
-	  border-color: rgba(255,255,255,.65);
+	  transform: translateY(-3px) scale(1.04);
+	  border-color: rgba(255,255,255,.7);
 	  color: #fff;
+	  background: rgba(255,255,255,.06);
+	  box-shadow: 0 8px 24px rgba(0,0,0,.4);
 	}
 
 	/* opacity controlled by JS warp-in; hover transitions only */
@@ -314,14 +335,9 @@
 	.floating-icon {
 	  position: absolute;
 	  z-index: 6;
-	  filter: drop-shadow(0 12px 24px rgba(0,0,0,.45));
 	  user-select: none;
 	  display: block;
-	  transition: transform .18s ease, filter .18s ease;
-	}
-
-	.floating-icon:hover {
-	  filter: drop-shadow(0 12px 24px rgba(0,0,0,.45)) brightness(1.1);
+	  transition: transform .22s ease, filter .22s ease;
 	}
 
 	.floating-icon img {
@@ -330,25 +346,30 @@
 	  height: auto;
 	}
 
+	/* Instagram — bottom left, large, like reference */
 	.icon-instagram {
-	  left: 25%;
-	  bottom: 26%;
-	  width: clamp(40px, 4vw, 72px);
-	  transform: rotate(-8deg);
+	  left: 7%;
+	  bottom: 20%;
+	  width: clamp(72px, 8vw, 130px);
+	  transform: rotate(-6deg);
+	  filter: drop-shadow(0 16px 32px rgba(0,0,0,.6));
+	}
+	.icon-instagram:hover {
+	  transform: rotate(-6deg) scale(1.1) translateY(-4px);
+	  filter: drop-shadow(0 20px 40px rgba(0,0,0,.7)) brightness(1.08);
 	}
 
+	/* YouTube — right side, large red logo, like reference */
 	.icon-youtube {
-	  right: 32%;
-	  top: 36%;
-	  width: clamp(52px, 4.5vw, 82px);
-	  transform: rotate(2deg);
+	  right: 8%;
+	  top: 32%;
+	  width: clamp(72px, 7.5vw, 120px);
+	  transform: rotate(3deg);
+	  filter: drop-shadow(0 16px 32px rgba(0,0,0,.6));
 	}
-
-	.icon-envelope {
-	  top: 34%;
-	  left: 50%;
-	  width: clamp(34px, 3vw, 54px);
-	  transform: translateX(-50%) rotate(2deg);
+	.icon-youtube:hover {
+	  transform: rotate(3deg) scale(1.1) translateY(-4px);
+	  filter: drop-shadow(0 20px 40px rgba(0,0,0,.7)) brightness(1.1);
 	}
 
 	.scanlines {
@@ -384,33 +405,17 @@
 	}
 
 	@media (max-width: 900px) {
-	  :root {
-		--logo-width: 240px;
-	  }
-
-	  .bg-video-wrap iframe {
-		transform: translate(-50%, -50%) scale(1.35);
-	  }
-
-	  .icon-instagram {
-		left: 15%;
-		bottom: 24%;
-	  }
-
-	  .icon-youtube {
-		right: 14%;
-		top: 38%;
-	  }
-
-	  .icon-envelope {
-		top: 31%;
-	  }
+	  :root { --logo-width: 240px; }
+	  .bg-video-wrap iframe { transform: translate(-50%, -50%) scale(1.35); }
+	  .icon-instagram { left: 4%; bottom: 18%; }
+	  .icon-youtube   { right: 4%; top: 34%; }
 	}
 
 	@media (max-width: 600px) {
 	  :root { --logo-width: 200px; }
-	  .icon-envelope { display: none; }
 	  .hud-rail { display: none; }
+	  .icon-instagram { width: clamp(52px, 10vw, 80px); }
+	  .icon-youtube   { width: clamp(52px, 10vw, 80px); }
 	}
   </style>
 </head>
@@ -437,6 +442,8 @@
 		<div class="wire-grid floor"></div>
 		<div class="wire-grid ceiling"></div>
 		<div class="wire-grid back"></div>
+		<div class="wire-grid left-wall"></div>
+		<div class="wire-grid right-wall"></div>
 
 		<div class="depth-lines" id="depthLines"></div>
 
@@ -450,7 +457,7 @@
 	  </div>
 	</div>
 
-	<!-- social icons — fill in your real URLs -->
+	<!-- social icons -->
 	<a href="https://www.instagram.com/capitalflightny/"
 	   class="floating-icon icon-instagram"
 	   target="_blank" rel="noopener" aria-label="Instagram">
@@ -465,10 +472,10 @@
 
 	<div class="center-brand" id="centerBrand">
 	  <img
+		class="brand-logo"
 		src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
 		alt="Capital Flight NY"
 	  >
-	  <p class="brand-tagline">Production · Marketing · Label</p>
 	  <div class="cta-row">
 		<a href="contact.html"    class="btn-primary">Work With Us</a>
 		<a href="production.html" class="btn-secondary">View Our Work</a>
@@ -552,32 +559,39 @@
 
 	const YTL = id => `https://www.youtube.com/watch?v=${id}`;
 
-	// Cards: landscape 16:9 for YouTube-linked, natural ratio for local clips
+	// 3D ROOM layout: LEFT WALL | CEILING | RIGHT WALL | FLOOR
 	const mediaItems = [
+	  // ── LEFT WALL (ry positive = card faces right toward center) ──
 	  { type:'video', src:'videos/ashanti.mp4',     link: YTL('_j55M6SC8Pw'),
-	    x:11, y:23, z:220, w:360, h:202, rx:0,   ry:24,  rz:-3 },
+	    x:5,  y:28, z:180, w:430, h:242, rx:0,  ry:36,  rz:0  },
 	  { type:'video', src:'videos/chani.mp4',        link: YTL('jMqIpCddv7s'),
-	    x:18, y:51, z:140, w:250, h:141, rx:0,   ry:18,  rz:0  },
-	  { type:'video', src:'videos/pooja.mp4',        link: YTL('C0dv7kjX1Sk'),
-	    x:34, y:16, z:180, w:260, h:146, rx:-6,  ry:8,   rz:-1 },
-	  { type:'video', src:'videos/esko.mp4',         link: YTL('WeCos4aCC60'),
-	    x:47, y:78, z:110, w:280, h:158, rx:10,  ry:-4,  rz:-8 },
-	  { type:'video', src:'videos/heems.mp4',        link: YTL('3d_cGjvZNTA'),
-	    x:57, y:24, z:90,  w:220, h:124, rx:0,   ry:-10, rz:0  },
+	    x:16, y:47, z:110, w:300, h:169, rx:0,  ry:26,  rz:-1 },
 	  { type:'video', src:'videos/shimmy.mp4',       link: YTL('iCCYnAwPcvI'),
-	    x:64, y:53, z:160, w:240, h:135, rx:0,   ry:-18, rz:0  },
+	    x:24, y:53, z:75,  w:240, h:135, rx:0,  ry:20,  rz:0  },
+
+	  // ── CEILING (rx negative = card tilts top away / lies on ceiling) ──
+	  { type:'video', src:'videos/pooja.mp4',        link: YTL('C0dv7kjX1Sk'),
+	    x:31, y:7,  z:170, w:310, h:174, rx:-40, ry:8,  rz:0  },
+	  { type:'video', src:'videos/esko.mp4',         link: YTL('WeCos4aCC60'),
+	    x:46, y:4,  z:150, w:280, h:157, rx:-38, ry:-2, rz:0  },
+	  { type:'video', src:'videos/heems.mp4',        link: YTL('3d_cGjvZNTA'),
+	    x:63, y:6,  z:160, w:300, h:169, rx:-36, ry:-10,rz:0  },
+
+	  // ── RIGHT WALL (ry negative = card faces left toward center) ──
 	  { type:'video', src:'videos/otr-raf.mp4',      link: YTL('DnBZ-QRVg0Q'),
-	    x:74, y:20, z:215, w:270, h:152, rx:0,   ry:-28, rz:2  },
+	    x:90, y:22, z:190, w:450, h:253, rx:0,  ry:-38, rz:0  },
 	  { type:'video', src:'videos/otr-rico.mp4',     link: YTL('f0ogsEtb0IY'),
-	    x:82, y:61, z:120, w:260, h:146, rx:0,   ry:-16, rz:1  },
+	    x:75, y:36, z:115, w:300, h:169, rx:0,  ry:-28, rz:0  },
+	  { type:'video', src:'videos/raf.mp4',           link: YTL('MwFC7trjEXM'),
+	    x:84, y:57, z:90,  w:370, h:208, rx:0,  ry:-33, rz:0  },
+
+	  // ── FLOOR (rx positive = card lies flat on floor) ──
 	  { type:'video', src:'videos/esko-annural.mp4', link: YTL('cC47jPDezss'),
-	    x:50, y:10, z:140, w:240, h:135, rx:-12, ry:0,   rz:0  },
+	    x:47, y:73, z:130, w:340, h:191, rx:64, ry:0,   rz:0  },
 	  { type:'video', src:'videos/otr-sammy.mp4',    link: YTL('sAHFb_rgcFQ'),
-	    x:54, y:86, z:160, w:260, h:146, rx:18,  ry:0,   rz:0  },
-	  { type:'video', src:'videos/raf.mp4',          link: YTL('MwFC7trjEXM'),
-	    x:70, y:78, z:85,  w:250, h:141, rx:12,  ry:-18, rz:0  },
+	    x:63, y:76, z:110, w:290, h:163, rx:60, ry:-12, rz:0  },
 	  { type:'video', src:'videos/otr-chani.mp4',    link: YTL('Tjc6sgmFi6Q'),
-	    x:29, y:70, z:70,  w:280, h:158, rx:14,  ry:22,  rz:-4 },
+	    x:26, y:78, z:100, w:310, h:174, rx:62, ry:16,  rz:0  },
 	];
 
 	const field = document.getElementById('mediaField');

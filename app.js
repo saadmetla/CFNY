@@ -391,7 +391,8 @@ function countUp(el) {
 (function () {
   const s = document.createElement('style');
   s.textContent = `
-    html {
+    .cf-lines {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image: repeating-linear-gradient(
         to right,
         rgba(255,255,255,.10) 0px,
@@ -399,8 +400,6 @@ function countUp(el) {
         transparent 1px,
         transparent calc(100% / 9)
       );
-      background-attachment: fixed;
-      background-size: 100vw 100vh;
     }
     .cf-grain {
       position: fixed; inset: 0; z-index: 9999; pointer-events: none;
@@ -410,8 +409,11 @@ function countUp(el) {
     }
   `;
   document.head.appendChild(s);
+  const lines = document.createElement('div');
+  lines.className = 'cf-lines';
   const grain = document.createElement('div');
   grain.className = 'cf-grain';
+  document.body.appendChild(lines);
   document.body.appendChild(grain);
 })();
 

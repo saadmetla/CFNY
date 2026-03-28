@@ -321,25 +321,20 @@ function formatViews(n) {
 }
 
 async function fetchViews(videoId) {
-  const apis = [
-    `https://inv.nadeko.net/api/v1/videos/${videoId}?fields=viewCount`,
-    `https://invidious.nerdvpn.de/api/v1/videos/${videoId}?fields=viewCount`,
-    `https://iv.datura.network/api/v1/videos/${videoId}?fields=viewCount`,
-    `https://invidious.privacyredirect.com/api/v1/videos/${videoId}?fields=viewCount`,
-    `https://yt.cdaut.de/api/v1/videos/${videoId}?fields=viewCount`,
-  ];
-  for (const url of apis) {
-    try {
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 4000);
-      const res = await fetch(url, { signal: ctrl.signal });
-      clearTimeout(t);
-      if (!res.ok) continue;
-      const data = await res.json();
-      if (data.viewCount) return data.viewCount;
-    } catch {}
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 6000);
+    const res = await fetch(
+      `https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`,
+      { signal: ctrl.signal }
+    );
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.viewCount ?? null;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 function initViewCounts() {

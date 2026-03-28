@@ -1153,7 +1153,7 @@ a{
 .contact-form select{
   width: 100%;
   padding: 14px 14px;
-  background: transparent;
+  background: #0d0d0d;
   border: 1px solid var(--line);
   color: var(--text);
   font: inherit;

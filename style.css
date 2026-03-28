@@ -803,14 +803,17 @@ body::after{
 }
 
 .about-main{
-  display: block;
+  display: grid;
+  grid-template-columns: var(--about-image-col) var(--about-text-col);
+  gap: var(--about-gap);
+  align-items: end;
   align-items: start;
   margin-bottom: 42px;
 }
 
 .about-hero{
   position: relative;
-  margin: 32px 0;
+  margin: 0;
   border: 1px solid var(--line);
   border-radius: var(--hero-radius);
   overflow: hidden;

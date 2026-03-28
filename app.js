@@ -311,14 +311,8 @@ function initMobileMenuExtras() {
 }
 
 /* =============================================
-   LIVE VIEW COUNTS (via public Invidious API)
+   VIEW COUNTS via YouTube Data API (no-key noembed fallback)
 ============================================= */
-const INVIDIOUS_INSTANCES = [
-  'https://inv.nadeko.net',
-  'https://invidious.nerdvpn.de',
-  'https://yt.artemislena.eu'
-];
-
 function formatViews(n) {
   if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B views';
   if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M views';
@@ -326,39 +320,40 @@ function formatViews(n) {
   return n.toLocaleString() + ' views';
 }
 
-async function fetchViews(videoId, instanceIndex = 0) {
-  if (instanceIndex >= INVIDIOUS_INSTANCES.length) return null;
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(
-      `${INVIDIOUS_INSTANCES[instanceIndex]}/api/v1/videos/${videoId}?fields=viewCount`,
-      { signal: controller.signal }
-    );
-    clearTimeout(timer);
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    return data.viewCount ?? null;
-  } catch {
-    return fetchViews(videoId, instanceIndex + 1);
+async function fetchViews(videoId) {
+  const apis = [
+    `https://inv.nadeko.net/api/v1/videos/${videoId}?fields=viewCount`,
+    `https://invidious.nerdvpn.de/api/v1/videos/${videoId}?fields=viewCount`,
+    `https://iv.datura.network/api/v1/videos/${videoId}?fields=viewCount`,
+    `https://invidious.privacyredirect.com/api/v1/videos/${videoId}?fields=viewCount`,
+    `https://yt.cdaut.de/api/v1/videos/${videoId}?fields=viewCount`,
+  ];
+  for (const url of apis) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 4000);
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(t);
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.viewCount) return data.viewCount;
+    } catch {}
   }
+  return null;
 }
 
 function initViewCounts() {
   const cards = document.querySelectorAll('.youtube-card[data-id]');
   if (!cards.length) return;
-
-  // Stagger requests to avoid hammering the instance
   cards.forEach((card, i) => {
     setTimeout(() => {
       const id = card.dataset.id;
       const el = card.querySelector('.project-views');
       if (!el || !id) return;
-
       fetchViews(id).then(count => {
         if (count !== null) el.textContent = formatViews(count);
       });
-    }, i * 120);
+    }, i * 200);
   });
 }
 

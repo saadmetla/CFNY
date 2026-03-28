@@ -602,16 +602,15 @@ a{
 .project-views{
   display: block;
   margin: 5px 0 0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.6);
 }
 
 .project-views:empty::before{
-  content: '— views';
-  opacity: 0.3;
+  content: '';
 }
 
 .project-card:hover .project-title,

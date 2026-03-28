@@ -1295,6 +1295,37 @@ body.is-leaving {
 
 
 /* ==================================================
+   CURSOR RING (overlay only — native cursor untouched)
+================================================== */
+
+.cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(255,255,255,0.55);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  will-change: transform;
+  transition:
+    opacity 0.2s ease,
+    width 0.2s ease,
+    height 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cursor-ring.is-visible { opacity: 1; }
+
+.cursor-ring.is-hovering {
+  width: 56px;
+  height: 56px;
+  border-color: rgba(255,255,255,0.9);
+}
+
+
+/* ==================================================
    SCROLL REVEAL
 ================================================== */
 

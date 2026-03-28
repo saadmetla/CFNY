@@ -330,6 +330,45 @@ function countUp(el) {
 
 
 /* =============================================
+   CURSOR RING
+============================================= */
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const ring = document.createElement('div');
+  ring.className = 'cursor-ring';
+  document.body.appendChild(ring);
+
+  let rx = -200, ry = -200, tx = -200, ty = -200;
+
+  const HOVER = 'a, button, .project-card, .media-card, .home-link, input, textarea, select, .enter-btn';
+
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX;
+    ty = e.clientY;
+    ring.classList.add('is-visible');
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => ring.classList.remove('is-visible'));
+  document.addEventListener('mouseenter', () => ring.classList.add('is-visible'));
+
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(HOVER)) ring.classList.add('is-hovering');
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(HOVER)) ring.classList.remove('is-hovering');
+  });
+
+  function tick() {
+    rx += (tx - rx) * 0.13;
+    ry += (ty - ry) * 0.13;
+    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* =============================================
    PAGE TRANSITIONS
 ============================================= */
 (function () {

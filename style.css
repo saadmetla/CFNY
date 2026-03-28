@@ -804,9 +804,9 @@ body::after{
 
 .about-main{
   display: grid;
-  grid-template-columns: var(--about-image-col) var(--about-text-col);
+  grid-template-columns: 1fr 1fr;
   gap: var(--about-gap);
-  align-items: end;
+  align-items: start;
   align-items: start;
   margin-bottom: 42px;
 }

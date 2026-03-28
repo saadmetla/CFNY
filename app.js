@@ -31,7 +31,7 @@ const videoData = {
     { year: '2025', title: 'DAYANA (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=HOWh_lDvdj8' },
     { year: '2025', title: 'MILLO (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=sAHFb_rgcFQ' },
     { year: '2025', title: 'YOMEL EL MELOSO (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=qhN_yR8EKGE' },
-    { year: '2025', title: 'JULIO CAESAR (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=qhN_yR8EKGE' },
+    { year: '2025', title: 'JULIO CAESAR (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=bvmS-oQ2qyE' },
     { year: '2025', title: 'AKSHARA (PERFORMANCE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=bQeQ_YKd7xE' },
 
     { year: '2024', title: 'NSEEB (FREESTYLE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=riRiVXi8wes' },

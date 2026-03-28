@@ -78,7 +78,7 @@ function createCard(item) {
   const embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`;
 
   return `
-  <div class="project-card youtube-card reveal" data-embed="${embed}">
+  <div class="project-card youtube-card reveal" data-embed="${embed}" data-id="${id}">
     <div class="project-thumb">
       <img src="${thumb}" loading="lazy" alt="${item.title}">
       <div class="project-overlay">
@@ -88,6 +88,7 @@ function createCard(item) {
     <div class="project-info">
       <h3 class="project-title">${item.title}</h3>
       <p class="project-sub">${item.subtitle}</p>
+      <span class="project-views"></span>
     </div>
   </div>`;
 }
@@ -274,7 +275,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initScrollReveal();
   initStatCounters();
+  initViewCounts();
 });
+
+/* =============================================
+   LIVE VIEW COUNTS (via public Invidious API)
+============================================= */
+const INVIDIOUS_INSTANCES = [
+  'https://inv.nadeko.net',
+  'https://invidious.nerdvpn.de',
+  'https://yt.artemislena.eu'
+];
+
+function formatViews(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B views';
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M views';
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K views';
+  return n.toLocaleString() + ' views';
+}
+
+async function fetchViews(videoId, instanceIndex = 0) {
+  if (instanceIndex >= INVIDIOUS_INSTANCES.length) return null;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(
+      `${INVIDIOUS_INSTANCES[instanceIndex]}/api/v1/videos/${videoId}?fields=viewCount`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timer);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    return data.viewCount ?? null;
+  } catch {
+    return fetchViews(videoId, instanceIndex + 1);
+  }
+}
+
+function initViewCounts() {
+  const cards = document.querySelectorAll('.youtube-card[data-id]');
+  if (!cards.length) return;
+
+  // Stagger requests to avoid hammering the instance
+  cards.forEach((card, i) => {
+    setTimeout(() => {
+      const id = card.dataset.id;
+      const el = card.querySelector('.project-views');
+      if (!el || !id) return;
+
+      fetchViews(id).then(count => {
+        if (count !== null) el.textContent = formatViews(count);
+      });
+    }, i * 120);
+  });
+}
 
 /* =============================================
    SCROLL REVEAL

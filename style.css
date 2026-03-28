@@ -568,6 +568,21 @@ body::after{
   font-weight: 600;
 }
 
+.project-views{
+  display: block;
+  margin: 5px 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.project-views:empty::before{
+  content: '— views';
+  opacity: 0.3;
+}
+
 .project-card:hover .project-title,
 .project-card:focus-visible .project-title,
 .project-card:hover .project-sub,

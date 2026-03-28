@@ -233,6 +233,12 @@ body::after{
   max-width: var(--logo-max-width);
   object-fit: contain;
   transform: translate(var(--logo-offset-x), var(--logo-offset-y));
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.brand:hover .site-logo {
+  transform: translate(var(--logo-offset-x), var(--logo-offset-y)) scale(1.07);
+  filter: brightness(1.15) drop-shadow(0 4px 16px rgba(255,255,255,.15));
 }
 
 .main-nav{

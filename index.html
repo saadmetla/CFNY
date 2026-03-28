@@ -99,54 +99,34 @@
 	  position: absolute;
 	  inset: 0;
 	  pointer-events: none;
-	  opacity: .85;
+	  opacity: .55;
 	}
 
 	.wire-grid.floor {
-	  transform: rotateX(90deg) translateZ(-200px);
+	  transform: rotateX(90deg) translateZ(-180px);
 	  transform-origin: center center;
 	  background-image:
-		linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
-		linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
+		linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
 	  background-size: 80px 80px;
 	}
 
 	.wire-grid.ceiling {
-	  transform: rotateX(90deg) translateZ(200px);
+	  transform: rotateX(90deg) translateZ(180px);
 	  transform-origin: center center;
 	  background-image:
-		linear-gradient(to right, rgba(255,255,255,.14) 1px, transparent 1px),
-		linear-gradient(to bottom, rgba(255,255,255,.14) 1px, transparent 1px);
+		linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
 	  background-size: 80px 80px;
 	}
 
 	.wire-grid.back {
-	  inset: 10% 12%;
-	  border: 1px solid rgba(255,255,255,.22);
+	  inset: 12% 14%;
+	  border: 1px solid rgba(255,255,255,.18);
 	  background-image:
-		linear-gradient(to right, rgba(255,255,255,.13) 1px, transparent 1px),
-		linear-gradient(to bottom, rgba(255,255,255,.13) 1px, transparent 1px);
-	  background-size: 88px 88px;
-	}
-
-	.wire-grid.left-wall {
-	  top: 0; bottom: 0; left: 0; width: 20%;
-	  transform-origin: left center;
-	  transform: rotateY(-90deg);
-	  background-image:
-		linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px),
-		linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px);
-	  background-size: 80px 80px;
-	}
-
-	.wire-grid.right-wall {
-	  top: 0; bottom: 0; right: 0; width: 20%;
-	  transform-origin: right center;
-	  transform: rotateY(90deg);
-	  background-image:
-		linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px),
-		linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px);
-	  background-size: 80px 80px;
+		linear-gradient(to right, rgba(255,255,255,.08) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255,255,255,.08) 1px, transparent 1px);
+	  background-size: 92px 92px;
 	}
 
 	.wire-frame {
@@ -442,8 +422,6 @@
 		<div class="wire-grid floor"></div>
 		<div class="wire-grid ceiling"></div>
 		<div class="wire-grid back"></div>
-		<div class="wire-grid left-wall"></div>
-		<div class="wire-grid right-wall"></div>
 
 		<div class="depth-lines" id="depthLines"></div>
 
@@ -559,39 +537,39 @@
 
 	const YTL = id => `https://www.youtube.com/watch?v=${id}`;
 
-	// 3D ROOM layout: LEFT WALL | CEILING | RIGHT WALL | FLOOR
+	// 3D ROOM layout matching reference: left wall, ceiling, right wall, floor
 	const mediaItems = [
-	  // ── LEFT WALL (ry positive = card faces right toward center) ──
+	  // ── LEFT WALL ──
 	  { type:'video', src:'videos/ashanti.mp4',     link: YTL('_j55M6SC8Pw'),
-	    x:5,  y:28, z:180, w:430, h:242, rx:0,  ry:36,  rz:0  },
+	    x:3,  y:22, z:200, w:380, h:214, rx:0,  ry:28,  rz:0  },
 	  { type:'video', src:'videos/chani.mp4',        link: YTL('jMqIpCddv7s'),
-	    x:16, y:47, z:110, w:300, h:169, rx:0,  ry:26,  rz:-1 },
+	    x:18, y:44, z:120, w:280, h:158, rx:0,  ry:22,  rz:-1 },
 	  { type:'video', src:'videos/shimmy.mp4',       link: YTL('iCCYnAwPcvI'),
-	    x:24, y:53, z:75,  w:240, h:135, rx:0,  ry:20,  rz:0  },
+	    x:22, y:60, z:80,  w:230, h:130, rx:2,  ry:18,  rz:1  },
 
-	  // ── CEILING (rx negative = card tilts top away / lies on ceiling) ──
+	  // ── CEILING ──
 	  { type:'video', src:'videos/pooja.mp4',        link: YTL('C0dv7kjX1Sk'),
-	    x:31, y:7,  z:170, w:310, h:174, rx:-40, ry:8,  rz:0  },
+	    x:30, y:5,  z:180, w:300, h:169, rx:-22, ry:10, rz:0  },
 	  { type:'video', src:'videos/esko.mp4',         link: YTL('WeCos4aCC60'),
-	    x:46, y:4,  z:150, w:280, h:157, rx:-38, ry:-2, rz:0  },
+	    x:47, y:3,  z:150, w:260, h:146, rx:-20, ry:0,  rz:0  },
 	  { type:'video', src:'videos/heems.mp4',        link: YTL('3d_cGjvZNTA'),
-	    x:63, y:6,  z:160, w:300, h:169, rx:-36, ry:-10,rz:0  },
+	    x:64, y:5,  z:165, w:280, h:158, rx:-22, ry:-8, rz:0  },
 
-	  // ── RIGHT WALL (ry negative = card faces left toward center) ──
+	  // ── RIGHT WALL ──
 	  { type:'video', src:'videos/otr-raf.mp4',      link: YTL('DnBZ-QRVg0Q'),
-	    x:90, y:22, z:190, w:450, h:253, rx:0,  ry:-38, rz:0  },
+	    x:88, y:20, z:195, w:390, h:219, rx:0,  ry:-30, rz:0  },
 	  { type:'video', src:'videos/otr-rico.mp4',     link: YTL('f0ogsEtb0IY'),
-	    x:75, y:36, z:115, w:300, h:169, rx:0,  ry:-28, rz:0  },
+	    x:74, y:42, z:115, w:280, h:158, rx:0,  ry:-24, rz:0  },
 	  { type:'video', src:'videos/raf.mp4',           link: YTL('MwFC7trjEXM'),
-	    x:84, y:57, z:90,  w:370, h:208, rx:0,  ry:-33, rz:0  },
+	    x:80, y:60, z:85,  w:320, h:180, rx:0,  ry:-26, rz:1  },
 
-	  // ── FLOOR (rx positive = card lies flat on floor) ──
+	  // ── FLOOR ──
 	  { type:'video', src:'videos/esko-annural.mp4', link: YTL('cC47jPDezss'),
-	    x:47, y:73, z:130, w:340, h:191, rx:64, ry:0,   rz:0  },
+	    x:46, y:72, z:140, w:320, h:180, rx:24, ry:0,   rz:0  },
 	  { type:'video', src:'videos/otr-sammy.mp4',    link: YTL('sAHFb_rgcFQ'),
-	    x:63, y:76, z:110, w:290, h:163, rx:60, ry:-12, rz:0  },
+	    x:63, y:75, z:115, w:270, h:152, rx:22, ry:-10, rz:0  },
 	  { type:'video', src:'videos/otr-chani.mp4',    link: YTL('Tjc6sgmFi6Q'),
-	    x:26, y:78, z:100, w:310, h:174, rx:62, ry:16,  rz:0  },
+	    x:25, y:76, z:105, w:290, h:163, rx:24, ry:14,  rz:0  },
 	];
 
 	const field = document.getElementById('mediaField');

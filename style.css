@@ -35,7 +35,7 @@
   --thumb-radius: 14px;
 
   /* header controls */
-  --header-bg: rgba(0, 0, 0, 1);
+  --header-bg: rgba(0, 0, 0, 0.75);
   --header-border: rgba(255,255,255,0.08);
   --header-blur: 0px;
   --header-padding-y: 16px;

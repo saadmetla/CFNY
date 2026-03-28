@@ -221,38 +221,87 @@
 	  display: flex;
 	  flex-direction: column;
 	  align-items: center;
-	  gap: 12px;
+	  gap: 10px;
 	  text-align: center;
+	  opacity: 0;
+	  transition: opacity .9s ease .5s;
 	}
+	.center-brand.visible { opacity: 1; }
 
 	.center-brand img {
 	  width: min(var(--logo-width), 52vw);
 	  max-width: 100%;
-	  filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+	  filter: drop-shadow(0 8px 28px rgba(0,0,0,.65));
 	}
 
-	.enter-btn {
-	  appearance: none;
-	  border: 0;
+	.brand-tagline {
+	  margin: 4px 0 8px;
+	  color: rgba(255,255,255,.55);
+	  font-size: clamp(9px, 1vw, 12px);
+	  font-weight: 700;
+	  letter-spacing: .25em;
+	  text-transform: uppercase;
+	  font-family: Arial, Helvetica, sans-serif;
+	}
+
+	.cta-row {
+	  display: flex;
+	  align-items: center;
+	  gap: 12px;
+	  flex-wrap: wrap;
+	  justify-content: center;
+	}
+
+	/* Primary CTA — drives leads to contact */
+	.btn-primary {
+	  display: inline-block;
+	  text-decoration: none;
 	  border-radius: 999px;
-	  padding: 9px 28px 10px;
+	  padding: 11px 30px 12px;
 	  background: #bfc2c8;
 	  color: #0c0c0c;
+	  font-family: Arial, Helvetica, sans-serif;
 	  font-weight: 800;
-	  letter-spacing: .08em;
-	  font-size: clamp(14px, 1.4vw, 18px);
+	  letter-spacing: .09em;
+	  font-size: clamp(11px, 1.2vw, 14px);
 	  text-transform: uppercase;
-	  cursor: pointer;
-	  box-shadow: 0 8px 20px rgba(0,0,0,.35);
-	  transition: transform .18s ease, filter .18s ease;
-	  text-decoration: none;
-	  display: inline-block;
+	  box-shadow: 0 8px 24px rgba(0,0,0,.45);
+	  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+	}
+	.btn-primary:hover {
+	  transform: translateY(-2px) scale(1.03);
+	  filter: brightness(1.06);
+	  box-shadow: 0 14px 34px rgba(0,0,0,.5);
 	}
 
-	.enter-btn:hover {
-	  transform: translateY(-1px) scale(1.02);
-	  filter: brightness(1.03);
+	/* Secondary CTA — view work */
+	.btn-secondary {
+	  display: inline-block;
+	  text-decoration: none;
+	  border-radius: 999px;
+	  padding: 10px 26px 11px;
+	  background: transparent;
+	  color: rgba(255,255,255,.8);
+	  border: 1px solid rgba(255,255,255,.3);
+	  font-family: Arial, Helvetica, sans-serif;
+	  font-weight: 700;
+	  letter-spacing: .09em;
+	  font-size: clamp(11px, 1.2vw, 14px);
+	  text-transform: uppercase;
+	  transition: transform .16s ease, border-color .16s ease, color .16s ease;
 	}
+	.btn-secondary:hover {
+	  transform: translateY(-2px);
+	  border-color: rgba(255,255,255,.65);
+	  color: #fff;
+	}
+
+	/* card entrance fade-in */
+	.media-card {
+	  opacity: 0;
+	  transition: opacity .6s ease, border-color .2s ease, box-shadow .2s ease;
+	}
+	.media-card.visible { opacity: 1; }
 
 	/* =========================
 	   SOCIAL / ICONS
@@ -409,18 +458,16 @@
 	  <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube">
 	</a>
 
-	<a href="contact.html"
-	   class="floating-icon icon-envelope"
-	   aria-label="Contact">
-	  <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Contact">
-	</a>
-
-	<div class="center-brand">
+	<div class="center-brand" id="centerBrand">
 	  <img
 		src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
 		alt="Capital Flight NY"
 	  >
-	  <a href="production.html" class="enter-btn">Enter</a>
+	  <p class="brand-tagline">Production · Marketing · Label · New York</p>
+	  <div class="cta-row">
+		<a href="contact.html"    class="btn-primary">Work With Us</a>
+		<a href="production.html" class="btn-secondary">View Our Work</a>
+	  </div>
 	</div>
 
 	<div class="scanlines"></div>
@@ -645,10 +692,32 @@
 	renderMedia();
 	buildDepthLines();
 
-	/* gentle drift — identical to original splash.html */
+	/* ── Staggered card entrance ── */
+	document.querySelectorAll('.media-card').forEach((card, i) => {
+	  setTimeout(() => card.classList.add('visible'), 80 + i * 90);
+	});
+	/* Center brand entrance */
+	setTimeout(() => document.getElementById('centerBrand').classList.add('visible'), 600);
+
+	/* ── Mouse parallax — perspective-origin shifts with cursor ── */
+	const stage = document.querySelector('.tunnel-stage');
+	let targetPX = 50, targetPY = 50, curPX = 50, curPY = 50;
+	document.addEventListener('mousemove', e => {
+	  targetPX = 50 + (e.clientX / window.innerWidth  - 0.5) * 7;
+	  targetPY = 50 + (e.clientY / window.innerHeight - 0.5) * 7;
+	}, { passive: true });
+
+	/* ── Float animation + parallax lerp ── */
 	let t = 0;
 	function animate() {
 	  t += 0.01;
+
+	  /* smooth parallax */
+	  curPX += (targetPX - curPX) * 0.04;
+	  curPY += (targetPY - curPY) * 0.04;
+	  stage.style.perspectiveOrigin = `${curPX}% ${curPY}%`;
+
+	  /* card drift */
 	  document.querySelectorAll('.media-card').forEach((card, i) => {
 		const z  = parseFloat(card.dataset.z);
 		const rx = parseFloat(card.dataset.rx);

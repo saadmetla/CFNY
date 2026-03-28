@@ -1293,7 +1293,11 @@ body.is-leaving {
 
 @media (pointer: fine) {
   html { cursor: none; }
-  * { cursor: none !important; }
+  a, button, input, textarea, select, label,
+  [role="button"], .project-card, .media-card,
+  .home-link, .enter-btn, .youtube-card {
+    cursor: none !important;
+  }
 }
 
 .cursor-dot {

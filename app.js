@@ -342,9 +342,12 @@ function countUp(el) {
 
   let mx = -200, my = -200, rx = -200, ry = -200;
 
-  document.addEventListener('mousemove', e => {
+  document.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
     mx = e.clientX;
     my = e.clientY;
+    dot.classList.add('is-visible');
+    ring.classList.add('is-visible');
   }, { passive: true });
 
   const HOVER = 'a, button, .project-card, .media-card, .home-link, input, textarea, select, .enter-btn';
@@ -363,12 +366,6 @@ function countUp(el) {
     dot.classList.add('is-visible');
     ring.classList.add('is-visible');
   });
-  // Show on first move
-  document.addEventListener('mousemove', function show() {
-    dot.classList.add('is-visible');
-    ring.classList.add('is-visible');
-    document.removeEventListener('mousemove', show);
-  }, { passive: true });
 
   function tick() {
     dot.style.transform  = `translate(${mx - 3}px, ${my - 3}px)`;

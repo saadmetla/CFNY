@@ -276,7 +276,39 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initStatCounters();
   initViewCounts();
+  initMobileMenuExtras();
 });
+
+function initMobileMenuExtras() {
+  const panel = document.querySelector('.mobile-menu-panel');
+  if (!panel) return;
+
+  // Logo
+  const logo = document.createElement('img');
+  logo.src = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
+  logo.alt = 'Capital Flight';
+  logo.className = 'mobile-menu-logo';
+  panel.insertBefore(logo, panel.querySelector('nav'));
+
+  // Social icons
+  const socials = document.createElement('div');
+  socials.className = 'mobile-menu-socials';
+  socials.innerHTML = `
+    <a href="https://www.instagram.com/capitalflightny/" target="_blank" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@CapitalFlightNY" target="_blank" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/><polygon points="10,9 16,12 10,15" fill="currentColor"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/company/capital-flight-ny" target="_blank" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/><rect x="6.5" y="10" width="2.5" height="7" fill="currentColor"/><circle cx="7.75" cy="7.5" r="1.3" fill="currentColor"/><path d="M12 10h2.2v1.2c.5-.8 1.4-1.4 2.8-1.4 2 0 3 1.2 3 3.5V17h-2.6v-3.3c0-1-.3-1.7-1.3-1.7s-1.6.7-1.6 1.7V17H12z" fill="currentColor"/></svg>
+    </a>
+    <a href="mailto:production@capitalflightny.com" aria-label="Email">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    </a>
+  `;
+  panel.appendChild(socials);
+}
 
 /* =============================================
    LIVE VIEW COUNTS (via public Invidious API)

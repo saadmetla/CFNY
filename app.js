@@ -10,6 +10,7 @@ const videoData = {
     { year: '2024', title: 'LOE SHIMMY & CASH COBAIN', subtitle: 'Confession', youtubeUrl: 'https://www.youtube.com/watch?v=iCCYnAwPcvI' },
     { year: '2024', title: 'SHEROZ & HENNY', subtitle: 'YAAR JIGRI', youtubeUrl: 'https://www.youtube.com/watch?v=vrZiFXlE-Vg' },
     { year: '2024', title: 'HEEMS', subtitle: 'Rakhi', youtubeUrl: 'https://www.youtube.com/watch?v=3d_cGjvZNTA' },
+    { year: '2024', title: 'AHMED KHAN FT PDNY', subtitle: 'Attention', youtubeUrl: 'https://www.youtube.com/watch?v=gd4__EYRXOg' },
 
     { year: '2023', title: 'RAF SAPERRA', subtitle: 'Ranjha', youtubeUrl: 'https://www.youtube.com/watch?v=MwFC7trjEXM' },
     { year: '2023', title: 'SHEROZ, HENNY, G HOUR', subtitle: 'Mission', youtubeUrl: 'https://www.youtube.com/watch?v=-Zc135mSu7I' },

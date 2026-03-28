@@ -341,14 +341,38 @@ function countUp(el) {
   document.body.append(dot, ring);
 
   let mx = -200, my = -200, rx = -200, ry = -200;
+  let usingCustom = false;
 
+  function enableCustom() {
+    if (usingCustom) return;
+    usingCustom = true;
+    document.documentElement.style.cursor = 'none';
+    dot.classList.add('is-visible');
+    ring.classList.add('is-visible');
+  }
+
+  function enableNative() {
+    if (!usingCustom) return;
+    usingCustom = false;
+    document.documentElement.style.cursor = '';
+    dot.classList.remove('is-visible');
+    ring.classList.remove('is-visible');
+  }
+
+  // Switch to custom cursor when mouse moves
   document.addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse') return;
     mx = e.clientX;
     my = e.clientY;
-    dot.classList.add('is-visible');
-    ring.classList.add('is-visible');
+    enableCustom();
   }, { passive: true });
+
+  // Restore native cursor while scrolling (mouse isn't moving)
+  document.addEventListener('scroll', enableNative, { passive: true });
+
+  // Hide when leaving window, restore on entry
+  document.addEventListener('mouseleave', enableNative);
+  document.addEventListener('mouseenter', enableCustom);
 
   const HOVER = 'a, button, .project-card, .media-card, .home-link, input, textarea, select, .enter-btn';
 
@@ -357,14 +381,6 @@ function countUp(el) {
   });
   document.addEventListener('mouseout', e => {
     if (e.target.closest(HOVER)) ring.classList.remove('is-hovering');
-  });
-  document.addEventListener('mouseleave', () => {
-    dot.classList.remove('is-visible');
-    ring.classList.remove('is-visible');
-  });
-  document.addEventListener('mouseenter', () => {
-    dot.classList.add('is-visible');
-    ring.classList.add('is-visible');
   });
 
   function tick() {

@@ -1291,14 +1291,7 @@ body.is-leaving {
    CUSTOM CURSOR (desktop / fine pointer only)
 ================================================== */
 
-@media (pointer: fine) {
-  html { cursor: none; }
-  a, button, input, textarea, select, label,
-  [role="button"], .project-card, .media-card,
-  .home-link, .enter-btn, .youtube-card {
-    cursor: none !important;
-  }
-}
+/* cursor: none is applied dynamically via JS only when mouse is active */
 
 .cursor-dot {
   position: fixed;

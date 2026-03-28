@@ -76,7 +76,7 @@ function createCard(item) {
   const embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`;
 
   return `
-  <div class="project-card youtube-card" data-embed="${embed}">
+  <div class="project-card youtube-card reveal" data-embed="${embed}">
     <div class="project-thumb">
       <img src="${thumb}" loading="lazy" alt="${item.title}">
       <div class="project-overlay">
@@ -107,6 +107,9 @@ function renderPage(pageKey) {
 
     section.style.display = '';
     grid.innerHTML = matches.map(createCard).join('');
+    grid.querySelectorAll('.project-card').forEach((card, idx) => {
+      card.style.transitionDelay = `${idx * 65}ms`;
+    });
   });
 
   bindCards();
@@ -266,4 +269,135 @@ document.addEventListener('DOMContentLoaded', () => {
       closeMobileMenu();
     }
   });
+
+  initScrollReveal();
+  initStatCounters();
 });
+
+/* =============================================
+   SCROLL REVEAL
+============================================= */
+function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+  els.forEach(el => io.observe(el));
+}
+
+/* =============================================
+   STAT COUNTERS
+============================================= */
+function initStatCounters() {
+  const stats = document.querySelectorAll('.stat-number[data-target]');
+  if (!stats.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        countUp(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  stats.forEach(el => io.observe(el));
+}
+
+function countUp(el) {
+  const target   = parseFloat(el.dataset.target);
+  const suffix   = el.dataset.suffix || '';
+  const duration = 1600;
+  const start    = performance.now();
+
+  function step(now) {
+    const p    = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val  = target * ease;
+    el.textContent = (Number.isInteger(target) ? Math.round(val) : val.toFixed(1)) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* =============================================
+   CUSTOM CURSOR
+============================================= */
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const dot  = document.createElement('div');
+  const ring = document.createElement('div');
+  dot.className  = 'cursor-dot';
+  ring.className = 'cursor-ring';
+  document.body.append(dot, ring);
+
+  let mx = -200, my = -200, rx = -200, ry = -200;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  const HOVER = 'a, button, .project-card, .media-card, .home-link, input, textarea, select, .enter-btn';
+
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(HOVER)) ring.classList.add('is-hovering');
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(HOVER)) ring.classList.remove('is-hovering');
+  });
+  document.addEventListener('mouseleave', () => {
+    dot.classList.remove('is-visible');
+    ring.classList.remove('is-visible');
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.classList.add('is-visible');
+    ring.classList.add('is-visible');
+  });
+  // Show on first move
+  document.addEventListener('mousemove', function show() {
+    dot.classList.add('is-visible');
+    ring.classList.add('is-visible');
+    document.removeEventListener('mousemove', show);
+  }, { passive: true });
+
+  function tick() {
+    dot.style.transform  = `translate(${mx - 3}px, ${my - 3}px)`;
+    rx += (mx - rx) * 0.13;
+    ry += (my - ry) * 0.13;
+    ring.style.transform = `translate(${rx - 17}px, ${ry - 17}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* =============================================
+   PAGE TRANSITIONS
+============================================= */
+(function () {
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (
+      !href ||
+      href.startsWith('http') ||
+      href.startsWith('#') ||
+      href.startsWith('mailto') ||
+      href.startsWith('tel') ||
+      link.target === '_blank'
+    ) return;
+    e.preventDefault();
+    document.body.classList.add('is-leaving');
+    setTimeout(() => { window.location.href = href; }, 340);
+  });
+})();

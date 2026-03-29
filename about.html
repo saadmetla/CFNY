@@ -23,16 +23,16 @@
     /* Pakistan flag — sits behind text, pivots from left like a flagpole */
     .saad-flag {
       position: absolute;
-      inset: -5px -14px;
-      border-radius: 4px;
+      inset: -5px -12px -5px 0;
+      border-radius: 3px;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
       z-index: -1;
       transform-origin: left center;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.2s ease;
       background: linear-gradient(to right, #fff 22%, #01411C 22%);
-      box-shadow: 0 3px 14px rgba(0,0,0,0.6);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.55);
     }
 
     /* Scrolling diagonal highlight bars — sunlight rippling across waving cloth */
@@ -43,13 +43,13 @@
       width: 200%;
       height: 200%;
       background: repeating-linear-gradient(
-        80deg,
+        75deg,
         transparent 0px,
-        transparent 20px,
-        rgba(255,255,255,0.18) 20px,
-        rgba(255,255,255,0.18) 22px
+        transparent 14px,
+        rgba(255,255,255,0.22) 14px,
+        rgba(255,255,255,0.22) 16px
       );
-      animation: flagSheen 0.7s linear infinite;
+      animation: flagSheen 0.35s linear infinite;
       pointer-events: none;
     }
 
@@ -67,8 +67,8 @@
     }
 
     .saad-link:hover .saad-flag {
-      opacity: 0.94;
-      animation: pkWave 1.8s ease-in-out infinite;
+      opacity: 0.95;
+      animation: pkWave 1s linear infinite;
     }
 
     /* Text stays white and readable */
@@ -80,27 +80,33 @@
       text-shadow: 0 1px 6px rgba(0,0,0,0.7);
     }
 
-    /* Sheen scroll — gives the ripple-on-cloth look */
+    /* Sheen scroll — light rippling across cloth */
     @keyframes flagSheen {
-      0%   { transform: translateX(0px); }
-      100% { transform: translateX(22px); }
+      0%   { transform: translateX(-16px); }
+      100% { transform: translateX(32px); }
     }
 
     /*
-     * Real flag physics: pole anchored at left (transform-origin: left center)
-     * Free end (right) flaps with larger amplitude.
-     * rotateY gives 3D perspective depth. skewX adds horizontal wave crease.
-     * Asymmetric timing (fast snap forward, slow drift back) = cloth inertia.
+     * Cloth wave: pole anchored left, free end flaps right.
+     * skewX simulates the wave crest travelling through the fabric.
+     * scaleX contracts slightly as cloth bends away, expands as it returns.
+     * rotateY adds 3D depth so it reads as volume, not a flat card flip.
+     * Two full wave cycles per second — matches realistic wind-blown cloth.
      */
     @keyframes pkWave {
-      0%   { transform: perspective(350px) rotateY(0deg)   skewX(0deg); }
-      15%  { transform: perspective(350px) rotateY(9deg)   skewX(-1.8deg); }
-      28%  { transform: perspective(350px) rotateY(2deg)   skewX(-0.5deg); }
-      42%  { transform: perspective(350px) rotateY(8deg)   skewX(-1.5deg); }
-      58%  { transform: perspective(350px) rotateY(1deg)   skewX(-0.3deg); }
-      72%  { transform: perspective(350px) rotateY(7deg)   skewX(-1.2deg); }
-      86%  { transform: perspective(350px) rotateY(2deg)   skewX(-0.4deg); }
-      100% { transform: perspective(350px) rotateY(0deg)   skewX(0deg); }
+      0%   { transform: perspective(280px) rotateY(0deg)   skewX(0deg)    scaleX(1);    }
+      8%   { transform: perspective(280px) rotateY(-5deg)  skewX(2.5deg)  scaleX(0.98); }
+      17%  { transform: perspective(280px) rotateY(-11deg) skewX(5deg)    scaleX(0.95); }
+      25%  { transform: perspective(280px) rotateY(-7deg)  skewX(3deg)    scaleX(0.97); }
+      33%  { transform: perspective(280px) rotateY(0deg)   skewX(0deg)    scaleX(1);    }
+      42%  { transform: perspective(280px) rotateY(6deg)   skewX(-2.5deg) scaleX(0.98); }
+      50%  { transform: perspective(280px) rotateY(12deg)  skewX(-5deg)   scaleX(0.95); }
+      58%  { transform: perspective(280px) rotateY(7deg)   skewX(-3deg)   scaleX(0.97); }
+      66%  { transform: perspective(280px) rotateY(0deg)   skewX(0deg)    scaleX(1);    }
+      75%  { transform: perspective(280px) rotateY(-5deg)  skewX(2.5deg)  scaleX(0.98); }
+      83%  { transform: perspective(280px) rotateY(-11deg) skewX(5deg)    scaleX(0.95); }
+      91%  { transform: perspective(280px) rotateY(-6deg)  skewX(2.5deg)  scaleX(0.97); }
+      100% { transform: perspective(280px) rotateY(0deg)   skewX(0deg)    scaleX(1);    }
     }
   </style>
 </head>

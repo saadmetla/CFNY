@@ -65,22 +65,29 @@
         );
       background-size: 100% 400%, 200% 200%;
       background-position: 0% var(--sy, 50%), var(--sx, 50%) var(--sy, 50%);
-      filter: brightness(1.25) contrast(3) saturate(0.75);
-      mix-blend-mode: overlay;
+      filter: brightness(0.85) contrast(1.4) saturate(0.6);
+      mix-blend-mode: color-dodge;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
       border-radius: inherit;
       z-index: 2;
     }
+    /* Streak — thin directional highlight that sweeps with cursor angle */
     .holo-glare {
       position: absolute;
       inset: 0;
-      background: radial-gradient(
-        farthest-corner circle at var(--px, 50%) var(--py, 50%),
-        rgba(255,255,255,0.8) 10%, rgba(255,255,255,0.4) 45%, rgba(0,0,0,0.1) 90%
+      background: linear-gradient(
+        calc(var(--pfl, 0.5) * 160deg + 10deg),
+        transparent 25%,
+        rgba(255,255,255,0.12) 44%,
+        rgba(255,255,255,0.55) 49%,
+        rgba(255,255,255,0.65) 50%,
+        rgba(255,255,255,0.55) 51%,
+        rgba(255,255,255,0.12) 56%,
+        transparent 75%
       );
-      mix-blend-mode: overlay;
+      mix-blend-mode: screen;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
@@ -101,9 +108,9 @@
     }
 
     /* Card active state */
-    .card.is-hovered .holo-shine { opacity: 0.72; }
-    .card.is-hovered .holo-glare { opacity: 0.35; }
-    .card.is-hovered .cf-logo   { opacity: 0.42; }
+    .card.is-hovered .holo-shine { opacity: 0.38; }
+    .card.is-hovered .holo-glare { opacity: 1; }
+    .card.is-hovered .cf-logo   { opacity: 0.38; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
@@ -144,9 +151,9 @@
       border-radius: 14px;
     }
     /* Lightbox active holo */
-    .lb-card.is-hovered .holo-shine { opacity: 0.8; }
-    .lb-card.is-hovered .holo-glare { opacity: 0.4; }
-    .lb-card.is-hovered .cf-logo   { opacity: 0.48; }
+    .lb-card.is-hovered .holo-shine { opacity: 0.42; }
+    .lb-card.is-hovered .holo-glare { opacity: 1; }
+    .lb-card.is-hovered .cf-logo   { opacity: 0.44; }
 
     .giphy-lightbox-close {
       position: fixed;

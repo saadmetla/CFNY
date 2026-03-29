@@ -35,7 +35,6 @@
 
     /* ── Card — no forced square, natural ratio ── */
     .card {
-      --card-opacity: 0;
       --pointer-x: 50%;
       --pointer-y: 50%;
       --pointer-from-left: 0.5;
@@ -50,7 +49,10 @@
       cursor: pointer;
       position: relative;
       box-shadow: 0 4px 16px rgba(0,0,0,0.45);
-      transition: transform 0.12s ease, box-shadow 0.25s ease;
+      /* always GPU-composited so GIFs never reset */
+      transform: translateZ(0);
+      will-change: transform;
+      transition: box-shadow 0.25s ease;
     }
 
     .card:hover {
@@ -60,11 +62,11 @@
 
     .card img {
       width: 100%;
-      height: auto;         /* natural portrait ratio */
+      height: auto;
       display: block;
     }
 
-    /* ── Holofoil — subtler ── */
+    /* ── Holofoil shine ── */
     .card__shine {
       position: absolute;
       inset: 0;
@@ -77,7 +79,7 @@
           rgba( 33,233,133, 0.55) 33%,
           rgba( 13,189,233, 0.55) 50%,
           rgba(201, 41,241, 0.55) 66%,
-          rgba(248, 14, 53, 0.55) 83%,
+          rgba(248, 14,  53, 0.55) 83%,
           rgba(238,223, 16, 0.55) 100%
         );
       background-size: 200% 200%;
@@ -106,21 +108,43 @@
       z-index: 3;
     }
 
-    .card:hover .card__shine { opacity: 0.3; }
+    /* ── CF logo stamp in holofoil ── */
+    .card__logo {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      -webkit-mask: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png') center/35% no-repeat;
+      mask: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png') center/35% no-repeat;
+      background-image:
+        linear-gradient(
+          calc(var(--pointer-from-left) * 360deg + 80deg),
+          #f80e35 0%, #eedf10 20%, #21e985 40%,
+          #0dbde9 60%, #c929f1 80%, #f80e35 100%
+        );
+      background-size: 200% 200%;
+      background-position: var(--shine-x) var(--shine-y);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .card:hover .card__shine { opacity: 0.28; }
     .card:hover .card__glare { opacity: 1; }
+    .card:hover .card__logo  { opacity: 0.55; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.92);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2000;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.22s ease;
     }
 
     .giphy-lightbox.is-open {
@@ -129,30 +153,29 @@
     }
 
     .giphy-lightbox-inner {
-      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      max-width: 92vw;
-      max-height: 88vh;
     }
 
     .giphy-lightbox img {
       display: block;
-      max-width: 92vw;
-      max-height: 88vh;
+      max-width: 90vw;
+      max-height: 85vh;
       width: auto;
       height: auto;
       border-radius: 12px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.8);
-      transform: scale(0.88);
+      /* start small+invisible, animate to natural size */
+      transform: scale(0.82);
       opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+      transition: none;
     }
 
     .giphy-lightbox.is-open img {
       transform: scale(1);
       opacity: 1;
+      transition: transform 0.4s cubic-bezier(0.34,1.4,0.64,1), opacity 0.22s ease;
     }
 
     .giphy-lightbox-close {
@@ -385,7 +408,10 @@
         const glare = document.createElement('div');
         glare.className = 'card__glare';
 
-        card.append(el, shine, glare);
+        const logo = document.createElement('div');
+        logo.className = 'card__logo';
+
+        card.append(el, shine, glare, logo);
         attachHolo(card);
 
         // Lightbox: show original at natural size
@@ -396,7 +422,7 @@
       grid.appendChild(frag);
     }
 
-    /* ── Subtle holofoil tilt ── */
+    /* ── Holofoil tilt — stays translateZ(0) so GIFs never reset ── */
     function attachHolo(card) {
       card.addEventListener('mousemove', e => {
         const r  = card.getBoundingClientRect();
@@ -404,36 +430,32 @@
         const y  = e.clientY - r.top;
         const fl = x / r.width;
         const ft = y / r.height;
-        const rx = -(ft - 0.5) * 12;   // max ±6 deg (was 20)
-        const ry =  (fl - 0.5) * 12;
+        const rx = -(ft - 0.5) * 10;
+        const ry =  (fl - 0.5) * 10;
 
-        card.style.setProperty('--pointer-x',        `${x}px`);
-        card.style.setProperty('--pointer-y',        `${y}px`);
+        card.style.setProperty('--pointer-x',         `${x}px`);
+        card.style.setProperty('--pointer-y',         `${y}px`);
         card.style.setProperty('--pointer-from-left', fl);
-        card.style.setProperty('--shine-x',          `${fl * 100}%`);
-        card.style.setProperty('--shine-y',          `${ft * 100}%`);
-        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+        card.style.setProperty('--shine-x',           `${fl * 100}%`);
+        card.style.setProperty('--shine-y',           `${ft * 100}%`);
+        // translateZ(0) keeps composite layer — GIFs keep playing
+        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03) translateZ(0)`;
       });
 
       card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
+        // return to base composited state, never remove the layer
+        card.style.transform = 'translateZ(0)';
       });
     }
 
-    /* ── Lightbox ── */
+    /* ── Lightbox — let CSS handle the animation ── */
     function openLightbox(src, alt) {
+      // clear is-open first so img resets to scale(0.82)/opacity:0 via CSS
+      lightbox.classList.remove('is-open');
       lbImg.src = src;
       lbImg.alt = alt;
-      // Reset animation then open
-      lbImg.style.transition = 'none';
-      lbImg.style.transform  = 'scale(0.88)';
-      lbImg.style.opacity    = '0';
-      lightbox.classList.add('is-open');
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          lbImg.style.transition = '';
-        });
-      });
+      // one frame later add is-open so CSS transition fires
+      requestAnimationFrame(() => lightbox.classList.add('is-open'));
     }
 
     function closeLightbox() {

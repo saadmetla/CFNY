@@ -11,39 +11,66 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .saad-link {
+      position: relative;
+      display: inline-block;
       text-decoration: underline;
       text-underline-offset: 3px;
       text-decoration-color: rgba(255,255,255,0.3);
       white-space: nowrap;
+      isolation: isolate;
     }
-    /* White fills into the letters like a crescent sweep */
-    .saad-fill {
-      background: linear-gradient(90deg, #fff 50%, rgba(255,255,255,0.6) 50%);
-      background-size: 202% 100%;
-      background-position: 100% 0;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transition: background-position 0.55s cubic-bezier(0.4,0,0.2,1);
-    }
-    .saad-link:hover .saad-fill {
-      background-position: 0% 0;
-    }
-    /* Crescent slides in after the white fill completes */
-    .pk-emblem {
-      display: inline-block;
-      margin-left: 4px;
-      font-size: 1em;
-      -webkit-text-fill-color: initial;
-      color: #fff;
+
+    /* The flag sits behind the text */
+    .saad-flag {
+      position: absolute;
+      inset: -3px -8px;
+      border-radius: 3px;
+      overflow: hidden;
       opacity: 0;
-      transform: translateX(-6px);
-      transition: opacity 0.3s ease 0.35s, transform 0.3s ease 0.35s;
       pointer-events: none;
+      z-index: -1;
+      transform-origin: left center;
+      transition: opacity 0.35s ease;
+      /* Pakistan flag: white stripe left ~22%, dark green rest */
+      background: linear-gradient(to right, #fff 22%, #01411C 22%);
     }
-    .saad-link:hover .pk-emblem {
+
+    /* Crescent + star on the green portion */
+    .saad-flag::after {
+      content: '☪';
+      position: absolute;
+      top: 50%;
+      left: 62%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 0.72em;
+      line-height: 1;
+    }
+
+    .saad-link:hover .saad-flag {
       opacity: 1;
-      transform: translateX(0);
+      animation: pkWave 1.8s ease-in-out infinite;
+    }
+
+    /* Text stays white and readable over the flag */
+    .saad-fill {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      -webkit-text-fill-color: #fff;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.55);
+    }
+
+    /* Flag wave — skewY ripple from left to right */
+    @keyframes pkWave {
+      0%   { transform: skewY(0deg)    scaleX(1);    }
+      12%  { transform: skewY(1.4deg)  scaleX(0.99); }
+      28%  { transform: skewY(-1.2deg) scaleX(1.01); }
+      44%  { transform: skewY(1.6deg)  scaleX(0.98); }
+      60%  { transform: skewY(-1deg)   scaleX(1.01); }
+      76%  { transform: skewY(1.1deg)  scaleX(0.99); }
+      90%  { transform: skewY(-0.6deg) scaleX(1);    }
+      100% { transform: skewY(0deg)    scaleX(1);    }
     }
   </style>
 </head>
@@ -140,7 +167,7 @@
         <section class="about-copy-wrap" aria-label="About text">
           <p class="about-copy">
             Capital Flight is a New York-based creative agency and record label founded by
-            director and producer <a href="https://saadmetla.com/about.html" target="_blank" rel="noopener noreferrer" class="saad-link"><span class="saad-fill">Saad Metla</span><span class="pk-emblem" aria-hidden="true">☪</span></a>. We deliver production, marketing, and label
+            director and producer <a href="https://saadmetla.com/about.html" target="_blank" rel="noopener noreferrer" class="saad-link"><span class="saad-flag" aria-hidden="true"></span><span class="saad-fill">Saad Metla</span></a>. We deliver production, marketing, and label
             services for artists and brands pushing culture forward. Bridging East and West,
             our work has driven 500+ million impressions across major platforms. We focus on
             hard results, real growth, and long-term impact, building movements that travel,

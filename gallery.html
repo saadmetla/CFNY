@@ -88,27 +88,26 @@
       z-index: 3;
     }
 
-    /* ── Watermark tile — CSS background-image repeat (clean, no DOM spam) ── */
-    .card-wm {
+    /* ── CF logo overlays ── */
+    .cf-logo {
       position: absolute;
-      inset: 0;
-      background-image: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png');
-      background-size: 24% auto;
-      background-repeat: repeat;
-      opacity: 0.13;
+      height: auto;
       mix-blend-mode: screen;
-      filter: brightness(4);
+      opacity: 0.13;
+      transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 4;
-      border-radius: inherit;
+      filter: brightness(4) drop-shadow(0 0 6px rgba(255,255,255,0.4));
     }
-
     /* Card active state */
-    .card.is-hovered .holo-shine { opacity: 0.18; }
-    .card.is-hovered .holo-glare { opacity: 0.22; }
-    .card.is-hovered .card-wm   { opacity: 0.38; }
+    .card.is-hovered .holo-shine  { opacity: 0.18; }
+    .card.is-hovered .holo-glare  { opacity: 0.22; }
+    .card.is-hovered .cf-logo     { opacity: 0.42; }
     .lb-card.is-hovered .holo-shine { opacity: 0.2; }
     .lb-card.is-hovered .holo-glare { opacity: 0.25; }
+    /* Lightbox logos hidden at rest, brighten on hover tilt */
+    .lb-card .cf-logo             { opacity: 0; }
+    .lb-card.is-hovered .cf-logo  { opacity: 0.42; }
 
     /* ── Giphy stats overlay ── */
     .giphy-stats {
@@ -250,7 +249,6 @@
       <img src="" alt="" id="giphyLightboxImg" style="display:block;max-width:88vw;max-height:82vh;border-radius:14px;">
       <div class="holo-shine" id="lbShine"></div>
       <div class="holo-glare" id="lbGlare"></div>
-      <div class="card-wm"></div>
     </div>
   </div>
 
@@ -357,14 +355,26 @@
     var GIPHY_API_KEY = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
     var giphyStats = {};  // id → { title, username }
 
-    function applyStatsToOverlay(el, data) {
-      var views = data.views || (data.analytics && data.analytics.onload && data.analytics.onload.count);
-      if (!views) return;
-      var formatted = Number(views).toLocaleString();
-      el.innerHTML = '<span class="gs-title">' + formatted + ' views</span>';
+    function formatNum(n) {
+      n = Number(n);
+      if (isNaN(n) || n <= 0) return null;
+      if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+      return String(n);
     }
 
-    // Batch-fetch in two rounds (API max ~50 IDs per call)
+    function applyStatsToOverlay(el, data) {
+      // Try every field Giphy might expose for view/send counts
+      var raw = data.views
+        || data.view_count
+        || (data.analytics && data.analytics.onload && data.analytics.onload.count)
+        || (data.user && data.user.view_count);
+      var num = formatNum(raw);
+      if (!num) return;
+      el.innerHTML = '<span class="gs-title">' + num + ' views</span>';
+    }
+
+    // Batch-fetch metadata; also try individual endpoint for analytics fields
     [GIPHY_IDS.slice(0, 50), GIPHY_IDS.slice(50)].forEach(function(batch) {
       if (!batch.length) return;
       fetch('https://api.giphy.com/v1/gifs?api_key=' + GIPHY_API_KEY + '&ids=' + batch.join(','))
@@ -373,7 +383,6 @@
           if (!json || !json.data) return;
           json.data.forEach(function(gif) {
             giphyStats[gif.id] = gif;
-            // Update any already-rendered overlay for this id
             document.querySelectorAll('[data-giphy-id="' + gif.id + '"]')
               .forEach(function(el) { applyStatsToOverlay(el, gif); });
           });
@@ -393,6 +402,45 @@
         var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
       }
       return arr;
+    }
+
+    /* ── Staggered logo grid — hex-pack, peeks at all 4 edges ── */
+    var EVEN_COLS = [4, 24, 50, 76, 96];
+    var ODD_COLS  = [13, 38, 62, 87];
+    var ROW_YS    = [-8, 10, 26, 42, 58, 74, 90, 108];
+    var SIZE_SCHEMES = [
+      { even: [28, 18, 22, 18, 28], odd: [20, 23, 20, 23] },
+      { even: [26, 20, 24, 20, 26], odd: [22, 20, 22, 20] },
+      { even: [30, 17, 22, 17, 30], odd: [20, 25, 20, 25] },
+      { even: [26, 22, 26, 22, 26], odd: [22, 22, 22, 22] },
+      { even: [28, 18, 20, 18, 28], odd: [21, 24, 21, 24] },
+    ];
+    var ROT_SCHEMES = [
+      { even: [-10, -5, 0, 5, 10], odd: [-7, -2, 3, 8]  },
+      { even: [10, 5, 0, -5, -10], odd: [7, 2, -3, -8]  },
+      { even: [-8, 6, -4, 6, -8],  odd: [5, -7, 5, -7]  },
+      { even: [0, -8, 0, -8, 0],   odd: [-6, 0, -6, 0]  },
+      { even: [6, -6, 12, -6, 6],  odd: [-9, 6, -9, 6]  },
+    ];
+    function attachLogos(container) {
+      var sz  = SIZE_SCHEMES[Math.floor(Math.random() * SIZE_SCHEMES.length)];
+      var rot = ROT_SCHEMES[Math.floor(Math.random() * ROT_SCHEMES.length)];
+      ROW_YS.forEach(function(t, ri) {
+        var even   = (ri % 2 === 0);
+        var cols   = even ? EVEN_COLS : ODD_COLS;
+        var sizes  = even ? sz.even   : sz.odd;
+        var rots   = even ? rot.even  : rot.odd;
+        cols.forEach(function(l, ci) {
+          var logo = document.createElement('img');
+          logo.className = 'cf-logo';
+          logo.src = CF_LOGO;
+          logo.alt = '';
+          logo.setAttribute('aria-hidden', 'true');
+          logo.style.cssText = 'top:' + t + '%;left:' + l + '%;width:' + sizes[ci] +
+            '%;transform:translate(-50%,-50%) rotate(' + rots[ci] + 'deg);';
+          container.appendChild(logo);
+        });
+      });
     }
 
     /* Apply tilt + holo vars to any element with --px/--py/--pfl/--sx/--sy */
@@ -424,10 +472,8 @@
       var glare = document.createElement('div');
       glare.className = 'holo-glare';
 
-      var wm = document.createElement('div');
-      wm.className = 'card-wm';
-
-      card.append(img, shine, glare, wm);
+      card.append(img, shine, glare);
+      attachLogos(card);
 
       // Giphy stats overlay — always rendered, populated once API returns
       var giphyIdMatch = src.match(/giphy\.com\/media\/([^/]+)\//);
@@ -464,6 +510,7 @@
     }
 
     /* ── Lightbox holo + tilt ── */
+    attachLogos(lbCard);
 
     lbCard.addEventListener('mousemove', function(e) {
       var pos = applyHolo(lbCard, e);

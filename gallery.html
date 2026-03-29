@@ -88,12 +88,12 @@
       z-index: 3;
     }
 
-    /* ── CF logo overlay ── */
+    /* ── CF logo overlay — always visible as watermark ── */
     .cf-logo {
       position: absolute;
       height: auto;
       mix-blend-mode: screen;
-      opacity: 0;
+      opacity: 0.14;
       transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 4;
@@ -103,7 +103,9 @@
     /* Card active state */
     .card.is-hovered .holo-shine { opacity: 0.18; }
     .card.is-hovered .holo-glare { opacity: 0.22; }
-    .card.is-hovered .cf-logo   { opacity: 0.35; }
+    .card.is-hovered .cf-logo   { opacity: 0.45; }
+    /* Lightbox watermark */
+    .lb-card.is-hovered .cf-logo { opacity: 0.5; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
@@ -146,7 +148,9 @@
     /* Lightbox active holo */
     .lb-card.is-hovered .holo-shine { opacity: 0.2; }
     .lb-card.is-hovered .holo-glare { opacity: 0.25; }
-    .lb-card.is-hovered .cf-logo   { opacity: 0.4; }
+
+    /* Disable image dragging sitewide */
+    .giphy-grid img, .lb-card img { -webkit-user-drag: none; user-select: none; }
 
     .giphy-lightbox-close {
       position: fixed;
@@ -340,10 +344,10 @@
      * Odd rows:  4 logos, offset half-step.
      * Each card picks a size + rotation scheme at random for variety.
      */
-    var EVEN_COLS = [-5, 24, 50, 76, 105];   // -5 & 105 → logos peek at L/R edges
+    var EVEN_COLS = [-2, 24, 50, 76, 102];   // -2 & 102 → ~40% of logo peeks in from L/R
     var ODD_COLS  = [12, 38, 62, 88];
-    // 7 rows: first & last near top/bottom edge so they clip too
-    var ROW_YS    = [3, 19, 36, 53, 70, 83, 97];
+    // 7 rows: first & last outside card top/bottom so they peek in
+    var ROW_YS    = [-6, 19, 36, 53, 70, 83, 106];
 
     // Size schemes (applied positionally to even cols; odd cols interpolated)
     var SIZE_SCHEMES = [
@@ -484,6 +488,17 @@
     var frag = document.createDocumentFragment();
     shuffle(ALL_SRCS.slice()).forEach(function(src) { frag.appendChild(buildCard(src)); });
     grid.appendChild(frag);
+
+    /* ── Download protection ── */
+    // Block right-click context menu on the gallery and lightbox
+    grid.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    lightbox.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    // Block drag-to-desktop / drag-to-address-bar on all images in gallery
+    document.addEventListener('dragstart', function(e) {
+      if (e.target.tagName === 'IMG' && (grid.contains(e.target) || lightbox.contains(e.target))) {
+        e.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>

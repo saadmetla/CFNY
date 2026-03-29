@@ -11,28 +11,39 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .saad-link {
-      color: inherit;
       text-decoration: underline;
       text-underline-offset: 3px;
-      transition: color 0.3s ease;
+      text-decoration-color: rgba(255,255,255,0.3);
       white-space: nowrap;
     }
-    .saad-link:hover {
-      color: #01411C;
+    /* White fills into the letters like a crescent sweep */
+    .saad-fill {
+      background: linear-gradient(90deg, #fff 50%, rgba(255,255,255,0.6) 50%);
+      background-size: 202% 100%;
+      background-position: 100% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: background-position 0.55s cubic-bezier(0.4,0,0.2,1);
     }
+    .saad-link:hover .saad-fill {
+      background-position: 0% 0;
+    }
+    /* Crescent slides in after the white fill completes */
     .pk-emblem {
       display: inline-block;
       margin-left: 4px;
-      font-size: 1.1em;
-      color: #01411C;
+      font-size: 1em;
+      -webkit-text-fill-color: initial;
+      color: #fff;
       opacity: 0;
-      transform: scale(0.4) rotate(-30deg);
-      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      transform: translateX(-6px);
+      transition: opacity 0.3s ease 0.35s, transform 0.3s ease 0.35s;
       pointer-events: none;
     }
     .saad-link:hover .pk-emblem {
       opacity: 1;
-      transform: scale(1) rotate(0deg);
+      transform: translateX(0);
     }
   </style>
 </head>
@@ -129,7 +140,7 @@
         <section class="about-copy-wrap" aria-label="About text">
           <p class="about-copy">
             Capital Flight is a New York-based creative agency and record label founded by
-            director and producer <a href="https://saadmetla.com/about.html" target="_blank" rel="noopener noreferrer" class="saad-link">Saad Metla<span class="pk-emblem" aria-hidden="true">☪</span></a>. We deliver production, marketing, and label
+            director and producer <a href="https://saadmetla.com/about.html" target="_blank" rel="noopener noreferrer" class="saad-link"><span class="saad-fill">Saad Metla</span><span class="pk-emblem" aria-hidden="true">☪</span></a>. We deliver production, marketing, and label
             services for artists and brands pushing culture forward. Bridging East and West,
             our work has driven 500+ million impressions across major platforms. We focus on
             hard results, real growth, and long-term impact, building movements that travel,

@@ -33,7 +33,7 @@
       padding: 20px 0 24px;
     }
 
-    /* ── Card — no forced square, natural ratio ── */
+    /* ── Card — no transforms, GIFs play exactly as original ── */
     .card {
       --pointer-x: 50%;
       --pointer-y: 50%;
@@ -49,14 +49,11 @@
       cursor: pointer;
       position: relative;
       box-shadow: 0 4px 16px rgba(0,0,0,0.45);
-      /* always GPU-composited so GIFs never reset */
-      transform: translateZ(0);
-      will-change: transform;
       transition: box-shadow 0.25s ease;
     }
 
     .card:hover {
-      box-shadow: 0 10px 32px rgba(0,0,0,0.65), 0 0 16px rgba(255,255,255,0.06);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.65), 0 0 14px rgba(255,255,255,0.06);
       z-index: 10;
     }
 
@@ -66,27 +63,27 @@
       display: block;
     }
 
-    /* ── Holofoil shine ── */
+    /* ── Holofoil color overlay only — no zoom, no distortion ── */
     .card__shine {
       position: absolute;
       inset: 0;
       border-radius: 10px;
-      background-image:
+      background:
         linear-gradient(
           calc(var(--pointer-from-left) * 360deg + 120deg),
-          rgba(248, 14,  53, 0.55) 0%,
-          rgba(238,223, 16, 0.55) 16%,
-          rgba( 33,233,133, 0.55) 33%,
-          rgba( 13,189,233, 0.55) 50%,
-          rgba(201, 41,241, 0.55) 66%,
-          rgba(248, 14,  53, 0.55) 83%,
-          rgba(238,223, 16, 0.55) 100%
+          rgba(248, 14, 53, 0.45) 0%,
+          rgba(238,223,16, 0.45) 16%,
+          rgba(33, 233,133,0.45) 33%,
+          rgba(13, 189,233,0.45) 50%,
+          rgba(201, 41,241,0.45) 66%,
+          rgba(248, 14, 53, 0.45) 83%,
+          rgba(238,223, 16,0.45) 100%
         );
       background-size: 200% 200%;
       background-position: var(--shine-x) var(--shine-y);
       mix-blend-mode: color-dodge;
       opacity: 0;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 2;
     }
@@ -97,41 +94,35 @@
       border-radius: 10px;
       background: radial-gradient(
         circle at var(--pointer-x) var(--pointer-y),
-        rgba(255,255,255,0.22) 0%,
-        rgba(255,255,255,0.06) 40%,
+        rgba(255,255,255,0.2) 0%,
+        rgba(255,255,255,0.05) 40%,
         transparent 70%
       );
       mix-blend-mode: overlay;
       opacity: 0;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 3;
     }
 
-    /* ── CF logo stamp in holofoil ── */
+    /* ── CF logo — img with screen blend so white logo glows ── */
     .card__logo {
       position: absolute;
-      inset: 0;
-      border-radius: 10px;
-      -webkit-mask: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png') center/35% no-repeat;
-      mask: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png') center/35% no-repeat;
-      background-image:
-        linear-gradient(
-          calc(var(--pointer-from-left) * 360deg + 80deg),
-          #f80e35 0%, #eedf10 20%, #21e985 40%,
-          #0dbde9 60%, #c929f1 80%, #f80e35 100%
-        );
-      background-size: 200% 200%;
-      background-position: var(--shine-x) var(--shine-y);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 38%;
+      height: auto;
+      mix-blend-mode: screen;
       opacity: 0;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 4;
+      filter: brightness(3);
     }
 
     .card:hover .card__shine { opacity: 0.28; }
     .card:hover .card__glare { opacity: 1; }
-    .card:hover .card__logo  { opacity: 0.55; }
+    .card:hover .card__logo  { opacity: 0.45; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
@@ -160,22 +151,12 @@
 
     .giphy-lightbox img {
       display: block;
-      max-width: 90vw;
-      max-height: 85vh;
+      max-width: 88vw;
+      max-height: 86vh;
       width: auto;
       height: auto;
       border-radius: 12px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.8);
-      /* start small+invisible, animate to natural size */
-      transform: scale(0.82);
-      opacity: 0;
-      transition: none;
-    }
-
-    .giphy-lightbox.is-open img {
-      transform: scale(1);
-      opacity: 1;
-      transition: transform 0.4s cubic-bezier(0.34,1.4,0.64,1), opacity 0.22s ease;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.85);
     }
 
     .giphy-lightbox-close {
@@ -387,20 +368,23 @@
       loading.style.display = 'none';
     }
 
+    const CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
+
     /* ── Render all cards at once ── */
     function renderAll(gifs) {
       const frag = document.createDocumentFragment();
       gifs.forEach(gif => {
-        const img = gif.images.fixed_width_downsampled || gif.images.fixed_width;
+        // Use fixed_width — full framerate animated GIF, not downsampled
+        const src = gif.images.fixed_width;
         const card = document.createElement('div');
         card.className = 'card';
 
         const el = document.createElement('img');
-        el.src     = img.url;
+        el.src     = src.url;
         el.alt     = gif.title;
         el.loading = 'lazy';
-        el.width   = img.width;
-        el.height  = img.height;   // preserves natural portrait ratio
+        el.width   = src.width;
+        el.height  = src.height;
 
         const shine = document.createElement('div');
         shine.className = 'card__shine';
@@ -408,13 +392,16 @@
         const glare = document.createElement('div');
         glare.className = 'card__glare';
 
-        const logo = document.createElement('div');
+        // Logo as img with mix-blend-mode:screen — white logo glows on hover
+        const logo = document.createElement('img');
         logo.className = 'card__logo';
+        logo.src = CF_LOGO;
+        logo.alt = '';
+        logo.setAttribute('aria-hidden', 'true');
 
         card.append(el, shine, glare, logo);
         attachHolo(card);
 
-        // Lightbox: show original at natural size
         const origUrl = gif.images.original.url;
         card.addEventListener('click', () => openLightbox(origUrl, gif.title));
         frag.appendChild(card);
@@ -422,40 +409,25 @@
       grid.appendChild(frag);
     }
 
-    /* ── Holofoil tilt — stays translateZ(0) so GIFs never reset ── */
+    /* ── Holofoil — color overlay only, zero transforms, GIFs untouched ── */
     function attachHolo(card) {
       card.addEventListener('mousemove', e => {
         const r  = card.getBoundingClientRect();
-        const x  = e.clientX - r.left;
-        const y  = e.clientY - r.top;
-        const fl = x / r.width;
-        const ft = y / r.height;
-        const rx = -(ft - 0.5) * 10;
-        const ry =  (fl - 0.5) * 10;
-
-        card.style.setProperty('--pointer-x',         `${x}px`);
-        card.style.setProperty('--pointer-y',         `${y}px`);
+        const fl = (e.clientX - r.left) / r.width;
+        const ft = (e.clientY - r.top)  / r.height;
+        card.style.setProperty('--pointer-x',         `${(e.clientX - r.left)}px`);
+        card.style.setProperty('--pointer-y',         `${(e.clientY - r.top)}px`);
         card.style.setProperty('--pointer-from-left', fl);
         card.style.setProperty('--shine-x',           `${fl * 100}%`);
         card.style.setProperty('--shine-y',           `${ft * 100}%`);
-        // translateZ(0) keeps composite layer — GIFs keep playing
-        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03) translateZ(0)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        // return to base composited state, never remove the layer
-        card.style.transform = 'translateZ(0)';
       });
     }
 
-    /* ── Lightbox — let CSS handle the animation ── */
+    /* ── Lightbox — simple fade, image at full natural size ── */
     function openLightbox(src, alt) {
-      // clear is-open first so img resets to scale(0.82)/opacity:0 via CSS
-      lightbox.classList.remove('is-open');
       lbImg.src = src;
       lbImg.alt = alt;
-      // one frame later add is-open so CSS transition fires
-      requestAnimationFrame(() => lightbox.classList.add('is-open'));
+      lightbox.classList.add('is-open');
     }
 
     function closeLightbox() {

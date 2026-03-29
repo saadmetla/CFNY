@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capital Flight — Gallery</title>
+  <title>Capital Flight &#x2014; Gallery</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
+
   <style>
-    /* ── Masonry grid ── */
     .giphy-grid {
       columns: 4;
       column-gap: 14px;
@@ -19,11 +18,11 @@
       max-width: 1200px;
       margin: 0 auto;
     }
-    @media (max-width: 900px)  { .giphy-grid { columns: 3; } }
-    @media (max-width: 600px)  { .giphy-grid { columns: 2; } }
-    @media (max-width: 380px)  { .giphy-grid { columns: 1; } }
+    @media (max-width: 900px) { .giphy-grid { columns: 3; } }
+    @media (max-width: 600px) { .giphy-grid { columns: 2; } }
+    @media (max-width: 380px) { .giphy-grid { columns: 1; } }
 
-    /* ── Card — 2D scale grow, GIFs stay animated ── */
+    /* Card — pre-promoted compositing layer so GIFs never reset on tilt */
     .card {
       --pointer-x: 50%;
       --pointer-y: 50%;
@@ -45,16 +44,14 @@
       overflow: hidden;
       cursor: pointer;
       position: relative;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.45);
-      transition: box-shadow 0.28s ease, transform 0.28s ease;
-      transform: scale(1) translateZ(0);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+      /* base transform establishes compositing layer upfront so GIFs don't reset */
+      transform: perspective(700px) rotateX(0deg) rotateY(0deg) scale(1);
+      will-change: transform;
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
     }
 
-    .card:hover {
-      box-shadow: 0 10px 32px rgba(0,0,0,0.7), 0 0 20px rgba(160,100,255,0.14);
-      transform: scale(1.05) translateZ(0);
-      z-index: 10;
-    }
+    .card:hover { z-index: 10; }
 
     .card img {
       width: 100%;
@@ -62,7 +59,7 @@
       display: block;
     }
 
-    /* ── Pokemon-cards-151 holo ── */
+    /* Pokemon-cards-151 holo */
     .card__shine {
       position: absolute;
       inset: 0;
@@ -80,9 +77,9 @@
         ),
         repeating-linear-gradient(
           calc(var(--pointer-from-left) * 90deg + 45deg),
-          rgba(255,255,255,0) 0%,
+          rgba(255,255,255,0)   0%,
           rgba(255,255,255,0.5) 50%,
-          rgba(255,255,255,0) 100%
+          rgba(255,255,255,0)  100%
         );
       background-size: 100% 400%, 200% 200%;
       background-position: 0% var(--shine-y), var(--shine-x) var(--shine-y);
@@ -111,7 +108,7 @@
       z-index: 3;
     }
 
-    /* ── CF logos — scattered, positions set via inline style ── */
+    /* CF logos — positions set per-card via inline style */
     .card__logo {
       position: absolute;
       height: auto;
@@ -120,18 +117,18 @@
       transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 4;
-      filter: brightness(3) drop-shadow(0 0 6px rgba(255,255,255,0.4));
+      filter: brightness(3) drop-shadow(0 0 8px rgba(255,255,255,0.5));
     }
 
-    .card:hover .card__shine { opacity: 0.72; }
-    .card:hover .card__glare { opacity: 0.35; }
-    .card:hover .card__logo  { opacity: 0.42; }
+    .card.is-hovered .card__shine { opacity: 0.72; }
+    .card.is-hovered .card__glare { opacity: 0.35; }
+    .card.is-hovered .card__logo  { opacity: 0.44; }
 
-    /* ── Lightbox ── */
+    /* Lightbox */
     .giphy-lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
+      background: rgba(0,0,0,0.93);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -176,10 +173,7 @@
       opacity: 0.75;
       transition: opacity 0.2s, background 0.2s;
     }
-    .giphy-lightbox-close:hover {
-      opacity: 1;
-      background: rgba(255,255,255,0.18);
-    }
+    .giphy-lightbox-close:hover { opacity: 1; background: rgba(255,255,255,0.2); }
   </style>
 </head>
 
@@ -189,32 +183,20 @@
   <header class="site-header" role="banner">
     <div class="header-inner">
       <a class="brand" href="https://cfny.framer.website/" aria-label="Capital Flight home">
-        <img
-          class="site-logo"
+        <img class="site-logo"
           src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
-          alt="Capital Flight"
-        >
+          alt="Capital Flight">
       </a>
-
-      <button
-        class="menu-toggle"
-        id="menuToggle"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="mobileMenu"
-        type="button"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu"
+        aria-expanded="false" aria-controls="mobileMenu" type="button">
+        <span></span><span></span><span></span>
       </button>
-
       <nav class="main-nav" aria-label="Main navigation">
         <a href="https://cfny.framer.website/">Home</a>
         <a href="production">Production</a>
         <a href="marketing">Marketing</a>
         <div class="nav-dropdown">
-          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <a href="label">Label <span class="dropdown-arrow">&#x25BE;</span></a>
           <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
             <a href="roster">Roster</a>
           </div></div>
@@ -230,7 +212,6 @@
     <section class="intro">
       <h1 class="intro-title">Gallery</h1>
     </section>
-
     <div class="giphy-grid" id="giphyGrid"></div>
   </main>
 
@@ -304,10 +285,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sparticles@latest/dist/sparticles.min.js"></script>
   <script src="app.js"></script>
   <script>
-    const CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
+    var CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
 
-    // All 65 @saadmetla GIFs — hardcoded direct CDN, no API key needed
-    const GIF_IDS = [
+    /* ─── Giphy GIFs (@saadmetla hardcoded — API was rate-limited) ─── */
+    var GIPHY_IDS = [
       '7YXyh6XGVrkipoT7AM','Hp0oLlOZbtD6ZbmO79','SCJyPU6loBmTE26VY8','RV4u79GSWJY93Oantt','eC3jZI6okosY6cfEjD',
       'wMIKzT6umGX0x9pu9B','Ufwem8bDVmtTH55tnU','f2RMUe8TJdbAKHuD3O','vnzV73oztE0tSgy9sf','F5q2vJ3QnhPWEYUKM7',
       'JCuwTjKdxPDD3VJ1rT','ps7KaGq7DQ15csS6XL','mh2GAoc0IqHklln8Wu','eSZ0KK05JWdNSk5WWC','X8A77knU6m8bKU4D7Q',
@@ -324,44 +305,87 @@
       'hK5GmwnR4V7yfmPMBd','3wVKQTtd2vI3DtLPL0'
     ];
 
-    const grid     = document.getElementById('giphyGrid');
-    const lightbox = document.getElementById('giphyLightbox');
-    const lbImg    = document.getElementById('giphyLightboxImg');
-    const closeBtn = document.getElementById('giphyClose');
+    /* ─── 3D GIFs from saadmetla.com/portfolios/3d-gif.html ─── */
+    var GIF_BASE = 'https://saadmetla.com/assets/Website/gifs/';
+    var PERSONAL_GIFS = [
+      'combsstudio5_1.gif','benny_1.gif','conway_1.gif','AP8.gif','georgekas1_1.gif',
+      'tdott1_1.gif','smooky1_1.gif','AP6.gif','roxy8_1.gif','rory1_1.gif',
+      'tdott2_1.gif','AP17.gif','sheffg_1.gif','migorichwatch1_1.gif','fivio1_1.gif',
+      'rory2_1.gif','milfdad_1.gif','AP4.gif','kaylin3d_1.gif','lilmosey1_1.gif',
+      'smooky2_1.gif','liltjay_1.gif','lilmosey3b_1.gif','combsstudio1_1.gif','AP25.gif',
+      'rich2_1.gif','fetty5_1.gif','chaitanya_1.gif','jaleelgif2_1.gif','madeinny5_1.gif',
+      'quavo1_1.gif','offset1%202_1.gif','combsstudio15_1.gif','offset1_1.gif',
+      'conway2_1.gif','AP3.gif','conway4_1.gif'
+    ];
+
+    /* ─── Rap & Hip-Hop photos from saadmetla.com/portfolios/hip-hop.html ─── */
+    var PHOTO_BASE = 'https://saadmetla.com/assets/Website/Photo/Rap%20and%20Hip-Hop/';
+    var PHOTOS = [
+      'Covers/cover-2.png','NavJosh.jpg','Covers/cover-1.png','capppp.jpg',
+      'QuavoHuncho-2.jpg','critchposter2.jpg','richthekid-2.jpg','OGThree.jpg',
+      'Olivier%20Cover.jpeg','QuavoHuncho-3.jpg','YRN%20(112%20of%20119).jpg',
+      'critch.png','torylanezbb%20(2%20of%2014).jpg','fivio%20(39%20of%2043).jpg',
+      'TakeOff.jpg','cappp.jpg','Instant%20Film/ellianteinstax1.jpg','sheffg.jpg',
+      'proudofmenow%20(82%20of%20143).jpg','richthekid-6.jpg',
+      'Instant%20Film/Instax135010.jpg','YRN%20(30%20of%20119).jpg',
+      'Instant%20Film/conwayparty20.jpg','Instant%20Film/DrZeusinstax6.jpg',
+      'richthekid.jpg','Covers/covers-3.jpg','richthekid-4.jpg',
+      'Instant%20Film/conwayparty7.jpg','fivio%20(32%20of%2043).jpg',
+      'QuavoHuncho-7.jpg','rich6-15%20(9%20of%20150).jpg','richthekid-3.jpg',
+      'Instant%20Film/conwayparty15.jpg','Instant%20Film/fettyinstax3.jpg',
+      'Instant%20Film/sheffg004.jpg','YRN%20(56%20of%20119).jpg',
+      'Instant%20Film/conwayparty5.jpg','Instant%20Film/Rich%20(1%20of%201)-3.jpg',
+      'Instant%20Film/DrZeusinstax2.jpg'
+    ];
+
+    /* ─── Build master URL list ─── */
+    var ALL_SRCS = []
+      .concat(GIPHY_IDS.map(function(id) { return 'https://media.giphy.com/media/' + id + '/giphy.gif'; }))
+      .concat(PERSONAL_GIFS.map(function(f) { return GIF_BASE + f; }))
+      .concat(PHOTOS.map(function(f) { return PHOTO_BASE + f; }));
+
+    var grid     = document.getElementById('giphyGrid');
+    var lightbox = document.getElementById('giphyLightbox');
+    var lbImg    = document.getElementById('giphyLightboxImg');
+    var closeBtn = document.getElementById('giphyClose');
 
     function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
       }
       return arr;
     }
 
-    const SCATTER = [
-      { t: 14, l: 22, w: 20, r: -12 },
-      { t: 70, l: 74, w: 15, r:  20 },
-      { t: 46, l: 54, w: 26, r:   5 },
+    /* 6 CF logo scatter positions across the card */
+    var SCATTER = [
+      { t:  8, l: 14, w: 18, r: -14 },
+      { t: 78, l: 80, w: 13, r:  24 },
+      { t: 46, l: 50, w: 26, r:   3 },
+      { t: 22, l: 76, w: 15, r: -22 },
+      { t: 68, l: 18, w: 11, r:  38 },
+      { t: 35, l: 88, w: 19, r:  -8 },
     ];
 
-    function buildCard(id) {
-      const src  = 'https://media.giphy.com/media/' + id + '/giphy.gif';
-      const card = document.createElement('div');
+    function buildCard(src) {
+      var card = document.createElement('div');
       card.className = 'card';
 
-      const img = document.createElement('img');
+      var img = document.createElement('img');
       img.src     = src;
       img.alt     = '';
       img.loading = 'lazy';
+      img.addEventListener('error', function() { card.style.display = 'none'; });
 
-      const shine = document.createElement('div');
+      var shine = document.createElement('div');
       shine.className = 'card__shine';
-      const glare = document.createElement('div');
+      var glare = document.createElement('div');
       glare.className = 'card__glare';
 
       card.append(img, shine, glare);
 
       SCATTER.forEach(function(p) {
-        const logo = document.createElement('img');
+        var logo = document.createElement('img');
         logo.className = 'card__logo';
         logo.src = CF_LOGO;
         logo.alt = '';
@@ -370,15 +394,33 @@
         card.appendChild(logo);
       });
 
+      /* 3D tilt — perspective is on the card itself, layer already promoted via will-change */
       card.addEventListener('mousemove', function(e) {
-        const r  = card.getBoundingClientRect();
-        const fl = (e.clientX - r.left) / r.width;
-        const ft = (e.clientY - r.top)  / r.height;
+        var r  = card.getBoundingClientRect();
+        var fl = (e.clientX - r.left) / r.width;
+        var ft = (e.clientY - r.top)  / r.height;
+
+        /* tilt ±18deg — cursor at top-left tilts card toward viewer at top-left */
+        var rx = (ft - 0.5) * -18;
+        var ry = (fl - 0.5) *  18;
+
+        card.classList.add('is-hovered');
+        card.style.transition = 'transform 0.08s ease, box-shadow 0.08s ease';
+        card.style.transform  = 'perspective(700px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(1.06)';
+        card.style.boxShadow  = '0 22px 44px rgba(0,0,0,0.8), 0 0 28px rgba(160,100,255,0.22)';
+
         card.style.setProperty('--pointer-x',         (e.clientX - r.left) + 'px');
         card.style.setProperty('--pointer-y',         (e.clientY - r.top)  + 'px');
         card.style.setProperty('--pointer-from-left', fl);
         card.style.setProperty('--shine-x',           (fl * 100) + '%');
         card.style.setProperty('--shine-y',           (ft * 100) + '%');
+      });
+
+      card.addEventListener('mouseleave', function() {
+        card.classList.remove('is-hovered');
+        card.style.transition = 'transform 0.45s ease, box-shadow 0.35s ease';
+        card.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)';
+        card.style.boxShadow  = '';
       });
 
       card.addEventListener('click', function() { openLightbox(src); });
@@ -401,9 +443,9 @@
     });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-    // Render instantly — no API call, no wait
+    /* Shuffle all 141 items and render */
     var frag = document.createDocumentFragment();
-    shuffle(GIF_IDS.slice()).forEach(function(id) { frag.appendChild(buildCard(id)); });
+    shuffle(ALL_SRCS.slice()).forEach(function(src) { frag.appendChild(buildCard(src)); });
     grid.appendChild(frag);
   </script>
 </body>

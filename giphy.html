@@ -155,7 +155,7 @@
           </div></div>
         </div>
         <a href="about">About</a>
-        <a href="giphy" aria-current="page">GIFs</a>
+        <a href="giphy" aria-current="page">Gallery</a>
         <a href="contact">Contact</a>
       </nav>
     </div>
@@ -164,7 +164,7 @@
   <main class="page" id="top">
 
     <section class="intro">
-      <h1 class="intro-title">GIFs</h1>
+      <h1 class="intro-title">Gallery</h1>
     </section>
 
     <div class="giphy-search-wrap">
@@ -245,7 +245,7 @@
           </div></div>
         </div>
         <a href="about">About</a>
-        <a href="giphy" aria-current="page">GIFs</a>
+        <a href="giphy" aria-current="page">Gallery</a>
       </nav>
     </div>
   </div>
@@ -265,9 +265,10 @@
     async function fetchGifs(query) {
       loading.style.display = 'block';
       grid.innerHTML = '';
+      const base = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=saadmetla&limit=50&rating=pg-13`;
       const endpoint = query
-        ? `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${encodeURIComponent(query)}&limit=30&rating=g`
-        : `https://api.giphy.com/v1/gifs/trending?api_key=${API_KEY}&limit=30&rating=g`;
+        ? `${base}&q=${encodeURIComponent(query)}`
+        : `${base}&q=saadmetla`;
 
       try {
         const res = await fetch(endpoint);

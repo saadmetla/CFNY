@@ -364,14 +364,19 @@
     }
 
     function applyStatsToOverlay(el, data) {
-      // Try every field Giphy might expose for view/send counts
-      var raw = data.views
-        || data.view_count
-        || (data.analytics && data.analytics.onload && data.analytics.onload.count)
-        || (data.user && data.user.view_count);
-      var num = formatNum(raw);
-      if (!num) return;
-      el.innerHTML = '<span class="gs-title">' + num + ' views</span>';
+      var orig   = data.images && data.images.original;
+      var frames = orig && orig.frames ? orig.frames + ' frames' : null;
+      var w      = orig && orig.width;
+      var h      = orig && orig.height;
+      var dims   = (w && h) ? w + '×' + h : null;
+      var date   = data.import_datetime
+        ? new Date(data.import_datetime).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+        : null;
+      var parts  = [frames, dims, date].filter(Boolean);
+      if (!parts.length) return;
+      el.innerHTML = parts.map(function(p) {
+        return '<span class="gs-title">' + p + '</span>';
+      }).join('');
     }
 
     // Batch-fetch metadata; also try individual endpoint for analytics fields

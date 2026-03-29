@@ -88,25 +88,27 @@
       z-index: 3;
     }
 
-    /* ── CF logo overlay — always visible as watermark ── */
-    .cf-logo {
+    /* ── Watermark tile — CSS background-image repeat (clean, no DOM spam) ── */
+    .card-wm {
       position: absolute;
-      height: auto;
+      inset: 0;
+      background-image: url('https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png');
+      background-size: 24% auto;
+      background-repeat: repeat;
+      opacity: 0.13;
       mix-blend-mode: screen;
-      opacity: 0.14;
-      transition: opacity 0.3s ease;
+      filter: brightness(4);
       pointer-events: none;
       z-index: 4;
-      filter: brightness(3) drop-shadow(0 0 8px rgba(255,255,255,0.5));
+      border-radius: inherit;
     }
 
     /* Card active state */
     .card.is-hovered .holo-shine { opacity: 0.18; }
     .card.is-hovered .holo-glare { opacity: 0.22; }
-    .card.is-hovered .cf-logo   { opacity: 0.45; }
-    /* Lightbox: canvas handles base watermark; DOM logos only on hover tilt */
-    .lb-card .cf-logo            { opacity: 0; }
-    .lb-card.is-hovered .cf-logo { opacity: 0.4; }
+    .card.is-hovered .card-wm   { opacity: 0.38; }
+    .lb-card.is-hovered .holo-shine { opacity: 0.2; }
+    .lb-card.is-hovered .holo-glare { opacity: 0.25; }
 
     /* ── Giphy stats overlay ── */
     .giphy-stats {
@@ -177,12 +179,8 @@
       height: auto;
       border-radius: 14px;
     }
-    /* Lightbox active holo */
-    .lb-card.is-hovered .holo-shine { opacity: 0.2; }
-    .lb-card.is-hovered .holo-glare { opacity: 0.25; }
-
-    /* Disable image dragging sitewide */
-    .giphy-grid img, .lb-card img { -webkit-user-drag: none; user-select: none; }
+    /* Disable image dragging */
+    .giphy-grid img, .lb-card img, .lb-card canvas { -webkit-user-drag: none; user-select: none; }
 
     .giphy-lightbox-close {
       position: fixed;
@@ -249,12 +247,11 @@
   <div class="giphy-lightbox" id="giphyLightbox">
     <button class="giphy-lightbox-close" id="giphyClose">&#x2715;</button>
     <div class="lb-card" id="lbCard">
-      <!-- canvas used so right-click-save includes baked watermarks -->
       <canvas id="giphyLightboxCanvas" style="display:block;max-width:88vw;max-height:82vh;border-radius:14px;"></canvas>
       <img src="" alt="" id="giphyLightboxImg" style="display:none;">
       <div class="holo-shine" id="lbShine"></div>
       <div class="holo-glare" id="lbGlare"></div>
-      <!-- logos injected by JS -->
+      <div class="card-wm"></div>
     </div>
   </div>
 
@@ -364,10 +361,10 @@
     function applyStatsToOverlay(el, data) {
       var title = (data.title || '').replace(/\s*GIF\s*$/i, '').trim();
       var user  = data.username ? '@' + data.username : '';
+      if (!title && !user) return;
       el.innerHTML =
         (title ? '<span class="gs-title">' + title + '</span>' : '') +
         (user  ? '<span class="gs-user">'  + user  + '</span>' : '');
-      if (!title && !user) el.style.display = 'none';
     }
 
     // Batch-fetch in two rounds (API max ~50 IDs per call)
@@ -402,68 +399,6 @@
       return arr;
     }
 
-    /*
-     * Staggered hex-pack logo layout — 7 rows, ~32 logos.
-     * Edge cols pushed outside card bounds so logos peek/clip at borders.
-     * Even rows: 5 logos, leftmost/rightmost intentionally clipped.
-     * Odd rows:  4 logos, offset half-step.
-     * Each card picks a size + rotation scheme at random for variety.
-     */
-    /*
-     * translate(-50%,-50%) shifts each logo by 50% of its OWN width beyond `left`.
-     * For a 26%-wide logo, that's an extra 13% pushed off screen.
-     * Edge cols at 4%/96% → actual visible right/left edges ≈ 4+13=17% inside card.
-     * With typical logo PNG padding, shows roughly 1/4–1/3 of the mark peeking in.
-     */
-    var EVEN_COLS = [4, 24, 50, 76, 96];   // 4% & 96% → logos peek at L/R edges
-    var ODD_COLS  = [13, 38, 62, 87];
-    // 8 rows: -8% & 108% push top/bottom rows outside card so they peek in
-    var ROW_YS    = [-8, 10, 26, 42, 58, 74, 90, 108];
-
-    // Edge logos are bigger so the peeking portion is more visible
-    var SIZE_SCHEMES = [
-      { even: [28, 18, 22, 18, 28], odd: [20, 23, 20, 23] },
-      { even: [26, 20, 24, 20, 26], odd: [22, 20, 22, 20] },
-      { even: [30, 17, 22, 17, 30], odd: [20, 25, 20, 25] },
-      { even: [26, 22, 26, 22, 26], odd: [22, 22, 22, 22] },
-      { even: [28, 18, 20, 18, 28], odd: [21, 24, 21, 24] },
-    ];
-
-    // Rotation schemes
-    var ROT_SCHEMES = [
-      { even: [-10, -5, 0, 5, 10],   odd: [-7, -2, 3, 8]   },  // diagonal sweep
-      { even: [10, 5, 0, -5, -10],   odd: [7, 2, -3, -8]   },  // reverse sweep
-      { even: [-8, 6, -4, 6, -8],    odd: [5, -7, 5, -7]   },  // alternating
-      { even: [0, -8, 0, -8, 0],     odd: [-6, 0, -6, 0]   },  // valley
-      { even: [6, -6, 12, -6, 6],    odd: [-9, 6, -9, 6]   },  // wave
-    ];
-
-    function attachLogos(container) {
-      var scheme = SIZE_SCHEMES[Math.floor(Math.random() * SIZE_SCHEMES.length)];
-      var rots   = ROT_SCHEMES[Math.floor(Math.random() * ROT_SCHEMES.length)];
-
-      ROW_YS.forEach(function(t, ri) {
-        var isEven = (ri % 2 === 0);
-        var cols   = isEven ? EVEN_COLS : ODD_COLS;
-        var sizes  = isEven ? scheme.even : scheme.odd;
-        var rotArr = isEven ? rots.even   : rots.odd;
-
-        cols.forEach(function(l, ci) {
-          var logo = document.createElement('img');
-          logo.className = 'cf-logo';
-          logo.src = CF_LOGO;
-          logo.alt = '';
-          logo.setAttribute('aria-hidden', 'true');
-          logo.style.cssText =
-            'top:'  + t + '%;' +
-            'left:' + l + '%;' +
-            'width:' + sizes[ci] + '%;' +
-            'transform:translate(-50%,-50%) rotate(' + rotArr[ci] + 'deg);';
-          container.appendChild(logo);
-        });
-      });
-    }
-
     /* Apply tilt + holo vars to any element with --px/--py/--pfl/--sx/--sy */
     function applyHolo(el, e) {
       var r  = el.getBoundingClientRect();
@@ -493,21 +428,20 @@
       var glare = document.createElement('div');
       glare.className = 'holo-glare';
 
-      card.append(img, shine, glare);
-      attachLogos(card);
+      var wm = document.createElement('div');
+      wm.className = 'card-wm';
 
-      // Giphy stats overlay
+      card.append(img, shine, glare, wm);
+
+      // Giphy stats overlay — always rendered, populated once API returns
       var giphyIdMatch = src.match(/giphy\.com\/media\/([^/]+)\//);
       if (giphyIdMatch) {
         var gid = giphyIdMatch[1];
         var statsEl = document.createElement('div');
         statsEl.className = 'giphy-stats';
         statsEl.setAttribute('data-giphy-id', gid);
-        // If stats already cached (unlikely on first render but just in case)
         if (giphyStats[gid]) {
           applyStatsToOverlay(statsEl, giphyStats[gid]);
-        } else {
-          statsEl.style.display = 'none'; // hidden until fetch returns
         }
         card.appendChild(statsEl);
       }
@@ -534,7 +468,6 @@
     }
 
     /* ── Lightbox holo + tilt ── */
-    attachLogos(lbCard);
 
     lbCard.addEventListener('mousemove', function(e) {
       var pos = applyHolo(lbCard, e);

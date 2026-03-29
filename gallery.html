@@ -104,8 +104,40 @@
     .card.is-hovered .holo-shine { opacity: 0.18; }
     .card.is-hovered .holo-glare { opacity: 0.22; }
     .card.is-hovered .cf-logo   { opacity: 0.45; }
-    /* Lightbox watermark */
-    .lb-card.is-hovered .cf-logo { opacity: 0.5; }
+    /* Lightbox: canvas handles base watermark; DOM logos only on hover tilt */
+    .lb-card .cf-logo            { opacity: 0; }
+    .lb-card.is-hovered .cf-logo { opacity: 0.4; }
+
+    /* ── Giphy stats overlay ── */
+    .giphy-stats {
+      position: absolute;
+      bottom: 7px;
+      left: 7px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 6px;
+      padding: 4px 7px 5px;
+      pointer-events: none;
+      z-index: 6;
+      max-width: 85%;
+    }
+    .gs-title {
+      display: block;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gs-user {
+      display: block;
+      color: rgba(255,255,255,0.55);
+      font-size: 9px;
+      line-height: 1.3;
+    }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
@@ -325,6 +357,36 @@
       .concat(PERSONAL_GIFS.map(function(f) { return GIF_BASE + f; }))
       .concat(PHOTOS.map(function(f) { return PHOTO_BASE + f; }));
 
+    /* ── Giphy stats cache & fetcher ── */
+    var GIPHY_API_KEY = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
+    var giphyStats = {};  // id → { title, username }
+
+    function applyStatsToOverlay(el, data) {
+      var title = (data.title || '').replace(/\s*GIF\s*$/i, '').trim();
+      var user  = data.username ? '@' + data.username : '';
+      el.innerHTML =
+        (title ? '<span class="gs-title">' + title + '</span>' : '') +
+        (user  ? '<span class="gs-user">'  + user  + '</span>' : '');
+      if (!title && !user) el.style.display = 'none';
+    }
+
+    // Batch-fetch in two rounds (API max ~50 IDs per call)
+    [GIPHY_IDS.slice(0, 50), GIPHY_IDS.slice(50)].forEach(function(batch) {
+      if (!batch.length) return;
+      fetch('https://api.giphy.com/v1/gifs?api_key=' + GIPHY_API_KEY + '&ids=' + batch.join(','))
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(json) {
+          if (!json || !json.data) return;
+          json.data.forEach(function(gif) {
+            giphyStats[gif.id] = gif;
+            // Update any already-rendered overlay for this id
+            document.querySelectorAll('[data-giphy-id="' + gif.id + '"]')
+              .forEach(function(el) { applyStatsToOverlay(el, gif); });
+          });
+        })
+        .catch(function() {});
+    });
+
     var grid      = document.getElementById('giphyGrid');
     var lightbox  = document.getElementById('giphyLightbox');
     var lbCard    = document.getElementById('lbCard');
@@ -433,6 +495,22 @@
 
       card.append(img, shine, glare);
       attachLogos(card);
+
+      // Giphy stats overlay
+      var giphyIdMatch = src.match(/giphy\.com\/media\/([^/]+)\//);
+      if (giphyIdMatch) {
+        var gid = giphyIdMatch[1];
+        var statsEl = document.createElement('div');
+        statsEl.className = 'giphy-stats';
+        statsEl.setAttribute('data-giphy-id', gid);
+        // If stats already cached (unlikely on first render but just in case)
+        if (giphyStats[gid]) {
+          applyStatsToOverlay(statsEl, giphyStats[gid]);
+        } else {
+          statsEl.style.display = 'none'; // hidden until fetch returns
+        }
+        card.appendChild(statsEl);
+      }
 
       card.addEventListener('mousemove', function(e) {
         var pos = applyHolo(card, e);

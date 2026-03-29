@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capital Flight — GIFs</title>
+  <title>Capital Flight — Gallery</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,79 +11,126 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
-    .giphy-search-wrap{
-      display: flex;
-      justify-content: center;
-      margin: 0 0 40px;
-    }
-
-    .giphy-search{
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 12px 20px;
-      width: 100%;
-      max-width: 480px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .giphy-search::placeholder{ color: rgba(255,255,255,0.3); }
-    .giphy-search:focus{ border-color: rgba(255,255,255,0.35); }
-
-    .giphy-grid{
-      columns: 3;
-      column-gap: 12px;
-      padding: 0 24px 60px;
-      max-width: 1100px;
+    /* ── Grid ── */
+    .giphy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 0 24px 80px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    @media(max-width:700px){
-      .giphy-grid{ columns: 2; }
-    }
-    @media(max-width:420px){
-      .giphy-grid{ columns: 1; }
-    }
-
-    .giphy-item{
-      break-inside: avoid;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .giphy-item:hover{
-      transform: scale(1.02);
-      opacity: 0.9;
-    }
-
-    .giphy-item img{
-      width: 100%;
-      display: block;
-    }
-
-    .giphy-loading{
+    .giphy-loading {
       text-align: center;
       color: rgba(255,255,255,0.4);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 60px 0;
+      padding: 40px 0 0;
     }
 
-    .giphy-lightbox{
+    /* ── Holographic Card (pokemon-cards-css inspired) ── */
+    .card {
+      --pointer-x: 50%;
+      --pointer-y: 50%;
+      --pointer-from-left: 0.5;
+      --pointer-from-top: 0.5;
+      --pointer-from-center: 0;
+      --card-opacity: 0;
+      --rotate-x: 0deg;
+      --rotate-y: 0deg;
+      --shine-x: 50%;
+      --shine-y: 50%;
+
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transform: perspective(600px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+      transition: transform 0.1s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      aspect-ratio: 1;
+    }
+
+    .card:hover {
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.6),
+        0 0 20px rgba(255,255,255,0.08);
+      z-index: 10;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 10px;
+    }
+
+    /* Holographic shine layer */
+    .card__shine {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.03) 0px,
+          rgba(255,255,255,0.03) 1px,
+          transparent 1px,
+          transparent 3px
+        ),
+        linear-gradient(
+          calc(var(--pointer-from-left) * 360deg + 120deg),
+          #f80e35 0%,
+          #eedf10 15%,
+          #21e985 30%,
+          #0dbde9 45%,
+          #c929f1 60%,
+          #f80e35 75%,
+          #eedf10 90%,
+          #21e985 100%
+        );
+      background-size: 100% 3px, 200% 200%;
+      background-position: 0 0, var(--shine-x) var(--shine-y);
+      mix-blend-mode: color-dodge;
+      opacity: var(--card-opacity);
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Glare / specular highlight */
+    .card__glare {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background: radial-gradient(
+        farthest-corner circle at var(--pointer-x) var(--pointer-y),
+        rgba(255,255,255,0.5) 0%,
+        rgba(255,255,255,0.15) 30%,
+        rgba(255,255,255,0) 70%
+      );
+      mix-blend-mode: overlay;
+      opacity: var(--card-opacity);
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .card:hover .card__shine,
+    .card:hover .card__glare {
+      opacity: 1;
+    }
+
+    /* ── Lightbox ── */
+    .giphy-lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.88);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,18 +140,19 @@
       transition: opacity 0.2s ease;
     }
 
-    .giphy-lightbox.is-open{
+    .giphy-lightbox.is-open {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .giphy-lightbox img{
+    .giphy-lightbox img {
       max-width: 90vw;
       max-height: 80vh;
-      border-radius: 10px;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
     }
 
-    .giphy-lightbox-close{
+    .giphy-lightbox-close {
       position: absolute;
       top: 20px;
       right: 24px;
@@ -114,7 +162,11 @@
       font-size: 28px;
       cursor: pointer;
       line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
+
+    .giphy-lightbox-close:hover { opacity: 1; }
   </style>
 </head>
 
@@ -167,22 +219,12 @@
       <h1 class="intro-title">Gallery</h1>
     </section>
 
-    <div class="giphy-search-wrap">
-      <input
-        class="giphy-search"
-        id="giphySearch"
-        type="text"
-        placeholder="Search GIFs..."
-        autocomplete="off"
-      >
-    </div>
-
-    <div class="giphy-loading" id="giphyLoading">Loading...</div>
+    <p class="giphy-loading" id="giphyLoading">Loading...</p>
     <div class="giphy-grid" id="giphyGrid"></div>
 
   </main>
 
-  <!-- GIF LIGHTBOX -->
+  <!-- LIGHTBOX -->
   <div class="giphy-lightbox" id="giphyLightbox">
     <button class="giphy-lightbox-close" id="giphyClose">✕</button>
     <img src="" alt="" id="giphyLightboxImg">
@@ -191,10 +233,7 @@
   <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
-      <div class="footer-copy">
-        © 2026 Capital Flight New York
-      </div>
-
+      <div class="footer-copy">© 2026 Capital Flight New York</div>
       <nav class="footer-socials" aria-label="Social links">
         <a href="https://www.instagram.com/capitalflightny/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -253,63 +292,118 @@
   <script src="app.js"></script>
   <script>
     const API_KEY = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
-    const grid = document.getElementById('giphyGrid');
-    const loading = document.getElementById('giphyLoading');
-    const lightbox = document.getElementById('giphyLightbox');
-    const lightboxImg = document.getElementById('giphyLightboxImg');
-    const closeBtn = document.getElementById('giphyClose');
-    const searchInput = document.getElementById('giphySearch');
+    const USERNAME = 'saadmetla';
+    const LIMIT = 50;
 
-    let debounceTimer;
+    const grid      = document.getElementById('giphyGrid');
+    const loading   = document.getElementById('giphyLoading');
+    const lightbox  = document.getElementById('giphyLightbox');
+    const lbImg     = document.getElementById('giphyLightboxImg');
+    const closeBtn  = document.getElementById('giphyClose');
 
-    async function fetchGifs(query) {
-      loading.style.display = 'block';
-      grid.innerHTML = '';
-      const base = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=saadmetla&limit=50&rating=pg-13`;
-      const endpoint = query
-        ? `${base}&q=${encodeURIComponent(query)}`
-        : `${base}&q=saadmetla`;
+    /* ── Fetch ALL gifs from the account ── */
+    async function fetchAll() {
+      let offset = 0;
+      let total  = null;
 
-      try {
-        const res = await fetch(endpoint);
-        const { data } = await res.json();
-        loading.style.display = 'none';
-        data.forEach(gif => {
-          const item = document.createElement('div');
-          item.className = 'giphy-item';
-          const img = document.createElement('img');
-          img.src = gif.images.fixed_width.url;
-          img.alt = gif.title;
-          img.loading = 'lazy';
-          item.appendChild(img);
-          item.addEventListener('click', () => openLightbox(gif.images.original.url, gif.title));
-          grid.appendChild(item);
-        });
-      } catch {
-        loading.textContent = 'Failed to load GIFs.';
-      }
+      do {
+        const url = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=${USERNAME}&q=${USERNAME}&limit=${LIMIT}&offset=${offset}&rating=pg-13`;
+        const res  = await fetch(url);
+        const json = await res.json();
+
+        if (total === null) total = json.pagination.total_count;
+        if (!json.data.length) break;
+
+        renderBatch(json.data);
+        offset += LIMIT;
+
+        loading.textContent = `Loaded ${Math.min(offset, total)} of ${total}...`;
+      } while (offset < total);
+
+      loading.style.display = 'none';
     }
 
+    /* ── Render a batch of GIF cards ── */
+    function renderBatch(gifs) {
+      gifs.forEach(gif => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const img = document.createElement('img');
+        img.src = gif.images.fixed_width.url;
+        img.alt = gif.title;
+        img.loading = 'lazy';
+
+        const shine = document.createElement('div');
+        shine.className = 'card__shine';
+
+        const glare = document.createElement('div');
+        glare.className = 'card__glare';
+
+        card.appendChild(img);
+        card.appendChild(shine);
+        card.appendChild(glare);
+
+        attachHoloEffect(card);
+        card.addEventListener('click', () => openLightbox(gif.images.original.url, gif.title));
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── Holographic tilt + shine (pokemon-cards-css technique) ── */
+    function attachHoloEffect(card) {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const fromLeft = x / rect.width;
+        const fromTop  = y / rect.height;
+        const fromCenterX = fromLeft - 0.5;
+        const fromCenterY = fromTop  - 0.5;
+        const fromCenter = Math.sqrt(fromCenterX ** 2 + fromCenterY ** 2);
+
+        const rotateY =  fromCenterX * 20;
+        const rotateX = -fromCenterY * 20;
+
+        const shineX = `${fromLeft  * 100}%`;
+        const shineY = `${fromTop   * 100}%`;
+
+        card.style.setProperty('--pointer-x',        `${x}px`);
+        card.style.setProperty('--pointer-y',        `${y}px`);
+        card.style.setProperty('--pointer-from-left', fromLeft);
+        card.style.setProperty('--pointer-from-top',  fromTop);
+        card.style.setProperty('--pointer-from-center', fromCenter);
+        card.style.setProperty('--rotate-x',  `${rotateX}deg`);
+        card.style.setProperty('--rotate-y',  `${rotateY}deg`);
+        card.style.setProperty('--shine-x',   shineX);
+        card.style.setProperty('--shine-y',   shineY);
+        card.style.setProperty('--card-opacity', '1');
+
+        card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--card-opacity', '0');
+        card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)';
+      });
+    }
+
+    /* ── Lightbox ── */
     function openLightbox(src, alt) {
-      lightboxImg.src = src;
-      lightboxImg.alt = alt;
+      lbImg.src = src;
+      lbImg.alt = alt;
       lightbox.classList.add('is-open');
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
-      lightboxImg.src = '';
+      lbImg.src = '';
     }
 
     closeBtn.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
 
-    searchInput.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => fetchGifs(searchInput.value.trim()), 400);
-    });
-
-    fetchGifs();
+    fetchAll();
   </script>
 </body>
 </html>

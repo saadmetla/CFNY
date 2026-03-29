@@ -334,21 +334,32 @@
 
     function rnd(min, max) { return Math.random() * (max - min) + min; }
 
-    /* 35 logos, fully random position + size + rotation per card */
+    /*
+     * 3×6 grid = 18 logos per card.
+     * Columns at 17%, 50%, 83% — rows evenly across 0–100%.
+     * Each logo gets a small ±5% position jitter so the grid feels organic,
+     * plus random size (16–26%) and rotation (−12° to 12°) per card.
+     * Spacing ensures no overlap.
+     */
+    var LOGO_COLS = [17, 50, 83];
+    var LOGO_ROWS = [6, 23, 40, 57, 74, 91];
+
     function attachLogos(container) {
-      for (var i = 0; i < 35; i++) {
-        var logo = document.createElement('img');
-        logo.className = 'cf-logo';
-        logo.src = CF_LOGO;
-        logo.alt = '';
-        logo.setAttribute('aria-hidden', 'true');
-        logo.style.cssText =
-          'top:'  + rnd(-5, 105) + '%;' +
-          'left:' + rnd(-5, 105) + '%;' +
-          'width:' + rnd(10, 32) + '%;' +
-          'transform:translate(-50%,-50%) rotate(' + rnd(-25, 25) + 'deg);';
-        container.appendChild(logo);
-      }
+      LOGO_ROWS.forEach(function(t) {
+        LOGO_COLS.forEach(function(l) {
+          var logo = document.createElement('img');
+          logo.className = 'cf-logo';
+          logo.src = CF_LOGO;
+          logo.alt = '';
+          logo.setAttribute('aria-hidden', 'true');
+          logo.style.cssText =
+            'top:'  + (t + rnd(-4, 4)) + '%;' +
+            'left:' + (l + rnd(-4, 4)) + '%;' +
+            'width:' + rnd(16, 26) + '%;' +
+            'transform:translate(-50%,-50%) rotate(' + rnd(-12, 12) + 'deg);';
+          container.appendChild(logo);
+        });
+      });
     }
 
     /* Apply tilt + holo vars to any element with --px/--py/--pfl/--sx/--sy */

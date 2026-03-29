@@ -20,23 +20,40 @@
       isolation: isolate;
     }
 
-    /* The flag sits behind the text — larger coverage, more visible */
+    /* Pakistan flag — sits behind text, pivots from left like a flagpole */
     .saad-flag {
       position: absolute;
-      inset: -5px -12px;
+      inset: -5px -14px;
       border-radius: 4px;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
       z-index: -1;
       transform-origin: left center;
-      transition: opacity 0.3s ease;
-      /* Pakistan flag: white stripe left ~22%, rich dark green rest */
+      transition: opacity 0.25s ease;
       background: linear-gradient(to right, #fff 22%, #01411C 22%);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 3px 14px rgba(0,0,0,0.6);
     }
 
-    /* Crescent on the green portion — larger and crisper */
+    /* Scrolling diagonal highlight bars — sunlight rippling across waving cloth */
+    .saad-flag::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        80deg,
+        transparent 0px,
+        transparent 20px,
+        rgba(255,255,255,0.18) 20px,
+        rgba(255,255,255,0.18) 22px
+      );
+      animation: flagSheen 0.7s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Crescent + star — large and visible */
     .saad-flag::after {
       content: '☪';
       position: absolute;
@@ -44,17 +61,17 @@
       left: 63%;
       transform: translate(-50%, -50%);
       color: #fff;
-      font-size: 0.9em;
+      font-size: 1.3em;
       line-height: 1;
-      text-shadow: 0 0 6px rgba(255,255,255,0.4);
+      text-shadow: 0 0 8px rgba(255,255,255,0.7), 0 1px 3px rgba(0,0,0,0.5);
     }
 
     .saad-link:hover .saad-flag {
-      opacity: 0.93;
-      animation: pkWave 1.4s ease-in-out infinite;
+      opacity: 0.94;
+      animation: pkWave 1.8s ease-in-out infinite;
     }
 
-    /* Text stays white and readable over the flag */
+    /* Text stays white and readable */
     .saad-fill {
       position: relative;
       z-index: 1;
@@ -63,16 +80,27 @@
       text-shadow: 0 1px 6px rgba(0,0,0,0.7);
     }
 
-    /* Flag wave — perspective rotateY + skewX = realistic cloth ripple from left pole */
+    /* Sheen scroll — gives the ripple-on-cloth look */
+    @keyframes flagSheen {
+      0%   { transform: translateX(0px); }
+      100% { transform: translateX(22px); }
+    }
+
+    /*
+     * Real flag physics: pole anchored at left (transform-origin: left center)
+     * Free end (right) flaps with larger amplitude.
+     * rotateY gives 3D perspective depth. skewX adds horizontal wave crease.
+     * Asymmetric timing (fast snap forward, slow drift back) = cloth inertia.
+     */
     @keyframes pkWave {
-      0%   { transform: perspective(280px) rotateY(0deg)    skewX(0deg);    }
-      10%  { transform: perspective(280px) rotateY(4deg)    skewX(-2deg);   }
-      25%  { transform: perspective(280px) rotateY(-3deg)   skewX(1.8deg);  }
-      40%  { transform: perspective(280px) rotateY(5.5deg)  skewX(-2.5deg); }
-      55%  { transform: perspective(280px) rotateY(-2.5deg) skewX(1.5deg);  }
-      70%  { transform: perspective(280px) rotateY(3.5deg)  skewX(-1.8deg); }
-      85%  { transform: perspective(280px) rotateY(-1deg)   skewX(0.8deg);  }
-      100% { transform: perspective(280px) rotateY(0deg)    skewX(0deg);    }
+      0%   { transform: perspective(350px) rotateY(0deg)   skewX(0deg); }
+      15%  { transform: perspective(350px) rotateY(9deg)   skewX(-1.8deg); }
+      28%  { transform: perspective(350px) rotateY(2deg)   skewX(-0.5deg); }
+      42%  { transform: perspective(350px) rotateY(8deg)   skewX(-1.5deg); }
+      58%  { transform: perspective(350px) rotateY(1deg)   skewX(-0.3deg); }
+      72%  { transform: perspective(350px) rotateY(7deg)   skewX(-1.2deg); }
+      86%  { transform: perspective(350px) rotateY(2deg)   skewX(-0.4deg); }
+      100% { transform: perspective(350px) rotateY(0deg)   skewX(0deg); }
     }
   </style>
 </head>

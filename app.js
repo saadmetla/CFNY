@@ -473,6 +473,10 @@ function countUp(el) {
     bounce:      false,
     overflow:    false,
   });
+  // Belt-and-suspenders: force pointer-events:none on any canvas Sparticles creates
+  setTimeout(() => {
+    pc.querySelectorAll('canvas').forEach(c => { c.style.pointerEvents = 'none'; });
+  }, 400);
 })();
 
 /* =============================================

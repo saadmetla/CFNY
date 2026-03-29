@@ -152,6 +152,17 @@ a{
    BACKGROUND EFFECTS
 ================================================== */
 
+/* sparticles canvas — fixed to viewport, behind all content, never blocks clicks */
+body > canvas,
+canvas.sparticles {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
 /* keep content above bg effects */
 .page,
 .footer,

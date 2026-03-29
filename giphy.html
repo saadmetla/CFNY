@@ -11,7 +11,7 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Masonry grid — natural portrait heights ── */
+    /* ── Masonry grid ── */
     .giphy-grid {
       columns: 4;
       column-gap: 14px;
@@ -23,17 +23,7 @@
     @media (max-width: 600px)  { .giphy-grid { columns: 2; } }
     @media (max-width: 380px)  { .giphy-grid { columns: 1; } }
 
-    .giphy-loading {
-      text-align: center;
-      color: rgba(255,255,255,0.4);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 20px 0 24px;
-    }
-
-    /* ── Card — 2D scale grow on hover, GIFs stay animated ── */
+    /* ── Card — 2D scale grow, GIFs stay animated ── */
     .card {
       --pointer-x: 50%;
       --pointer-y: 50%;
@@ -41,7 +31,6 @@
       --shine-x: 50%;
       --shine-y: 50%;
 
-      /* pokemon-cards-151 sunpillar palette */
       --sunpillar-1: hsla(2,   100%, 73%, 1);
       --sunpillar-2: hsla(53,  100%, 69%, 1);
       --sunpillar-3: hsla(93,  100%, 69%, 1);
@@ -73,7 +62,7 @@
       display: block;
     }
 
-    /* ── Holofoil — pokemon-cards-151 style (sunpillar bars + overlay blend) ── */
+    /* ── Pokemon-cards-151 holo ── */
     .card__shine {
       position: absolute;
       inset: 0;
@@ -122,7 +111,7 @@
       z-index: 3;
     }
 
-    /* ── CF logos — scattered positions set via inline style in JS ── */
+    /* ── CF logos — scattered, positions set via inline style ── */
     .card__logo {
       position: absolute;
       height: auto;
@@ -151,18 +140,15 @@
       pointer-events: none;
       transition: opacity 0.22s ease;
     }
-
     .giphy-lightbox.is-open {
       opacity: 1;
       pointer-events: auto;
     }
-
     .giphy-lightbox-inner {
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
     .giphy-lightbox img {
       display: block;
       max-width: 88vw;
@@ -172,7 +158,6 @@
       border-radius: 12px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.85);
     }
-
     .giphy-lightbox-close {
       position: fixed;
       top: 20px;
@@ -191,7 +176,6 @@
       opacity: 0.75;
       transition: opacity 0.2s, background 0.2s;
     }
-
     .giphy-lightbox-close:hover {
       opacity: 1;
       background: rgba(255,255,255,0.18);
@@ -247,13 +231,12 @@
       <h1 class="intro-title">Gallery</h1>
     </section>
 
-    <p class="giphy-loading" id="giphyLoading">Loading...</p>
     <div class="giphy-grid" id="giphyGrid"></div>
   </main>
 
   <!-- LIGHTBOX -->
   <div class="giphy-lightbox" id="giphyLightbox">
-    <button class="giphy-lightbox-close" id="giphyClose">✕</button>
+    <button class="giphy-lightbox-close" id="giphyClose">&#x2715;</button>
     <div class="giphy-lightbox-inner">
       <img src="" alt="" id="giphyLightboxImg">
     </div>
@@ -262,7 +245,7 @@
   <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
-      <div class="footer-copy">© 2026 Capital Flight New York</div>
+      <div class="footer-copy">&#169; 2026 Capital Flight New York</div>
       <nav class="footer-socials" aria-label="Social links">
         <a href="https://www.instagram.com/capitalflightny/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -300,14 +283,14 @@
     <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
     <div class="mobile-menu-panel">
       <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu" type="button">
-        Tap to close ✕
+        Tap to close &#x2715;
       </button>
       <nav class="mobile-nav" aria-label="Mobile navigation">
         <a href="https://cfny.framer.website/">Home</a>
         <a href="production">Production</a>
         <a href="marketing">Marketing</a>
         <div class="nav-dropdown">
-          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <a href="label">Label <span class="dropdown-arrow">&#x25BE;</span></a>
           <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
             <a href="roster">Roster</a>
           </div></div>
@@ -321,20 +304,31 @@
   <script src="https://cdn.jsdelivr.net/npm/sparticles@latest/dist/sparticles.min.js"></script>
   <script src="app.js"></script>
   <script>
-    const API_KEY  = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
-    const USERNAME = 'saadmetla';
-    const LIMIT    = 50;
+    const CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
 
-    // Cast a very wide net: vowels + common short words catch virtually every GIF title/tag
-    const QUERIES  = ['a','e','i','o','the','new','on','off','rap','ny','music','video','ft','feat'];
+    // All 65 @saadmetla GIFs — hardcoded direct CDN, no API key needed
+    const GIF_IDS = [
+      '7YXyh6XGVrkipoT7AM','Hp0oLlOZbtD6ZbmO79','SCJyPU6loBmTE26VY8','RV4u79GSWJY93Oantt','eC3jZI6okosY6cfEjD',
+      'wMIKzT6umGX0x9pu9B','Ufwem8bDVmtTH55tnU','f2RMUe8TJdbAKHuD3O','vnzV73oztE0tSgy9sf','F5q2vJ3QnhPWEYUKM7',
+      'JCuwTjKdxPDD3VJ1rT','ps7KaGq7DQ15csS6XL','mh2GAoc0IqHklln8Wu','eSZ0KK05JWdNSk5WWC','X8A77knU6m8bKU4D7Q',
+      'urdJikxhonENmjfW5D','YDP0zAVeUP2nVqPrsp','RMa2XHZurr7OyQnSsJ','EtxJUiWzJpReXbOZke','MQ8tvpzEgBKhsv1IR6',
+      'YWCgKvqCgzvePGqVQP','b0KcHRbeA4nmhwTaPL','rwJPJA29xQA8URD1Vd','aKdCLAoT9ZKiLZmloD','INlQJwwoIf4NxVsQTo',
+      '4RMIfGvOFaAPLan8gW','ErGUv1zp1zotWhQdoS','vutM9hEltrjxo5nv8J','PPGj667Jf2mpLyheYF','agmtdtCJPnRyY8Ftlh',
+      'VHzuQ0lOxvpQieRZSx','D7R9sWPfxru3f96QIa','YrOJbd0RMdTn1iAYfN','ErJzG5Bc20UGazt1Ry','tIuW93NFixReSweOw9',
+      'hpKW2LqWwACGRUzzpv','92Fd7I1rlMZinNJNSC','a1KVP0zT3Ki2LG4E7Y','C8bDdb4g2TWmNgCJc5','QwHHU09LmQBmNyF8Yl',
+      'iGEXvN1C5T8nqtDXiA','VVGfvI5fnBOVtJo9kc','48SsDaoB6L5V0e3OmG','lAtWoHcji8JF8wA2vf','o1JZOCkGxEqSAdcGwg',
+      '8aFeKQWtuj3Wctqmpq','y5hhPp9lcZzdVL0GUV','T0pgtPLAxLrerDbgfe','WfdjcpoM6cAbGtvEf3','Eki04ysaPhCV6EzCVx',
+      'm9w4aDfnNlcO8pFdNT','qexkGiFDLCtzRKTKwg','ljVEUxRT309m3iyah3','QVhtLw4SnaxmMdHX7F',
+      'r42yUUm087mBZLifKk','mL0ahBPCZeVHNUufxQ','4vMUKxKxjtiwSRGstg','8cZGgp4Yn62QYDLTwf','mxneB06HKsStvWY2Wq','BMkopzVICIDXaHwA34',
+      'SASBc01Eda9HhTT1Sq','8o85HC3wNvQfjTO6BH','LPdEzkmMukxnNdaMEW',
+      'hK5GmwnR4V7yfmPMBd','3wVKQTtd2vI3DtLPL0'
+    ];
 
     const grid     = document.getElementById('giphyGrid');
-    const loading  = document.getElementById('giphyLoading');
     const lightbox = document.getElementById('giphyLightbox');
     const lbImg    = document.getElementById('giphyLightboxImg');
     const closeBtn = document.getElementById('giphyClose');
 
-    /* ── Shuffle (Fisher-Yates) ── */
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -343,127 +337,74 @@
       return arr;
     }
 
-    /* ── Fetch all pages for one query ── */
-    async function fetchQuery(q) {
-      const results = [];
-      let offset = 0, total = null;
-      do {
-        try {
-          const url = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=${USERNAME}&q=${encodeURIComponent(q)}&limit=${LIMIT}&offset=${offset}&rating=pg-13`;
-          const res  = await fetch(url);
-          const json = await res.json();
-          if (total === null) total = json.pagination.total_count;
-          if (!json.data.length) break;
-          results.push(...json.data);
-          offset += LIMIT;
-        } catch { break; }
-      } while (offset < total);
-      return results;
-    }
+    const SCATTER = [
+      { t: 14, l: 22, w: 20, r: -12 },
+      { t: 70, l: 74, w: 15, r:  20 },
+      { t: 46, l: 54, w: 26, r:   5 },
+    ];
 
-    /* ── Load everything, deduplicate, shuffle, render ── */
-    async function fetchAll() {
-      const seen = new Set();
-      const all  = [];
+    function buildCard(id) {
+      const src  = 'https://media.giphy.com/media/' + id + '/giphy.gif';
+      const card = document.createElement('div');
+      card.className = 'card';
 
-      for (const q of QUERIES) {
-        const batch = await fetchQuery(q);
-        for (const gif of batch) {
-          if (!seen.has(gif.id)) {
-            seen.add(gif.id);
-            all.push(gif);
-          }
-        }
-        loading.textContent = `Loading… ${all.length} GIFs found`;
-      }
+      const img = document.createElement('img');
+      img.src     = src;
+      img.alt     = '';
+      img.loading = 'lazy';
 
-      loading.textContent = `Rendering ${all.length} GIFs…`;
-      shuffle(all);
-      renderAll(all);
-      loading.style.display = 'none';
-    }
+      const shine = document.createElement('div');
+      shine.className = 'card__shine';
+      const glare = document.createElement('div');
+      glare.className = 'card__glare';
 
-    const CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
+      card.append(img, shine, glare);
 
-    /* ── Render all cards at once ── */
-    function renderAll(gifs) {
-      const frag = document.createDocumentFragment();
-      gifs.forEach(gif => {
-        // Use fixed_width — full framerate animated GIF, not downsampled
-        const src = gif.images.fixed_width;
-        const card = document.createElement('div');
-        card.className = 'card';
-
-        const el = document.createElement('img');
-        el.src     = src.url;
-        el.alt     = gif.title;
-        el.loading = 'lazy';
-        el.width   = src.width;
-        el.height  = src.height;
-
-        const shine = document.createElement('div');
-        shine.className = 'card__shine';
-
-        const glare = document.createElement('div');
-        glare.className = 'card__glare';
-
-        card.append(el, shine, glare);
-
-        // Scatter 3 CF logos at different positions/sizes/angles
-        const SCATTER = [
-          { t: 14, l: 22, w: 20, r: -12 },
-          { t: 70, l: 74, w: 15, r:  20 },
-          { t: 46, l: 54, w: 26, r:   5 },
-        ];
-        SCATTER.forEach(p => {
-          const logo = document.createElement('img');
-          logo.className = 'card__logo';
-          logo.src = CF_LOGO;
-          logo.alt = '';
-          logo.setAttribute('aria-hidden', 'true');
-          logo.style.cssText = `top:${p.t}%;left:${p.l}%;width:${p.w}%;transform:translate(-50%,-50%) rotate(${p.r}deg);`;
-          card.appendChild(logo);
-        });
-        attachHolo(card);
-
-        const origUrl = gif.images.original.url;
-        card.addEventListener('click', () => openLightbox(origUrl, gif.title));
-        frag.appendChild(card);
+      SCATTER.forEach(function(p) {
+        const logo = document.createElement('img');
+        logo.className = 'card__logo';
+        logo.src = CF_LOGO;
+        logo.alt = '';
+        logo.setAttribute('aria-hidden', 'true');
+        logo.style.cssText = 'top:' + p.t + '%;left:' + p.l + '%;width:' + p.w + '%;transform:translate(-50%,-50%) rotate(' + p.r + 'deg);';
+        card.appendChild(logo);
       });
-      grid.appendChild(frag);
-    }
 
-    /* ── Holofoil — color overlay only, zero transforms, GIFs untouched ── */
-    function attachHolo(card) {
-      card.addEventListener('mousemove', e => {
+      card.addEventListener('mousemove', function(e) {
         const r  = card.getBoundingClientRect();
         const fl = (e.clientX - r.left) / r.width;
         const ft = (e.clientY - r.top)  / r.height;
-        card.style.setProperty('--pointer-x',         `${(e.clientX - r.left)}px`);
-        card.style.setProperty('--pointer-y',         `${(e.clientY - r.top)}px`);
+        card.style.setProperty('--pointer-x',         (e.clientX - r.left) + 'px');
+        card.style.setProperty('--pointer-y',         (e.clientY - r.top)  + 'px');
         card.style.setProperty('--pointer-from-left', fl);
-        card.style.setProperty('--shine-x',           `${fl * 100}%`);
-        card.style.setProperty('--shine-y',           `${ft * 100}%`);
+        card.style.setProperty('--shine-x',           (fl * 100) + '%');
+        card.style.setProperty('--shine-y',           (ft * 100) + '%');
       });
+
+      card.addEventListener('click', function() { openLightbox(src); });
+      return card;
     }
 
-    /* ── Lightbox — simple fade, image at full natural size ── */
-    function openLightbox(src, alt) {
+    function openLightbox(src) {
       lbImg.src = src;
-      lbImg.alt = alt;
       lightbox.classList.add('is-open');
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
-      setTimeout(() => { lbImg.src = ''; }, 300);
+      setTimeout(function() { lbImg.src = ''; }, 300);
     }
 
     closeBtn.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target.closest('.giphy-lightbox') === lightbox && !e.target.closest('.giphy-lightbox-inner')) closeLightbox(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    lightbox.addEventListener('click', function(e) {
+      if (!e.target.closest('.giphy-lightbox-inner')) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-    fetchAll();
+    // Render instantly — no API call, no wait
+    var frag = document.createDocumentFragment();
+    shuffle(GIF_IDS.slice()).forEach(function(id) { frag.appendChild(buildCard(id)); });
+    grid.appendChild(frag);
   </script>
 </body>
 </html>

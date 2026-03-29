@@ -332,39 +332,30 @@
       return arr;
     }
 
-    /*
-     * 5×7 logo grid — 35 logos total.
-     * Edge logos are intentionally cropped by overflow:hidden — looks like a watermark stamp.
-     * Size varies by column (center largest, edges medium).
-     * Rotation alternates like a checkerboard (-6° / +6°).
-     */
-    var LOGO_PATTERN = (function() {
-      var cols  = [5,  26, 50, 74, 95];        // left %  — edges hang off card
-      var rows  = [4,  18, 33, 50, 66, 81, 95]; // top %  — top/bottom rows cropped
-      var sizes = [22, 16, 28, 16, 22];          // width per column: center biggest
-      var out   = [];
-      rows.forEach(function(t, ri) {
-        cols.forEach(function(l, ci) {
-          out.push({ t: t, l: l, w: sizes[ci], r: ((ri + ci) % 2 === 0) ? -6 : 6 });
-        });
-      });
-      return out;
-    }());
+    /* Grid positions — fixed 5×7 layout, edges hang off card */
+    var LOGO_COLS  = [5, 26, 50, 74, 95];
+    var LOGO_ROWS  = [4, 18, 33, 50, 66, 81, 95];
+    var LOGO_SIZES = [13, 17, 21, 25, 29];   // pick randomly per logo
+    var LOGO_ROTS  = [-14, -9, -4, 0, 4, 9, 14]; // pick randomly per logo
 
-    /* Attach logos in the clean X pattern to any container element */
+    function rndPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    /* Each call randomises size + rotation independently per logo — every card unique */
     function attachLogos(container) {
-      LOGO_PATTERN.forEach(function(p) {
-        var logo = document.createElement('img');
-        logo.className = 'cf-logo';
-        logo.src = CF_LOGO;
-        logo.alt = '';
-        logo.setAttribute('aria-hidden', 'true');
-        logo.style.cssText =
-          'top:' + p.t + '%;' +
-          'left:' + p.l + '%;' +
-          'width:' + p.w + '%;' +
-          'transform:translate(-50%,-50%) rotate(' + p.r + 'deg);';
-        container.appendChild(logo);
+      LOGO_ROWS.forEach(function(t) {
+        LOGO_COLS.forEach(function(l) {
+          var logo = document.createElement('img');
+          logo.className = 'cf-logo';
+          logo.src = CF_LOGO;
+          logo.alt = '';
+          logo.setAttribute('aria-hidden', 'true');
+          logo.style.cssText =
+            'top:'  + t + '%;' +
+            'left:' + l + '%;' +
+            'width:' + rndPick(LOGO_SIZES) + '%;' +
+            'transform:translate(-50%,-50%) rotate(' + rndPick(LOGO_ROTS) + 'deg);';
+          container.appendChild(logo);
+        });
       });
     }
 

@@ -20,36 +20,38 @@
       isolation: isolate;
     }
 
-    /* The flag sits behind the text */
+    /* The flag sits behind the text — larger coverage, more visible */
     .saad-flag {
       position: absolute;
-      inset: -3px -8px;
-      border-radius: 3px;
+      inset: -5px -12px;
+      border-radius: 4px;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
       z-index: -1;
       transform-origin: left center;
-      transition: opacity 0.35s ease;
-      /* Pakistan flag: white stripe left ~22%, dark green rest */
+      transition: opacity 0.3s ease;
+      /* Pakistan flag: white stripe left ~22%, rich dark green rest */
       background: linear-gradient(to right, #fff 22%, #01411C 22%);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
     }
 
-    /* Crescent + star on the green portion */
+    /* Crescent on the green portion — larger and crisper */
     .saad-flag::after {
       content: '☪';
       position: absolute;
       top: 50%;
-      left: 62%;
+      left: 63%;
       transform: translate(-50%, -50%);
       color: #fff;
-      font-size: 0.72em;
+      font-size: 0.9em;
       line-height: 1;
+      text-shadow: 0 0 6px rgba(255,255,255,0.4);
     }
 
     .saad-link:hover .saad-flag {
-      opacity: 1;
-      animation: pkWave 1.8s ease-in-out infinite;
+      opacity: 0.93;
+      animation: pkWave 1.4s ease-in-out infinite;
     }
 
     /* Text stays white and readable over the flag */
@@ -58,19 +60,19 @@
       z-index: 1;
       color: #fff;
       -webkit-text-fill-color: #fff;
-      text-shadow: 0 1px 5px rgba(0,0,0,0.55);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
     }
 
-    /* Flag wave — skewY ripple from left to right */
+    /* Flag wave — perspective rotateY + skewX = realistic cloth ripple from left pole */
     @keyframes pkWave {
-      0%   { transform: skewY(0deg)    scaleX(1);    }
-      12%  { transform: skewY(1.4deg)  scaleX(0.99); }
-      28%  { transform: skewY(-1.2deg) scaleX(1.01); }
-      44%  { transform: skewY(1.6deg)  scaleX(0.98); }
-      60%  { transform: skewY(-1deg)   scaleX(1.01); }
-      76%  { transform: skewY(1.1deg)  scaleX(0.99); }
-      90%  { transform: skewY(-0.6deg) scaleX(1);    }
-      100% { transform: skewY(0deg)    scaleX(1);    }
+      0%   { transform: perspective(280px) rotateY(0deg)    skewX(0deg);    }
+      10%  { transform: perspective(280px) rotateY(4deg)    skewX(-2deg);   }
+      25%  { transform: perspective(280px) rotateY(-3deg)   skewX(1.8deg);  }
+      40%  { transform: perspective(280px) rotateY(5.5deg)  skewX(-2.5deg); }
+      55%  { transform: perspective(280px) rotateY(-2.5deg) skewX(1.5deg);  }
+      70%  { transform: perspective(280px) rotateY(3.5deg)  skewX(-1.8deg); }
+      85%  { transform: perspective(280px) rotateY(-1deg)   skewX(0.8deg);  }
+      100% { transform: perspective(280px) rotateY(0deg)    skewX(0deg);    }
     }
   </style>
 </head>

@@ -452,7 +452,11 @@ function countUp(el) {
 ============================================= */
 (function () {
   if (typeof Sparticles === 'undefined') return;
-  new Sparticles(document.body, {
+  // Render to a dedicated fixed container so it never overlaps page content
+  const pc = document.createElement('div');
+  pc.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;';
+  document.body.appendChild(pc);
+  new Sparticles(pc, {
     count:       80,
     color:       ['#ffffff', '#c0c0c0', '#d4af37'],
     shape:       ['circle', 'diamond'],

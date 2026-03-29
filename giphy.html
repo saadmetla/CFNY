@@ -33,13 +33,21 @@
       padding: 20px 0 24px;
     }
 
-    /* ── Card — no transforms, GIFs play exactly as original ── */
+    /* ── Card — 2D scale grow on hover, GIFs stay animated ── */
     .card {
       --pointer-x: 50%;
       --pointer-y: 50%;
       --pointer-from-left: 0.5;
       --shine-x: 50%;
       --shine-y: 50%;
+
+      /* pokemon-cards-151 sunpillar palette */
+      --sunpillar-1: hsla(2,   100%, 73%, 1);
+      --sunpillar-2: hsla(53,  100%, 69%, 1);
+      --sunpillar-3: hsla(93,  100%, 69%, 1);
+      --sunpillar-4: hsla(176, 100%, 76%, 1);
+      --sunpillar-5: hsla(228, 100%, 74%, 1);
+      --sunpillar-6: hsla(283, 100%, 73%, 1);
 
       display: block;
       break-inside: avoid;
@@ -49,11 +57,13 @@
       cursor: pointer;
       position: relative;
       box-shadow: 0 4px 16px rgba(0,0,0,0.45);
-      transition: box-shadow 0.25s ease;
+      transition: box-shadow 0.28s ease, transform 0.28s ease;
+      transform: scale(1) translateZ(0);
     }
 
     .card:hover {
-      box-shadow: 0 8px 28px rgba(0,0,0,0.65), 0 0 14px rgba(255,255,255,0.06);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.7), 0 0 20px rgba(160,100,255,0.14);
+      transform: scale(1.05) translateZ(0);
       z-index: 10;
     }
 
@@ -63,25 +73,32 @@
       display: block;
     }
 
-    /* ── Holofoil color overlay only — no zoom, no distortion ── */
+    /* ── Holofoil — pokemon-cards-151 style (sunpillar bars + overlay blend) ── */
     .card__shine {
       position: absolute;
       inset: 0;
       border-radius: 10px;
-      background:
-        linear-gradient(
-          calc(var(--pointer-from-left) * 360deg + 120deg),
-          rgba(248, 14, 53, 0.45) 0%,
-          rgba(238,223,16, 0.45) 16%,
-          rgba(33, 233,133,0.45) 33%,
-          rgba(13, 189,233,0.45) 50%,
-          rgba(201, 41,241,0.45) 66%,
-          rgba(248, 14, 53, 0.45) 83%,
-          rgba(238,223, 16,0.45) 100%
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          var(--sunpillar-1)   0%,
+          var(--sunpillar-2)  16.6%,
+          var(--sunpillar-3)  33.3%,
+          var(--sunpillar-4)  50%,
+          var(--sunpillar-5)  66.6%,
+          var(--sunpillar-6)  83.3%,
+          var(--sunpillar-1) 100%
+        ),
+        repeating-linear-gradient(
+          calc(var(--pointer-from-left) * 90deg + 45deg),
+          rgba(255,255,255,0) 0%,
+          rgba(255,255,255,0.5) 50%,
+          rgba(255,255,255,0) 100%
         );
-      background-size: 200% 200%;
-      background-position: var(--shine-x) var(--shine-y);
-      mix-blend-mode: color-dodge;
+      background-size: 100% 400%, 200% 200%;
+      background-position: 0% var(--shine-y), var(--shine-x) var(--shine-y);
+      filter: brightness(1.25) contrast(3) saturate(0.75);
+      mix-blend-mode: overlay;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
@@ -93,10 +110,10 @@
       inset: 0;
       border-radius: 10px;
       background: radial-gradient(
-        circle at var(--pointer-x) var(--pointer-y),
-        rgba(255,255,255,0.2) 0%,
-        rgba(255,255,255,0.05) 40%,
-        transparent 70%
+        farthest-corner circle at var(--pointer-x) var(--pointer-y),
+        rgba(255,255,255,0.8) 10%,
+        rgba(255,255,255,0.4) 45%,
+        rgba(0,0,0,0.1) 90%
       );
       mix-blend-mode: overlay;
       opacity: 0;
@@ -105,24 +122,21 @@
       z-index: 3;
     }
 
-    /* ── CF logo — img with screen blend so white logo glows ── */
+    /* ── CF logos — scattered positions set via inline style in JS ── */
     .card__logo {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 38%;
       height: auto;
       mix-blend-mode: screen;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 4;
-      filter: brightness(3);
+      filter: brightness(3) drop-shadow(0 0 6px rgba(255,255,255,0.4));
     }
 
-    .card:hover .card__shine { opacity: 0.28; }
-    .card:hover .card__glare { opacity: 1; }
-    .card:hover .card__logo  { opacity: 0.45; }
+    .card:hover .card__shine { opacity: 0.72; }
+    .card:hover .card__glare { opacity: 0.35; }
+    .card:hover .card__logo  { opacity: 0.42; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
@@ -393,14 +407,23 @@
         const glare = document.createElement('div');
         glare.className = 'card__glare';
 
-        // Logo as img with mix-blend-mode:screen — white logo glows on hover
-        const logo = document.createElement('img');
-        logo.className = 'card__logo';
-        logo.src = CF_LOGO;
-        logo.alt = '';
-        logo.setAttribute('aria-hidden', 'true');
+        card.append(el, shine, glare);
 
-        card.append(el, shine, glare, logo);
+        // Scatter 3 CF logos at different positions/sizes/angles
+        const SCATTER = [
+          { t: 14, l: 22, w: 20, r: -12 },
+          { t: 70, l: 74, w: 15, r:  20 },
+          { t: 46, l: 54, w: 26, r:   5 },
+        ];
+        SCATTER.forEach(p => {
+          const logo = document.createElement('img');
+          logo.className = 'card__logo';
+          logo.src = CF_LOGO;
+          logo.alt = '';
+          logo.setAttribute('aria-hidden', 'true');
+          logo.style.cssText = `top:${p.t}%;left:${p.l}%;width:${p.w}%;transform:translate(-50%,-50%) rotate(${p.r}deg);`;
+          card.appendChild(logo);
+        });
         attachHolo(card);
 
         const origUrl = gif.images.original.url;

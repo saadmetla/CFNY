@@ -333,17 +333,23 @@
     }
 
     /*
-     * Clean logo pattern — 5-point X layout:
-     * top-left, top-right, center, bottom-left, bottom-right
-     * All logos same mild tilt inward toward center.
+     * 5×7 logo grid — 35 logos total.
+     * Edge logos are intentionally cropped by overflow:hidden — looks like a watermark stamp.
+     * Size varies by column (center largest, edges medium).
+     * Rotation alternates like a checkerboard (-6° / +6°).
      */
-    var LOGO_PATTERN = [
-      { t:  9, l: 11, w: 20, r: -10 },   /* top-left     */
-      { t:  9, l: 89, w: 20, r:  10 },   /* top-right    */
-      { t: 50, l: 50, w: 26, r:   0 },   /* center       */
-      { t: 88, l: 11, w: 20, r:  10 },   /* bottom-left  */
-      { t: 88, l: 89, w: 20, r: -10 },   /* bottom-right */
-    ];
+    var LOGO_PATTERN = (function() {
+      var cols  = [5,  26, 50, 74, 95];        // left %  — edges hang off card
+      var rows  = [4,  18, 33, 50, 66, 81, 95]; // top %  — top/bottom rows cropped
+      var sizes = [22, 16, 28, 16, 22];          // width per column: center biggest
+      var out   = [];
+      rows.forEach(function(t, ri) {
+        cols.forEach(function(l, ci) {
+          out.push({ t: t, l: l, w: sizes[ci], r: ((ri + ci) % 2 === 0) ? -6 : 6 });
+        });
+      });
+      return out;
+    }());
 
     /* Attach logos in the clean X pattern to any container element */
     function attachLogos(container) {

@@ -334,16 +334,16 @@
     }
 
     /*
-     * Staggered hex-pack logo layout — fills the entire card like Pokemon holo.
-     * Even rows: 5 logos at [10, 30, 50, 70, 90]%
-     * Odd rows:  4 logos at [20, 40, 60, 80]%
-     * 11 rows total → ~50 logos, full coverage, no dead zones.
+     * Staggered hex-pack logo layout — 7 rows, ~32 logos.
+     * Edge cols pushed outside card bounds so logos peek/clip at borders.
+     * Even rows: 5 logos, leftmost/rightmost intentionally clipped.
+     * Odd rows:  4 logos, offset half-step.
      * Each card picks a size + rotation scheme at random for variety.
      */
-    var EVEN_COLS = [10, 30, 50, 70, 90];
-    var ODD_COLS  = [20, 40, 60, 80];
-    // 11 rows: alternating even/odd
-    var ROW_YS    = [5, 14, 23, 32, 41, 50, 59, 68, 77, 86, 95];
+    var EVEN_COLS = [-5, 24, 50, 76, 105];   // -5 & 105 → logos peek at L/R edges
+    var ODD_COLS  = [12, 38, 62, 88];
+    // 7 rows: first & last near top/bottom edge so they clip too
+    var ROW_YS    = [3, 19, 36, 53, 70, 83, 97];
 
     // Size schemes (applied positionally to even cols; odd cols interpolated)
     var SIZE_SCHEMES = [

@@ -11,15 +11,17 @@
 
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Grid ── */
+    /* ── Masonry grid — natural portrait heights ── */
     .giphy-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      columns: 4;
+      column-gap: 14px;
       padding: 0 24px 80px;
       max-width: 1200px;
       margin: 0 auto;
     }
+    @media (max-width: 900px)  { .giphy-grid { columns: 3; } }
+    @media (max-width: 600px)  { .giphy-grid { columns: 2; } }
+    @media (max-width: 380px)  { .giphy-grid { columns: 1; } }
 
     .giphy-loading {
       text-align: center;
@@ -28,116 +30,97 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 40px 0 0;
+      padding: 20px 0 24px;
     }
 
-    /* ── Holographic Card (pokemon-cards-css inspired) ── */
+    /* ── Card — no forced square, natural ratio ── */
     .card {
+      --card-opacity: 0;
       --pointer-x: 50%;
       --pointer-y: 50%;
       --pointer-from-left: 0.5;
-      --pointer-from-top: 0.5;
-      --pointer-from-center: 0;
-      --card-opacity: 0;
-      --rotate-x: 0deg;
-      --rotate-y: 0deg;
       --shine-x: 50%;
       --shine-y: 50%;
 
-      position: relative;
+      display: block;
+      break-inside: avoid;
+      margin-bottom: 14px;
       border-radius: 10px;
       overflow: hidden;
       cursor: pointer;
-      transform-style: preserve-3d;
-      transform: perspective(600px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
-      transition: transform 0.1s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      aspect-ratio: 1;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+      transition: transform 0.12s ease, box-shadow 0.25s ease;
     }
 
     .card:hover {
-      box-shadow:
-        0 10px 40px rgba(0,0,0,0.6),
-        0 0 20px rgba(255,255,255,0.08);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.65), 0 0 16px rgba(255,255,255,0.06);
       z-index: 10;
     }
 
     .card img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;         /* natural portrait ratio */
       display: block;
-      border-radius: 10px;
     }
 
-    /* Holographic shine layer */
+    /* ── Holofoil — subtler ── */
     .card__shine {
       position: absolute;
       inset: 0;
       border-radius: 10px;
       background-image:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255,255,255,0.03) 0px,
-          rgba(255,255,255,0.03) 1px,
-          transparent 1px,
-          transparent 3px
-        ),
         linear-gradient(
           calc(var(--pointer-from-left) * 360deg + 120deg),
-          #f80e35 0%,
-          #eedf10 15%,
-          #21e985 30%,
-          #0dbde9 45%,
-          #c929f1 60%,
-          #f80e35 75%,
-          #eedf10 90%,
-          #21e985 100%
+          rgba(248, 14,  53, 0.55) 0%,
+          rgba(238,223, 16, 0.55) 16%,
+          rgba( 33,233,133, 0.55) 33%,
+          rgba( 13,189,233, 0.55) 50%,
+          rgba(201, 41,241, 0.55) 66%,
+          rgba(248, 14, 53, 0.55) 83%,
+          rgba(238,223, 16, 0.55) 100%
         );
-      background-size: 100% 3px, 200% 200%;
-      background-position: 0 0, var(--shine-x) var(--shine-y);
+      background-size: 200% 200%;
+      background-position: var(--shine-x) var(--shine-y);
       mix-blend-mode: color-dodge;
-      opacity: var(--card-opacity);
-      transition: opacity 0.4s ease;
+      opacity: 0;
+      transition: opacity 0.35s ease;
       pointer-events: none;
       z-index: 2;
     }
 
-    /* Glare / specular highlight */
     .card__glare {
       position: absolute;
       inset: 0;
       border-radius: 10px;
       background: radial-gradient(
-        farthest-corner circle at var(--pointer-x) var(--pointer-y),
-        rgba(255,255,255,0.5) 0%,
-        rgba(255,255,255,0.15) 30%,
-        rgba(255,255,255,0) 70%
+        circle at var(--pointer-x) var(--pointer-y),
+        rgba(255,255,255,0.22) 0%,
+        rgba(255,255,255,0.06) 40%,
+        transparent 70%
       );
       mix-blend-mode: overlay;
-      opacity: var(--card-opacity);
-      transition: opacity 0.4s ease;
+      opacity: 0;
+      transition: opacity 0.35s ease;
       pointer-events: none;
       z-index: 3;
     }
 
-    .card:hover .card__shine,
-    .card:hover .card__glare {
-      opacity: 1;
-    }
+    .card:hover .card__shine { opacity: 0.3; }
+    .card:hover .card__glare { opacity: 1; }
 
     /* ── Lightbox ── */
     .giphy-lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.88);
+      background: rgba(0,0,0,0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 2000;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.25s ease;
     }
 
     .giphy-lightbox.is-open {
@@ -145,28 +128,56 @@
       pointer-events: auto;
     }
 
+    .giphy-lightbox-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 92vw;
+      max-height: 88vh;
+    }
+
     .giphy-lightbox img {
-      max-width: 90vw;
-      max-height: 80vh;
+      display: block;
+      max-width: 92vw;
+      max-height: 88vh;
+      width: auto;
+      height: auto;
       border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+      transform: scale(0.88);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    }
+
+    .giphy-lightbox.is-open img {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .giphy-lightbox-close {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 24px;
-      background: none;
-      border: none;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50%;
       color: #fff;
-      font-size: 28px;
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      line-height: 1;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: 0.75;
+      transition: opacity 0.2s, background 0.2s;
     }
 
-    .giphy-lightbox-close:hover { opacity: 1; }
+    .giphy-lightbox-close:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.18);
+    }
   </style>
 </head>
 
@@ -214,20 +225,20 @@
   </header>
 
   <main class="page" id="top">
-
     <section class="intro">
       <h1 class="intro-title">Gallery</h1>
     </section>
 
     <p class="giphy-loading" id="giphyLoading">Loading...</p>
     <div class="giphy-grid" id="giphyGrid"></div>
-
   </main>
 
   <!-- LIGHTBOX -->
   <div class="giphy-lightbox" id="giphyLightbox">
     <button class="giphy-lightbox-close" id="giphyClose">✕</button>
-    <img src="" alt="" id="giphyLightboxImg">
+    <div class="giphy-lightbox-inner">
+      <img src="" alt="" id="giphyLightboxImg">
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -291,48 +302,82 @@
 
   <script src="app.js"></script>
   <script>
-    const API_KEY = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
+    const API_KEY  = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
     const USERNAME = 'saadmetla';
-    const LIMIT = 50;
+    const LIMIT    = 50;
 
-    const grid      = document.getElementById('giphyGrid');
-    const loading   = document.getElementById('giphyLoading');
-    const lightbox  = document.getElementById('giphyLightbox');
-    const lbImg     = document.getElementById('giphyLightboxImg');
-    const closeBtn  = document.getElementById('giphyClose');
+    // Cast a very wide net: vowels + common short words catch virtually every GIF title/tag
+    const QUERIES  = ['a','e','i','o','the','new','on','off','rap','ny','music','video','ft','feat'];
 
-    /* ── Fetch ALL gifs from the account ── */
-    async function fetchAll() {
-      let offset = 0;
-      let total  = null;
+    const grid     = document.getElementById('giphyGrid');
+    const loading  = document.getElementById('giphyLoading');
+    const lightbox = document.getElementById('giphyLightbox');
+    const lbImg    = document.getElementById('giphyLightboxImg');
+    const closeBtn = document.getElementById('giphyClose');
 
+    /* ── Shuffle (Fisher-Yates) ── */
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    /* ── Fetch all pages for one query ── */
+    async function fetchQuery(q) {
+      const results = [];
+      let offset = 0, total = null;
       do {
-        const url = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=${USERNAME}&q=${USERNAME}&limit=${LIMIT}&offset=${offset}&rating=pg-13`;
-        const res  = await fetch(url);
-        const json = await res.json();
-
-        if (total === null) total = json.pagination.total_count;
-        if (!json.data.length) break;
-
-        renderBatch(json.data);
-        offset += LIMIT;
-
-        loading.textContent = `Loaded ${Math.min(offset, total)} of ${total}...`;
+        try {
+          const url = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&username=${USERNAME}&q=${encodeURIComponent(q)}&limit=${LIMIT}&offset=${offset}&rating=pg-13`;
+          const res  = await fetch(url);
+          const json = await res.json();
+          if (total === null) total = json.pagination.total_count;
+          if (!json.data.length) break;
+          results.push(...json.data);
+          offset += LIMIT;
+        } catch { break; }
       } while (offset < total);
+      return results;
+    }
 
+    /* ── Load everything, deduplicate, shuffle, render ── */
+    async function fetchAll() {
+      const seen = new Set();
+      const all  = [];
+
+      for (const q of QUERIES) {
+        const batch = await fetchQuery(q);
+        for (const gif of batch) {
+          if (!seen.has(gif.id)) {
+            seen.add(gif.id);
+            all.push(gif);
+          }
+        }
+        loading.textContent = `Loading… ${all.length} GIFs found`;
+      }
+
+      loading.textContent = `Rendering ${all.length} GIFs…`;
+      shuffle(all);
+      renderAll(all);
       loading.style.display = 'none';
     }
 
-    /* ── Render a batch of GIF cards ── */
-    function renderBatch(gifs) {
+    /* ── Render all cards at once ── */
+    function renderAll(gifs) {
+      const frag = document.createDocumentFragment();
       gifs.forEach(gif => {
+        const img = gif.images.fixed_width_downsampled || gif.images.fixed_width;
         const card = document.createElement('div');
         card.className = 'card';
 
-        const img = document.createElement('img');
-        img.src = gif.images.fixed_width.url;
-        img.alt = gif.title;
-        img.loading = 'lazy';
+        const el = document.createElement('img');
+        el.src     = img.url;
+        el.alt     = gif.title;
+        el.loading = 'lazy';
+        el.width   = img.width;
+        el.height  = img.height;   // preserves natural portrait ratio
 
         const shine = document.createElement('div');
         shine.className = 'card__shine';
@@ -340,51 +385,38 @@
         const glare = document.createElement('div');
         glare.className = 'card__glare';
 
-        card.appendChild(img);
-        card.appendChild(shine);
-        card.appendChild(glare);
+        card.append(el, shine, glare);
+        attachHolo(card);
 
-        attachHoloEffect(card);
-        card.addEventListener('click', () => openLightbox(gif.images.original.url, gif.title));
-        grid.appendChild(card);
+        // Lightbox: show original at natural size
+        const origUrl = gif.images.original.url;
+        card.addEventListener('click', () => openLightbox(origUrl, gif.title));
+        frag.appendChild(card);
       });
+      grid.appendChild(frag);
     }
 
-    /* ── Holographic tilt + shine (pokemon-cards-css technique) ── */
-    function attachHoloEffect(card) {
+    /* ── Subtle holofoil tilt ── */
+    function attachHolo(card) {
       card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const fromLeft = x / rect.width;
-        const fromTop  = y / rect.height;
-        const fromCenterX = fromLeft - 0.5;
-        const fromCenterY = fromTop  - 0.5;
-        const fromCenter = Math.sqrt(fromCenterX ** 2 + fromCenterY ** 2);
-
-        const rotateY =  fromCenterX * 20;
-        const rotateX = -fromCenterY * 20;
-
-        const shineX = `${fromLeft  * 100}%`;
-        const shineY = `${fromTop   * 100}%`;
+        const r  = card.getBoundingClientRect();
+        const x  = e.clientX - r.left;
+        const y  = e.clientY - r.top;
+        const fl = x / r.width;
+        const ft = y / r.height;
+        const rx = -(ft - 0.5) * 12;   // max ±6 deg (was 20)
+        const ry =  (fl - 0.5) * 12;
 
         card.style.setProperty('--pointer-x',        `${x}px`);
         card.style.setProperty('--pointer-y',        `${y}px`);
-        card.style.setProperty('--pointer-from-left', fromLeft);
-        card.style.setProperty('--pointer-from-top',  fromTop);
-        card.style.setProperty('--pointer-from-center', fromCenter);
-        card.style.setProperty('--rotate-x',  `${rotateX}deg`);
-        card.style.setProperty('--rotate-y',  `${rotateY}deg`);
-        card.style.setProperty('--shine-x',   shineX);
-        card.style.setProperty('--shine-y',   shineY);
-        card.style.setProperty('--card-opacity', '1');
-
-        card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        card.style.setProperty('--pointer-from-left', fl);
+        card.style.setProperty('--shine-x',          `${fl * 100}%`);
+        card.style.setProperty('--shine-y',          `${ft * 100}%`);
+        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
       });
 
       card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--card-opacity', '0');
-        card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)';
+        card.style.transform = '';
       });
     }
 
@@ -392,16 +424,26 @@
     function openLightbox(src, alt) {
       lbImg.src = src;
       lbImg.alt = alt;
+      // Reset animation then open
+      lbImg.style.transition = 'none';
+      lbImg.style.transform  = 'scale(0.88)';
+      lbImg.style.opacity    = '0';
       lightbox.classList.add('is-open');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          lbImg.style.transition = '';
+        });
+      });
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
-      lbImg.src = '';
+      setTimeout(() => { lbImg.src = ''; }, 300);
     }
 
     closeBtn.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target.closest('.giphy-lightbox') === lightbox && !e.target.closest('.giphy-lightbox-inner')) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
     fetchAll();
   </script>

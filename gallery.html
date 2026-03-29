@@ -258,6 +258,7 @@
         </div>
         <a href="about">About</a>
         <a href="gallery" aria-current="page">Gallery</a>
+        <a href="contact">Contact</a>
       </nav>
     </div>
   </div>
@@ -332,31 +333,57 @@
       return arr;
     }
 
-    function rnd(min, max) { return Math.random() * (max - min) + min; }
-
     /*
-     * 3×6 grid = 18 logos per card.
-     * Columns at 17%, 50%, 83% — rows evenly across 0–100%.
-     * Each logo gets a small ±5% position jitter so the grid feels organic,
-     * plus random size (16–26%) and rotation (−12° to 12°) per card.
-     * Spacing ensures no overlap.
+     * Staggered hex-pack logo layout — fills the entire card like Pokemon holo.
+     * Even rows: 5 logos at [10, 30, 50, 70, 90]%
+     * Odd rows:  4 logos at [20, 40, 60, 80]%
+     * 11 rows total → ~50 logos, full coverage, no dead zones.
+     * Each card picks a size + rotation scheme at random for variety.
      */
-    var LOGO_COLS = [17, 50, 83];
-    var LOGO_ROWS = [6, 23, 40, 57, 74, 91];
+    var EVEN_COLS = [10, 30, 50, 70, 90];
+    var ODD_COLS  = [20, 40, 60, 80];
+    // 11 rows: alternating even/odd
+    var ROW_YS    = [5, 14, 23, 32, 41, 50, 59, 68, 77, 86, 95];
+
+    // Size schemes (applied positionally to even cols; odd cols interpolated)
+    var SIZE_SCHEMES = [
+      { even: [20, 17, 22, 17, 20], odd: [18, 21, 18, 21] },  // edges & center larger
+      { even: [18, 20, 18, 20, 18], odd: [20, 18, 20, 18] },  // alternating
+      { even: [22, 18, 22, 18, 22], odd: [19, 22, 19, 22] },  // outer dominant
+      { even: [18, 18, 18, 18, 18], odd: [18, 18, 18, 18] },  // uniform
+      { even: [24, 17, 20, 17, 24], odd: [18, 22, 18, 22] },  // corner pop
+    ];
+
+    // Rotation schemes
+    var ROT_SCHEMES = [
+      { even: [-10, -5, 0, 5, 10],   odd: [-7, -2, 3, 8]   },  // diagonal sweep
+      { even: [10, 5, 0, -5, -10],   odd: [7, 2, -3, -8]   },  // reverse sweep
+      { even: [-8, 6, -4, 6, -8],    odd: [5, -7, 5, -7]   },  // alternating
+      { even: [0, -8, 0, -8, 0],     odd: [-6, 0, -6, 0]   },  // valley
+      { even: [6, -6, 12, -6, 6],    odd: [-9, 6, -9, 6]   },  // wave
+    ];
 
     function attachLogos(container) {
-      LOGO_ROWS.forEach(function(t) {
-        LOGO_COLS.forEach(function(l) {
+      var scheme = SIZE_SCHEMES[Math.floor(Math.random() * SIZE_SCHEMES.length)];
+      var rots   = ROT_SCHEMES[Math.floor(Math.random() * ROT_SCHEMES.length)];
+
+      ROW_YS.forEach(function(t, ri) {
+        var isEven = (ri % 2 === 0);
+        var cols   = isEven ? EVEN_COLS : ODD_COLS;
+        var sizes  = isEven ? scheme.even : scheme.odd;
+        var rotArr = isEven ? rots.even   : rots.odd;
+
+        cols.forEach(function(l, ci) {
           var logo = document.createElement('img');
           logo.className = 'cf-logo';
           logo.src = CF_LOGO;
           logo.alt = '';
           logo.setAttribute('aria-hidden', 'true');
           logo.style.cssText =
-            'top:'  + (t + rnd(-4, 4)) + '%;' +
-            'left:' + (l + rnd(-4, 4)) + '%;' +
-            'width:' + rnd(16, 26) + '%;' +
-            'transform:translate(-50%,-50%) rotate(' + rnd(-12, 12) + 'deg);';
+            'top:'  + t + '%;' +
+            'left:' + l + '%;' +
+            'width:' + sizes[ci] + '%;' +
+            'transform:translate(-50%,-50%) rotate(' + rotArr[ci] + 'deg);';
           container.appendChild(logo);
         });
       });

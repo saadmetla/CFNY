@@ -448,6 +448,30 @@ function countUp(el) {
 })();
 
 /* =============================================
+   SPARTICLES
+============================================= */
+(function () {
+  if (typeof Sparticles === 'undefined') return;
+  new Sparticles(document.body, {
+    count:       80,
+    color:       ['#ffffff', '#c0c0c0', '#d4af37'],
+    shape:       ['circle', 'diamond'],
+    composition: 'screen',
+    twinkle:     true,
+    glow:        6,
+    minSize:     2,
+    maxSize:     6,
+    minAlpha:    0.1,
+    maxAlpha:    0.55,
+    minSpeed:    0.3,
+    maxSpeed:    1.2,
+    direction:   180,
+    bounce:      false,
+    overflow:    false,
+  });
+})();
+
+/* =============================================
    CURSOR RING
 ============================================= */
 (function () {

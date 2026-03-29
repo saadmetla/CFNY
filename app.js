@@ -11,6 +11,7 @@ const videoData = {
     { year: '2024', title: 'SHEROZ & HENNY', subtitle: 'YAAR JIGRI', youtubeUrl: 'https://www.youtube.com/watch?v=vrZiFXlE-Vg' },
     { year: '2024', title: 'HEEMS', subtitle: 'Rakhi', youtubeUrl: 'https://www.youtube.com/watch?v=3d_cGjvZNTA' },
     { year: '2024', title: 'AHMED KHAN FT PDNY', subtitle: 'Attention', youtubeUrl: 'https://www.youtube.com/watch?v=gd4__EYRXOg' },
+    { year: '2024', title: 'G HOUR TOP', subtitle: 'No Handouts', youtubeUrl: 'https://www.youtube.com/watch?v=7jUrtC4iw7E' },
 
     { year: '2023', title: 'RAF SAPERRA', subtitle: 'Ranjha', youtubeUrl: 'https://www.youtube.com/watch?v=MwFC7trjEXM' },
     { year: '2023', title: 'TRA-V THE SHOOTA', subtitle: 'I Wanna Be', youtubeUrl: 'https://www.youtube.com/watch?v=3liNCRTa4-s' },

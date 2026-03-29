@@ -332,31 +332,23 @@
       return arr;
     }
 
-    /* Grid positions — fixed 5×7 layout, edges hang off card */
-    var LOGO_COLS  = [5, 26, 50, 74, 95];
-    var LOGO_ROWS  = [4, 18, 33, 50, 66, 81, 95];
-    var LOGO_SIZES = [13, 17, 21, 25, 29];   // pick randomly per logo
-    var LOGO_ROTS  = [-14, -9, -4, 0, 4, 9, 14]; // pick randomly per logo
+    function rnd(min, max) { return Math.random() * (max - min) + min; }
 
-    function rndPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-    /* Each call randomises size + rotation independently per logo — every card unique */
+    /* 35 logos, fully random position + size + rotation per card */
     function attachLogos(container) {
-      LOGO_ROWS.forEach(function(t) {
-        LOGO_COLS.forEach(function(l) {
-          var logo = document.createElement('img');
-          logo.className = 'cf-logo';
-          logo.src = CF_LOGO;
-          logo.alt = '';
-          logo.setAttribute('aria-hidden', 'true');
-          logo.style.cssText =
-            'top:'  + t + '%;' +
-            'left:' + l + '%;' +
-            'width:' + rndPick(LOGO_SIZES) + '%;' +
-            'transform:translate(-50%,-50%) rotate(' + rndPick(LOGO_ROTS) + 'deg);';
-          container.appendChild(logo);
-        });
-      });
+      for (var i = 0; i < 35; i++) {
+        var logo = document.createElement('img');
+        logo.className = 'cf-logo';
+        logo.src = CF_LOGO;
+        logo.alt = '';
+        logo.setAttribute('aria-hidden', 'true');
+        logo.style.cssText =
+          'top:'  + rnd(-5, 105) + '%;' +
+          'left:' + rnd(-5, 105) + '%;' +
+          'width:' + rnd(10, 32) + '%;' +
+          'transform:translate(-50%,-50%) rotate(' + rnd(-25, 25) + 'deg);';
+        container.appendChild(logo);
+      }
     }
 
     /* Apply tilt + holo vars to any element with --px/--py/--pfl/--sx/--sy */

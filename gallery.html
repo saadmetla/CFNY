@@ -247,8 +247,7 @@
   <div class="giphy-lightbox" id="giphyLightbox">
     <button class="giphy-lightbox-close" id="giphyClose">&#x2715;</button>
     <div class="lb-card" id="lbCard">
-      <canvas id="giphyLightboxCanvas" style="display:block;max-width:88vw;max-height:82vh;border-radius:14px;"></canvas>
-      <img src="" alt="" id="giphyLightboxImg" style="display:none;">
+      <img src="" alt="" id="giphyLightboxImg" style="display:block;max-width:88vw;max-height:82vh;border-radius:14px;">
       <div class="holo-shine" id="lbShine"></div>
       <div class="holo-glare" id="lbGlare"></div>
       <div class="card-wm"></div>
@@ -359,12 +358,10 @@
     var giphyStats = {};  // id → { title, username }
 
     function applyStatsToOverlay(el, data) {
-      var title = (data.title || '').replace(/\s*GIF\s*$/i, '').trim();
-      var user  = data.username ? '@' + data.username : '';
-      if (!title && !user) return;
-      el.innerHTML =
-        (title ? '<span class="gs-title">' + title + '</span>' : '') +
-        (user  ? '<span class="gs-user">'  + user  + '</span>' : '');
+      var views = data.views || (data.analytics && data.analytics.onload && data.analytics.onload.count);
+      if (!views) return;
+      var formatted = Number(views).toLocaleString();
+      el.innerHTML = '<span class="gs-title">' + formatted + ' views</span>';
     }
 
     // Batch-fetch in two rounds (API max ~50 IDs per call)
@@ -384,12 +381,11 @@
         .catch(function() {});
     });
 
-    var grid      = document.getElementById('giphyGrid');
-    var lightbox  = document.getElementById('giphyLightbox');
-    var lbCard    = document.getElementById('lbCard');
-    var lbCanvas  = document.getElementById('giphyLightboxCanvas');
-    var lbImg     = document.getElementById('giphyLightboxImg');
-    var closeBtn  = document.getElementById('giphyClose');
+    var grid     = document.getElementById('giphyGrid');
+    var lightbox = document.getElementById('giphyLightbox');
+    var lbCard   = document.getElementById('lbCard');
+    var lbImg    = document.getElementById('giphyLightboxImg');
+    var closeBtn = document.getElementById('giphyClose');
 
     function shuffle(arr) {
       for (var i = arr.length - 1; i > 0; i--) {
@@ -486,63 +482,16 @@
       lbCard.style.boxShadow  = '0 24px 64px rgba(0,0,0,0.85)';
     });
 
-    function drawWatermarkedCanvas(src) {
-      var photo = new Image();
-      photo.crossOrigin = 'anonymous';
-      photo.onload = function() {
-        var w = photo.naturalWidth, h = photo.naturalHeight;
-        lbCanvas.width  = w;
-        lbCanvas.height = h;
-        // Size canvas to fit viewport (CSS handles display scaling)
-        var ctx = lbCanvas.getContext('2d');
-        ctx.drawImage(photo, 0, 0);
-
-        // Tile CF logo watermarks over the image
-        var logo = new Image();
-        logo.onload = function() {
-          var tw = w * 0.2;  // tile width = 20% of image
-          var th = logo.naturalHeight * (tw / logo.naturalWidth);
-          ctx.globalAlpha = 0.18;
-          ctx.globalCompositeOperation = 'screen';
-          for (var ty = -th; ty < h + th; ty += th * 1.5) {
-            for (var tx = -tw; tx < w + tw; tx += tw * 1.4) {
-              ctx.save();
-              ctx.translate(tx + tw / 2, ty + th / 2);
-              ctx.rotate(-0.25);
-              ctx.drawImage(logo, -tw / 2, -th / 2, tw, th);
-              ctx.restore();
-            }
-          }
-          ctx.globalAlpha = 1;
-          ctx.globalCompositeOperation = 'source-over';
-          lbCanvas.style.display = 'block';
-          lbImg.style.display = 'none';
-        };
-        logo.src = CF_LOGO;
-      };
-      photo.onerror = function() {
-        // CORS blocked — fall back to plain img (CSS watermarks still overlay)
-        lbCanvas.style.display = 'none';
-        lbImg.style.display = 'block';
-        lbImg.src = src;
-      };
-      photo.src = src;
-    }
-
     function openLightbox(src) {
+      lbImg.src = src;
       lightbox.classList.add('is-open');
-      drawWatermarkedCanvas(src);
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
       lbCard.classList.remove('is-hovered');
       lbCard.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
-      setTimeout(function() {
-        lbImg.src = '';
-        lbCanvas.style.display = 'none';
-        lbCanvas.width = 1; lbCanvas.height = 1; // clear
-      }, 300);
+      setTimeout(function() { lbImg.src = ''; }, 300);
     }
 
     closeBtn.addEventListener('click', closeLightbox);

@@ -217,7 +217,9 @@
   <div class="giphy-lightbox" id="giphyLightbox">
     <button class="giphy-lightbox-close" id="giphyClose">&#x2715;</button>
     <div class="lb-card" id="lbCard">
-      <img src="" alt="" id="giphyLightboxImg">
+      <!-- canvas used so right-click-save includes baked watermarks -->
+      <canvas id="giphyLightboxCanvas" style="display:block;max-width:88vw;max-height:82vh;border-radius:14px;"></canvas>
+      <img src="" alt="" id="giphyLightboxImg" style="display:none;">
       <div class="holo-shine" id="lbShine"></div>
       <div class="holo-glare" id="lbGlare"></div>
       <!-- logos injected by JS -->
@@ -323,11 +325,12 @@
       .concat(PERSONAL_GIFS.map(function(f) { return GIF_BASE + f; }))
       .concat(PHOTOS.map(function(f) { return PHOTO_BASE + f; }));
 
-    var grid     = document.getElementById('giphyGrid');
-    var lightbox = document.getElementById('giphyLightbox');
-    var lbCard   = document.getElementById('lbCard');
-    var lbImg    = document.getElementById('giphyLightboxImg');
-    var closeBtn = document.getElementById('giphyClose');
+    var grid      = document.getElementById('giphyGrid');
+    var lightbox  = document.getElementById('giphyLightbox');
+    var lbCard    = document.getElementById('lbCard');
+    var lbCanvas  = document.getElementById('giphyLightboxCanvas');
+    var lbImg     = document.getElementById('giphyLightboxImg');
+    var closeBtn  = document.getElementById('giphyClose');
 
     function shuffle(arr) {
       for (var i = arr.length - 1; i > 0; i--) {
@@ -344,18 +347,23 @@
      * Odd rows:  4 logos, offset half-step.
      * Each card picks a size + rotation scheme at random for variety.
      */
-    var EVEN_COLS = [-2, 24, 50, 76, 102];   // -2 & 102 → ~40% of logo peeks in from L/R
-    var ODD_COLS  = [12, 38, 62, 88];
-    // 7 rows: first & last outside card top/bottom so they peek in
-    var ROW_YS    = [-6, 19, 36, 53, 70, 83, 106];
+    /*
+     * translate(-50%,-50%) shifts each logo by 50% of its OWN width beyond `left`.
+     * For a 26%-wide logo, that's an extra 13% pushed off screen.
+     * Edge cols at 4%/96% → actual visible right/left edges ≈ 4+13=17% inside card.
+     * With typical logo PNG padding, shows roughly 1/4–1/3 of the mark peeking in.
+     */
+    var EVEN_COLS = [4, 24, 50, 76, 96];   // 4% & 96% → logo clearly peeking at edges
+    var ODD_COLS  = [13, 38, 62, 87];
+    var ROW_YS    = [2, 19, 36, 53, 70, 83, 98];  // 2% & 98% → peek top/bottom
 
-    // Size schemes (applied positionally to even cols; odd cols interpolated)
+    // Edge logos are bigger so the peeking portion is more visible
     var SIZE_SCHEMES = [
-      { even: [20, 17, 22, 17, 20], odd: [18, 21, 18, 21] },  // edges & center larger
-      { even: [18, 20, 18, 20, 18], odd: [20, 18, 20, 18] },  // alternating
-      { even: [22, 18, 22, 18, 22], odd: [19, 22, 19, 22] },  // outer dominant
-      { even: [18, 18, 18, 18, 18], odd: [18, 18, 18, 18] },  // uniform
-      { even: [24, 17, 20, 17, 24], odd: [18, 22, 18, 22] },  // corner pop
+      { even: [28, 18, 22, 18, 28], odd: [20, 23, 20, 23] },
+      { even: [26, 20, 24, 20, 26], odd: [22, 20, 22, 20] },
+      { even: [30, 17, 22, 17, 30], odd: [20, 25, 20, 25] },
+      { even: [26, 22, 26, 22, 26], odd: [22, 22, 22, 22] },
+      { even: [28, 18, 20, 18, 28], odd: [21, 24, 21, 24] },
     ];
 
     // Rotation schemes
@@ -466,16 +474,63 @@
       lbCard.style.boxShadow  = '0 24px 64px rgba(0,0,0,0.85)';
     });
 
+    function drawWatermarkedCanvas(src) {
+      var photo = new Image();
+      photo.crossOrigin = 'anonymous';
+      photo.onload = function() {
+        var w = photo.naturalWidth, h = photo.naturalHeight;
+        lbCanvas.width  = w;
+        lbCanvas.height = h;
+        // Size canvas to fit viewport (CSS handles display scaling)
+        var ctx = lbCanvas.getContext('2d');
+        ctx.drawImage(photo, 0, 0);
+
+        // Tile CF logo watermarks over the image
+        var logo = new Image();
+        logo.onload = function() {
+          var tw = w * 0.2;  // tile width = 20% of image
+          var th = logo.naturalHeight * (tw / logo.naturalWidth);
+          ctx.globalAlpha = 0.18;
+          ctx.globalCompositeOperation = 'screen';
+          for (var ty = -th; ty < h + th; ty += th * 1.5) {
+            for (var tx = -tw; tx < w + tw; tx += tw * 1.4) {
+              ctx.save();
+              ctx.translate(tx + tw / 2, ty + th / 2);
+              ctx.rotate(-0.25);
+              ctx.drawImage(logo, -tw / 2, -th / 2, tw, th);
+              ctx.restore();
+            }
+          }
+          ctx.globalAlpha = 1;
+          ctx.globalCompositeOperation = 'source-over';
+          lbCanvas.style.display = 'block';
+          lbImg.style.display = 'none';
+        };
+        logo.src = CF_LOGO;
+      };
+      photo.onerror = function() {
+        // CORS blocked — fall back to plain img (CSS watermarks still overlay)
+        lbCanvas.style.display = 'none';
+        lbImg.style.display = 'block';
+        lbImg.src = src;
+      };
+      photo.src = src;
+    }
+
     function openLightbox(src) {
-      lbImg.src = src;
       lightbox.classList.add('is-open');
+      drawWatermarkedCanvas(src);
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
       lbCard.classList.remove('is-hovered');
       lbCard.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
-      setTimeout(function() { lbImg.src = ''; }, 300);
+      setTimeout(function() {
+        lbImg.src = '';
+        lbCanvas.style.display = 'none';
+        lbCanvas.width = 1; lbCanvas.height = 1; // clear
+      }, 300);
     }
 
     closeBtn.addEventListener('click', closeLightbox);

@@ -1013,6 +1013,12 @@ a{
   align-items: center;
   justify-content: center;
   padding: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.partner-logo:hover{
+  transform: scale(1.1);
 }
 
 .partner-logo img{
@@ -1020,6 +1026,15 @@ a{
   height: 100% !important;
   object-fit: contain;
   transform: none;
+  transition: filter 0.3s ease;
+}
+
+.partner-logo:hover img{
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,255,255,0.4));
+}
+
+.partners-track:has(.partner-logo:hover){
+  animation-play-state: paused;
 }
 
 @keyframes partnersMarquee{

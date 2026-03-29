@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capital Flight — GIFs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .giphy-search-wrap{
+      display: flex;
+      justify-content: center;
+      margin: 0 0 40px;
+    }
+
+    .giphy-search{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 12px 20px;
+      width: 100%;
+      max-width: 480px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .giphy-search::placeholder{ color: rgba(255,255,255,0.3); }
+    .giphy-search:focus{ border-color: rgba(255,255,255,0.35); }
+
+    .giphy-grid{
+      columns: 3;
+      column-gap: 12px;
+      padding: 0 24px 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media(max-width:700px){
+      .giphy-grid{ columns: 2; }
+    }
+    @media(max-width:420px){
+      .giphy-grid{ columns: 1; }
+    }
+
+    .giphy-item{
+      break-inside: avoid;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .giphy-item:hover{
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+
+    .giphy-item img{
+      width: 100%;
+      display: block;
+    }
+
+    .giphy-loading{
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 60px 0;
+    }
+
+    .giphy-lightbox{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .giphy-lightbox.is-open{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .giphy-lightbox img{
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 10px;
+    }
+
+    .giphy-lightbox-close{
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+    }
+  </style>
+</head>
+
+<body data-page="giphy">
+
+  <!-- HEADER -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="brand" href="https://cfny.framer.website/" aria-label="Capital Flight home">
+        <img
+          class="site-logo"
+          src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
+          alt="Capital Flight"
+        >
+      </a>
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobileMenu"
+        type="button"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="https://cfny.framer.website/">Home</a>
+        <a href="production">Production</a>
+        <a href="marketing">Marketing</a>
+        <div class="nav-dropdown">
+          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="roster">Roster</a>
+          </div></div>
+        </div>
+        <a href="about">About</a>
+        <a href="giphy" aria-current="page">GIFs</a>
+        <a href="contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page" id="top">
+
+    <section class="intro">
+      <h1 class="intro-title">GIFs</h1>
+    </section>
+
+    <div class="giphy-search-wrap">
+      <input
+        class="giphy-search"
+        id="giphySearch"
+        type="text"
+        placeholder="Search GIFs..."
+        autocomplete="off"
+      >
+    </div>
+
+    <div class="giphy-loading" id="giphyLoading">Loading...</div>
+    <div class="giphy-grid" id="giphyGrid"></div>
+
+  </main>
+
+  <!-- GIF LIGHTBOX -->
+  <div class="giphy-lightbox" id="giphyLightbox">
+    <button class="giphy-lightbox-close" id="giphyClose">✕</button>
+    <img src="" alt="" id="giphyLightboxImg">
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        © 2026 Capital Flight New York
+      </div>
+
+      <nav class="footer-socials" aria-label="Social links">
+        <a href="https://www.instagram.com/capitalflightny/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="https://www.youtube.com/@CapitalFlightNY" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="6" width="19" height="12" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <polygon points="10,9 16,12 10,15" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/company/capital-flight-ny" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <rect x="6.5" y="10" width="2.5" height="7" fill="currentColor"/>
+            <circle cx="7.75" cy="7.5" r="1.3" fill="currentColor"/>
+            <path d="M12 10h2.2v1.2c.5-.8 1.4-1.4 2.8-1.4 2 0 3 1.2 3 3.5V17h-2.6v-3.3c0-1-.3-1.7-1.3-1.7s-1.6.7-1.6 1.7V17H12z" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="mailto:production@capitalflightny.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" fill="none"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+    <div class="mobile-menu-panel">
+      <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu" type="button">
+        Tap to close ✕
+      </button>
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="https://cfny.framer.website/">Home</a>
+        <a href="production">Production</a>
+        <a href="marketing">Marketing</a>
+        <div class="nav-dropdown">
+          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="roster">Roster</a>
+          </div></div>
+        </div>
+        <a href="about">About</a>
+        <a href="giphy" aria-current="page">GIFs</a>
+      </nav>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const API_KEY = 'rSF4xwW6RrxmQev5PirpyRlV9cNHooq0';
+    const grid = document.getElementById('giphyGrid');
+    const loading = document.getElementById('giphyLoading');
+    const lightbox = document.getElementById('giphyLightbox');
+    const lightboxImg = document.getElementById('giphyLightboxImg');
+    const closeBtn = document.getElementById('giphyClose');
+    const searchInput = document.getElementById('giphySearch');
+
+    let debounceTimer;
+
+    async function fetchGifs(query) {
+      loading.style.display = 'block';
+      grid.innerHTML = '';
+      const endpoint = query
+        ? `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${encodeURIComponent(query)}&limit=30&rating=g`
+        : `https://api.giphy.com/v1/gifs/trending?api_key=${API_KEY}&limit=30&rating=g`;
+
+      try {
+        const res = await fetch(endpoint);
+        const { data } = await res.json();
+        loading.style.display = 'none';
+        data.forEach(gif => {
+          const item = document.createElement('div');
+          item.className = 'giphy-item';
+          const img = document.createElement('img');
+          img.src = gif.images.fixed_width.url;
+          img.alt = gif.title;
+          img.loading = 'lazy';
+          item.appendChild(img);
+          item.addEventListener('click', () => openLightbox(gif.images.original.url, gif.title));
+          grid.appendChild(item);
+        });
+      } catch {
+        loading.textContent = 'Failed to load GIFs.';
+      }
+    }
+
+    function openLightbox(src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt;
+      lightbox.classList.add('is-open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      lightboxImg.src = '';
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => fetchGifs(searchInput.value.trim()), 400);
+    });
+
+    fetchGifs();
+  </script>
+</body>
+</html>

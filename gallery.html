@@ -353,9 +353,10 @@
      * Edge cols at 4%/96% → actual visible right/left edges ≈ 4+13=17% inside card.
      * With typical logo PNG padding, shows roughly 1/4–1/3 of the mark peeking in.
      */
-    var EVEN_COLS = [4, 24, 50, 76, 96];   // 4% & 96% → logo clearly peeking at edges
+    var EVEN_COLS = [4, 24, 50, 76, 96];   // 4% & 96% → logos peek at L/R edges
     var ODD_COLS  = [13, 38, 62, 87];
-    var ROW_YS    = [2, 19, 36, 53, 70, 83, 98];  // 2% & 98% → peek top/bottom
+    // 8 rows: -8% & 108% push top/bottom rows outside card so they peek in
+    var ROW_YS    = [-8, 10, 26, 42, 58, 74, 90, 108];
 
     // Edge logos are bigger so the peeking portion is more visible
     var SIZE_SCHEMES = [

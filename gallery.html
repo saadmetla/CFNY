@@ -7,7 +7,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -429,7 +430,12 @@
       glare.className = 'holo-glare';
 
       card.append(img, shine, glare);
-      attachLogos(card);
+
+      // Defer logo attachment until first hover — avoids creating hundreds of img elements upfront
+      var logosAttached = false;
+      card.addEventListener('mouseenter', function() {
+        if (!logosAttached) { attachLogos(card); logosAttached = true; }
+      }, { once: false });
 
       card.addEventListener('mousemove', function(e) {
         var pos = applyHolo(card, e);
@@ -490,10 +496,33 @@
     });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-    /* Render all 141 items */
-    var frag = document.createDocumentFragment();
-    shuffle(ALL_SRCS.slice()).forEach(function(src) { frag.appendChild(buildCard(src)); });
-    grid.appendChild(frag);
+    /* Batch render — first 24 immediately, then 24 more per scroll */
+    var BATCH = 24;
+    var shuffled = shuffle(ALL_SRCS.slice());
+    var rendered = 0;
+
+    function renderBatch() {
+      var frag = document.createDocumentFragment();
+      var end = Math.min(rendered + BATCH, shuffled.length);
+      for (var i = rendered; i < end; i++) {
+        frag.appendChild(buildCard(shuffled[i]));
+      }
+      rendered = end;
+      grid.appendChild(frag);
+    }
+
+    renderBatch(); // first 24
+
+    var sentinel = document.createElement('div');
+    sentinel.id = 'grid-sentinel';
+    grid.parentNode.insertBefore(sentinel, grid.nextSibling);
+
+    var observer = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && rendered < shuffled.length) {
+        renderBatch();
+      }
+    }, { rootMargin: '300px' });
+    observer.observe(sentinel);
 
     /* ── Download protection ── */
     // Block right-click context menu on the gallery and lightbox

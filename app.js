@@ -274,6 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Mobile Label → Roster dropdown toggle
+  document.querySelectorAll('.mobile-nav .nav-dropdown > a .dropdown-arrow').forEach(arrow => {
+    arrow.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      arrow.closest('.nav-dropdown').classList.toggle('is-open');
+    });
+  });
+
   initScrollReveal();
   initStatCounters();
   initViewCounts();

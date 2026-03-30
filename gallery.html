@@ -199,7 +199,7 @@
     <div class="header-inner">
       <a class="brand" href="https://cfny.framer.website/" aria-label="Capital Flight home">
         <img class="site-logo"
-          src="https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png"
+          src="images/CF_LOGO_NEW.png"
           alt="Capital Flight">
       </a>
       <button class="menu-toggle" id="menuToggle" aria-label="Open menu"
@@ -226,12 +226,14 @@
   <main class="page" id="top">
     <section class="intro">
       <h1 class="intro-title">Gallery</h1>
+    </section>
+    <div class="giphy-grid" id="giphyGrid"></div>
+    <div style="text-align:center;padding:32px 0 64px;">
       <a class="giphy-link" href="https://www.giphy.com/saadmetla" target="_blank" rel="noopener noreferrer">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 2h6v2H4v16h16v-4h2v6H2V2zm10 0h10v10h-2V5.414L9.414 16 8 14.586 18.586 4H12V2z"/></svg>
         View on Giphy
       </a>
-    </section>
-    <div class="giphy-grid" id="giphyGrid"></div>
+    </div>
   </main>
 
   <!-- LIGHTBOX -->
@@ -287,10 +289,10 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/sparticles@latest/dist/sparticles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sparticles@2.1.0/dist/sparticles.min.js"></script>
   <script src="app.js"></script>
   <script>
-    var CF_LOGO = 'https://raw.githubusercontent.com/amadcore2099/CFNY/refs/heads/main/images/CF_LOGO_NEW.png';
+    var CF_LOGO = 'images/CF_LOGO_NEW.png';
 
     /* ─── All source URLs ─── */
     var GIPHY_IDS = [

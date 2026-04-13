@@ -51,8 +51,8 @@ const videoData = {
   ],
 
   concerts: [
-    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0' },
-    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y' }
+    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0', noViews: true },
+    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y', noViews: true }
   ],
 
   nightlife: [

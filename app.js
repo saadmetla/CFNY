@@ -50,6 +50,15 @@ const videoData = {
     { year: '2023', title: 'RAF SAPERRA (FREESTYLE)', subtitle: 'ON THE RADAR', youtubeUrl: 'https://www.youtube.com/watch?v=DnBZ-QRVg0Q' }
   ],
 
+  concerts: [
+    { year: '2024', title: '', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0' },
+    { year: '2024', title: '', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y' }
+  ],
+
+  nightlife: [
+    { year: '2026', title: '', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' }
+  ],
+
   label: [
     { year: '2025', title: 'ABDULLAH MUZAFFAR FT JJ ESKO', subtitle: 'CASH CHAIYAY', youtubeUrl: 'https://www.youtube.com/watch?v=FyKjwCNAH1U' },
 
@@ -61,9 +70,11 @@ const videoData = {
 
 const pageConfig = {
   production: { title: 'PRODUCTION', intro: '' },
-  marketing: { title: 'MARKETING', intro: '' },
-  label: { title: 'LABEL', intro: '' },
-  about: { title: 'ABOUT', intro: '' }
+  concerts:   { title: 'CONCERTS',   intro: '' },
+  nightlife:  { title: 'NIGHTLIFE',  intro: '' },
+  marketing:  { title: 'MARKETING',  intro: '' },
+  label:      { title: 'LABEL',      intro: '' },
+  about:      { title: 'ABOUT',      intro: '' }
 };
 
 let justTouched = false;
@@ -73,7 +84,30 @@ function getYouTubeId(url = '') {
   return m ? m[1] : '';
 }
 
+function createInstagramCard(item) {
+  return `
+  <a class="project-card instagram-card reveal" href="${item.instagramUrl}" target="_blank" rel="noopener noreferrer">
+    <div class="project-thumb">
+      <div class="instagram-thumb">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="48" height="48">
+          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="project-overlay">
+        <div class="play-button"><span class="play-icon" style="font-size:22px;">↗</span></div>
+      </div>
+    </div>
+    <div class="project-info">
+      <h3 class="project-title">${item.title}</h3>
+      <p class="project-sub">${item.subtitle}</p>
+    </div>
+  </a>`;
+}
+
 function createCard(item) {
+  if (item.instagramUrl) return createInstagramCard(item);
   const id = getYouTubeId(item.youtubeUrl);
   if (!id) return '';
 
@@ -227,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (introTitle) introTitle.textContent = pageData.title;
   if (introCopy) introCopy.textContent = pageData.intro;
 
-  if (['production', 'marketing', 'label'].includes(currentPage)) {
+  if (['production', 'concerts', 'nightlife', 'marketing', 'label'].includes(currentPage)) {
     renderPage(currentPage);
   }
 

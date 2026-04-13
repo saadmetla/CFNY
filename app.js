@@ -51,12 +51,12 @@ const videoData = {
   ],
 
   concerts: [
-    { year: '2024', title: '', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0' },
-    { year: '2024', title: '', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y' }
+    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0' },
+    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y' }
   ],
 
   nightlife: [
-    { year: '2026', title: '', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' }
+    { year: '2026', title: 'MVM x INDOWAREHOUSE', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' }
   ],
 
   label: [

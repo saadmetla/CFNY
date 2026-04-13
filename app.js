@@ -4,7 +4,6 @@ const videoData = {
 
     { year: '2025', title: 'BAPE® by KidSuper', youtubeUrl: 'https://www.youtube.com/watch?v=KQrg8Wiob6Q' },
     { year: '2025', title: 'Miss Pooja', subtitle: 'Lakh Hile Majajan Jandi Da', youtubeUrl: 'https://www.youtube.com/watch?v=C0dv7kjX1Sk' },
-    { year: '2025', title: 'J. Esko', subtitle: 'Like That', youtubeUrl: 'https://www.youtube.com/watch?v=WeCos4aCC60' },
     { year: '2025', title: 'Channi Nattan', subtitle: 'Gangsta Luv', youtubeUrl: 'https://www.youtube.com/watch?v=jMqIpCddv7s' },
     { year: '2025', title: 'Russ', subtitle: 'Movin’ Album Promo', youtubeUrl: 'https://www.youtube.com/shorts/BUU5SxAGbu4' },
 

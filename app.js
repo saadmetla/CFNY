@@ -1,6 +1,6 @@
 const videoData = {
   production: [
-    { year: '2026', title: 'Novig', subtitle: 'Novig Brand Activation', youtubeUrl: 'https://www.youtube.com/watch?v=bOaHuXXjkUk' },
+    { year: '2026', title: 'Novig', subtitle: 'Novig Brand Activation', youtubeUrl: 'https://www.youtube.com/watch?v=bOaHuXXjkUk', noViews: true },
 
     { year: '2025', title: 'Miss Pooja', subtitle: 'Lakh Hile Majajan Jandi Da', youtubeUrl: 'https://www.youtube.com/watch?v=C0dv7kjX1Sk' },
     { year: '2025', title: 'J. Esko', subtitle: 'Like That', youtubeUrl: 'https://www.youtube.com/watch?v=WeCos4aCC60' },
@@ -81,7 +81,7 @@ function createCard(item) {
   const embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`;
 
   return `
-  <div class="project-card youtube-card reveal" data-embed="${embed}" data-id="${id}">
+  <div class="project-card youtube-card reveal" data-embed="${embed}" data-id="${id}"${item.noViews ? ' data-no-views="1"' : ''}>
     <div class="project-thumb">
       <img src="${thumb}" loading="lazy" alt="${item.title}">
       <div class="project-overlay">
@@ -356,7 +356,7 @@ function initViewCounts() {
     setTimeout(() => {
       const id = card.dataset.id;
       const el = card.querySelector('.project-views');
-      if (!el || !id) return;
+      if (!el || !id || card.dataset.noViews) return;
       fetchViews(id).then(count => {
         if (count !== null) el.textContent = formatViews(count);
       });

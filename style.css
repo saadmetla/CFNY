@@ -1190,9 +1190,12 @@ canvas.sparticles {
   filter: brightness(0) invert(1);
 }
 
-.partner-logo:hover img,
-.partner-logo--dark:hover img{
+.partner-logo:hover img{
   filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,255,255,0.4));
+}
+
+.partner-logo--dark:hover img{
+  filter: brightness(0) invert(1) brightness(1.2) drop-shadow(0 0 8px rgba(255,255,255,0.4));
 }
 
 .partners-track:has(.partner-logo:hover){

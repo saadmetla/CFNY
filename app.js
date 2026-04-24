@@ -157,8 +157,19 @@ function createCard(item) {
   </div>`;
 }
 
+// Sub-pages whose content is automatically included on the production page.
+// Add any new sub-page key here and it will appear on production automatically.
+const PRODUCTION_SUB_PAGES = ['concerts', 'nightlife', 'social'];
+
 function renderPage(pageKey) {
-  const items = videoData[pageKey] || [];
+  let items = videoData[pageKey] || [];
+
+  if (pageKey === 'production') {
+    items = [
+      ...items,
+      ...PRODUCTION_SUB_PAGES.flatMap(key => videoData[key] || [])
+    ];
+  }
 
   document.querySelectorAll('.archive-year').forEach(section => {
     const year = section.dataset.year;

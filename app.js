@@ -21,9 +21,11 @@ const videoData = {
     { year: '2023', title: 'Heems', subtitle: 'RAPS AT PUNJABI DELI', youtubeUrl: 'https://www.youtube.com/watch?v=0TzZYaM9IDM' },
     { year: '2023', title: 'Heems', subtitle: 'RAPS IN JACKSON HEIGHTS', youtubeUrl: 'https://www.youtube.com/watch?v=Bg0gEo-xuOE' },
 
-    { year: '2022', title: 'ANGIE MARTINEZ IRL PODCAST', subtitle: 'Ashanti', youtubeUrl: 'https://www.youtube.com/watch?v=_j55M6SC8Pw' },
+    { year: '2022', title: 'ANGIE MARTINEZ IRL PODCAST', subtitle: 'Ashanti', youtubeUrl: 'https://www.youtube.com/watch?v=_j55M6SC8Pw' }
+  ],
 
-    { year: 'social-content', title: 'Osteostrong Testimonal Ad', subtitle: '', youtubeUrl: 'https://youtu.be/YReBawBGdW8', noViews: true }
+  social: [
+    { year: '2026', title: 'Osteostrong Testimonal Ad', subtitle: '', youtubeUrl: 'https://youtu.be/YReBawBGdW8', noViews: true }
   ],
 
   marketing: [
@@ -72,12 +74,13 @@ const videoData = {
 };
 
 const pageConfig = {
-  production: { title: 'PRODUCTION', intro: '' },
-  concerts:   { title: 'CONCERTS',   intro: '' },
-  nightlife:  { title: 'NIGHTLIFE',  intro: '' },
-  marketing:  { title: 'MARKETING',  intro: '' },
-  label:      { title: 'LABEL',      intro: '' },
-  about:      { title: 'ABOUT',      intro: '' }
+  production: { title: 'PRODUCTION',     intro: '' },
+  concerts:   { title: 'CONCERTS',       intro: '' },
+  nightlife:  { title: 'NIGHTLIFE',      intro: '' },
+  social:     { title: 'SOCIAL CONTENT', intro: '' },
+  marketing:  { title: 'MARKETING',      intro: '' },
+  label:      { title: 'LABEL',          intro: '' },
+  about:      { title: 'ABOUT',          intro: '' }
 };
 
 let justTouched = false;
@@ -285,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (introTitle) introTitle.textContent = pageData.title;
   if (introCopy) introCopy.textContent = pageData.intro;
 
-  if (['production', 'concerts', 'nightlife', 'marketing', 'label'].includes(currentPage)) {
+  if (['production', 'concerts', 'nightlife', 'social', 'marketing', 'label'].includes(currentPage)) {
     renderPage(currentPage);
   }
 

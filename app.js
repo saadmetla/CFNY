@@ -58,7 +58,7 @@ const videoData = {
   ],
 
   nightlife: [
-    { year: '2026', title: 'MVM x INDOWAREHOUSE', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' },
+    { year: '2026', title: 'MVM NYC x INDO WAREHOUSE', subtitle: '', youtubeUrl: 'https://youtu.be/B8yh8l9yw1k', noViews: true },
     { year: '2026', title: 'MVM London Holi', subtitle: '', youtubeUrl: 'https://youtu.be/j-x2FNm8DZc', noViews: true }
   ],
 

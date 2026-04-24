@@ -23,7 +23,7 @@ const videoData = {
 
     { year: '2022', title: 'ANGIE MARTINEZ IRL PODCAST', subtitle: 'Ashanti', youtubeUrl: 'https://www.youtube.com/watch?v=_j55M6SC8Pw' },
 
-    { year: 'social-content', title: 'Osteostrong Testimonal Ad', subtitle: '', youtubeUrl: 'https://youtube.com/shorts/YReBawBGdW8?feature=share', noViews: true }
+    { year: 'social-content', title: 'Osteostrong Testimonal Ad', subtitle: '', youtubeUrl: 'https://youtu.be/YReBawBGdW8', noViews: true }
   ],
 
   marketing: [

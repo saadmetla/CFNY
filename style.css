@@ -94,7 +94,7 @@
   --partners-logo-width: 220px;
   --partners-logo-height: 120px;
   --partners-gap: 44px;
-  --partners-speed: 22s;
+  --partners-speed: 38s;
   --partners-fade-width: 80px;
 
   /* footer */
@@ -1186,7 +1186,12 @@ canvas.sparticles {
   transition: filter 0.3s ease;
 }
 
-.partner-logo:hover img{
+.partner-logo--dark img{
+  filter: brightness(0) invert(1);
+}
+
+.partner-logo:hover img,
+.partner-logo--dark:hover img{
   filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,255,255,0.4));
 }
 
@@ -1403,7 +1408,7 @@ canvas.sparticles {
     --partners-logo-height: 90px;
     --partners-gap: 28px;
     --partners-fade-width: 36px;
-    --partners-speed: 18s;
+    --partners-speed: 30s;
 
     --footer-pad-top: 36px;
     --footer-pad-bottom: 24px;

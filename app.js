@@ -56,7 +56,8 @@ const videoData = {
   ],
 
   nightlife: [
-    { year: '2026', title: 'MVM x INDOWAREHOUSE', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' }
+    { year: '2026', title: 'MVM x INDOWAREHOUSE', subtitle: '', instagramUrl: 'https://www.instagram.com/p/DVTvBsoDglq/' },
+    { year: '2026', title: 'MVM v1', subtitle: '', dropboxUrl: 'https://www.dropbox.com/scl/fi/cpr944tbrjjffxnv68v6s/MVM-v1-4x3.mp4?rlkey=yxm2hxho98ylfsteaqz3qbva7&st=8nfxebqw&dl=0' }
   ],
 
   label: [
@@ -106,7 +107,28 @@ function createInstagramCard(item) {
   </a>`;
 }
 
+function createDropboxCard(item) {
+  return `
+  <a class="project-card instagram-card reveal" href="${item.dropboxUrl}" target="_blank" rel="noopener noreferrer">
+    <div class="project-thumb">
+      <div class="instagram-thumb">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="48" height="48">
+          <path d="M12 2L6 6l6 4 6-4-6-4zM6 10l-6 4 6 4 6-4-6-4zm12 0l-6 4 6 4 6-4-6-4zM6 18l6 4 6-4-6-4-6 4z" stroke="currentColor" stroke-width="0.5" fill="currentColor" opacity="0.85"/>
+        </svg>
+      </div>
+      <div class="project-overlay">
+        <div class="play-button"><span class="play-icon" style="font-size:22px;">↗</span></div>
+      </div>
+    </div>
+    <div class="project-info">
+      <h3 class="project-title">${item.title}</h3>
+      <p class="project-sub">${item.subtitle || ''}</p>
+    </div>
+  </a>`;
+}
+
 function createCard(item) {
+  if (item.dropboxUrl) return createDropboxCard(item);
   if (item.instagramUrl) return createInstagramCard(item);
   const id = getYouTubeId(item.youtubeUrl);
   if (!id) return '';

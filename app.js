@@ -55,8 +55,8 @@ const videoData = {
   ],
 
   concerts: [
-    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0', noViews: true },
-    { year: '2024', title: 'Desi Paradise', subtitle: '', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y', noViews: true },
+    { year: '2024', title: 'Desi Paradise', subtitle: 'Concert Recap', youtubeUrl: 'https://www.youtube.com/watch?v=gxU9fqvfEU0', noViews: true },
+    { year: '2024', title: 'Desi Paradise', subtitle: 'Concert Recap', youtubeUrl: 'https://www.youtube.com/watch?v=TTFvVLXhV2Y', noViews: true },
 
     { year: '2023', title: 'Raja Kumari - Bridge the World Tour', subtitle: 'Concert Recap', youtubeUrl: 'https://youtube.com/shorts/3Ey63yxao2U', noViews: true }
   ],

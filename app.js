@@ -25,7 +25,7 @@ const videoData = {
   ],
 
   social: [
-    { year: '2026', title: 'Osteostrong Testimonal Ad', subtitle: '', youtubeUrl: 'https://youtu.be/YReBawBGdW8', noViews: true }
+    { year: '2026', title: 'Osteostrong', subtitle: 'Testimonal Ad', youtubeUrl: 'https://youtu.be/YReBawBGdW8', noViews: true }
   ],
 
   marketing: [
@@ -60,8 +60,8 @@ const videoData = {
   ],
 
   nightlife: [
-    { year: '2026', title: 'MVM NYC x INDO WAREHOUSE', subtitle: '', youtubeUrl: 'https://youtu.be/B8yh8l9yw1k', noViews: true },
-    { year: '2026', title: 'MVM London Holi', subtitle: '', youtubeUrl: 'https://youtu.be/j-x2FNm8DZc', noViews: true }
+    { year: '2026', title: 'MVM NYC x INDO WAREHOUSE', subtitle: 'Event Recap', youtubeUrl: 'https://youtu.be/B8yh8l9yw1k', noViews: true },
+    { year: '2026', title: 'MVM London Holi', subtitle: 'Event Recap', youtubeUrl: 'https://youtu.be/j-x2FNm8DZc', noViews: true }
   ],
 
   label: [

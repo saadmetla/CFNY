@@ -705,6 +705,10 @@ canvas.sparticles {
   aspect-ratio: 1 / 1;
 }
 
+[data-page="roster"] .project-info{
+  text-align: center;
+}
+
 .project-info{
   position: relative;
   inset: auto;

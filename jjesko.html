@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capital Flight — JJ Esko Press Kit</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet"></noscript>
+
+  <link rel="stylesheet" href="style.css?v=3">
+  <style>
+    :root { --epk-accent: #c9a46b; }
+    .epk { max-width: 880px; margin: 0 auto; padding: 8px 0 48px; }
+    .epk-back {
+      display: inline-block; margin: 0 0 26px;
+      font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: .02em;
+    }
+    .epk-back:hover { color: var(--text); }
+    .epk-eyebrow {
+      margin: 0 0 14px; font-size: 12px; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--epk-accent);
+    }
+    .epk-title {
+      margin: 0 0 30px; max-width: 20ch;
+      font-size: clamp(30px, 5vw, 50px); line-height: 1.06; letter-spacing: .01em;
+    }
+    .epk-hero {
+      aspect-ratio: 16 / 9; overflow: hidden; border-radius: 20px;
+      background: var(--card-thumb-bg);
+    }
+    .epk-hero img {
+      width: 100%; height: 100%; display: block;
+      object-fit: cover; object-position: center 30%;
+    }
+    .epk-caption { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
+    .epk-section { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line); }
+    .epk-section:first-of-type { border-top: none; padding-top: 0; }
+    .epk-h {
+      margin: 0 0 20px; font-size: 12px; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+    }
+    .epk-body p { margin: 0 0 18px; font-size: 15px; line-height: 1.75; color: var(--muted); }
+    .epk-body p:last-child { margin-bottom: 0; }
+    .epk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+    .epk-member-name { margin: 0 0 5px; font-size: 17px; letter-spacing: .02em; }
+    .epk-member-role { margin: 0 0 6px; font-size: 13px; color: var(--muted); }
+    .epk-handle {
+      font-size: 13px; color: var(--epk-accent); text-decoration: none;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .epk-handle:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .epk-stat-num {
+      display: block; font-size: clamp(34px, 6vw, 50px);
+      font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--epk-accent);
+    }
+    .epk-stat-label {
+      display: block; margin-top: 8px; font-size: 11px; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+    }
+    .epk-note { margin: 20px 0 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
+    .epk-field-label {
+      display: block; margin-bottom: 5px; font-size: 11px; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.42);
+    }
+    .epk-field-value { font-size: 15px; color: var(--text); text-decoration: none; }
+    a.epk-field-value:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .epk-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .epk-btn {
+      display: inline-block; padding: 14px 24px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; text-decoration: none;
+      transition: opacity var(--transition), background var(--transition);
+    }
+    .epk-btn-primary { background: var(--text); color: #000; }
+    .epk-btn-ghost { border: 1px solid rgba(255,255,255,0.25); color: var(--text); }
+    .epk-btn:hover { opacity: .82; }
+    @media (max-width: 620px) {
+      .epk-grid { grid-template-columns: 1fr; }
+    }
+    /* Portrait press photo pairs with the bio; wide hero would crop him */
+    .epk-lead { display:grid; grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr); gap:32px; align-items:start; }
+    .epk-portrait { aspect-ratio:532/640; overflow:hidden; border-radius:20px; background:var(--card-thumb-bg); }
+    .epk-portrait img { width:100%; height:100%; display:block; object-fit:cover; }
+    .epk-stats4 { grid-template-columns:repeat(4,minmax(0,1fr)); gap:26px 22px; }
+    .epk-stats4 .epk-stat-num { font-size:clamp(24px,3vw,34px); }
+    .epk-quote {
+      margin:34px 0 0; padding:22px 26px; border-left:2px solid var(--epk-accent);
+      background:rgba(255,255,255,0.03); border-radius:0 14px 14px 0;
+    }
+    .epk-quote p { margin:0; font-size:clamp(16px,2vw,20px); line-height:1.5; color:var(--text); font-weight:700; }
+    .epk-quote cite { display:block; margin-top:10px; font-size:12px; font-style:normal;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--epk-accent); }
+    .epk-figs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; margin:26px 0 0; }
+    .epk-fig { margin:0; }
+    .epk-fig img { width:100%; display:block; border-radius:16px; background:var(--card-thumb-bg); }
+    .epk-fig figcaption { margin-top:10px; font-size:12px; color:var(--muted); }
+    .epk-release { margin-top:26px; padding-top:22px; border-top:1px solid var(--line); }
+    .epk-release:first-of-type { margin-top:0; padding-top:0; border-top:none; }
+    .epk-release h3 { margin:0 0 8px; font-size:16px; letter-spacing:.02em; }
+    .epk-release h3 span { color:var(--epk-accent); font-weight:700; }
+    .epk-release p { margin:0; font-size:15px; line-height:1.7; color:var(--muted); }
+    .epk-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .epk-table { width:100%; border-collapse:collapse; font-size:14px; min-width:420px; }
+    .epk-table th {
+      text-align:left; padding:0 14px 10px 0; font-size:11px; font-weight:700;
+      letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,0.42);
+      border-bottom:1px solid var(--line);
+    }
+    .epk-table td { padding:11px 14px 11px 0; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--muted); }
+    .epk-table td:first-child { color:var(--text); }
+    .epk-table tr.is-best td { color:var(--epk-accent); }
+    .epk-table td.num, .epk-table th.num { text-align:right; padding-right:0; font-variant-numeric:tabular-nums; }
+    .epk-list { margin:0; padding-left:20px; }
+    .epk-list li { margin:0 0 12px; font-size:15px; line-height:1.7; color:var(--muted); }
+    .epk-list li:last-child { margin-bottom:0; }
+    .epk-words p {
+      margin:0 0 16px; padding-left:18px; border-left:2px solid rgba(255,255,255,0.14);
+      font-size:15px; line-height:1.7; color:var(--muted); font-style:italic;
+    }
+    .epk-words p:last-child { margin-bottom:0; }
+    @media (max-width:860px){ .epk-stats4 { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:700px){ .epk-lead { grid-template-columns:1fr; gap:24px; } .epk-figs { grid-template-columns:1fr; } }
+  </style>
+</head>
+
+<body data-page="jjesko">
+
+  <!-- HEADER -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="brand" href="https://cfny.framer.website/" aria-label="Capital Flight home">
+        <img
+          class="site-logo"
+          src="images/CF_LOGO_NEW.png"
+          alt="Capital Flight"
+        >
+      </a>
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobileMenu"
+        type="button"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="https://cfny.framer.website/">Home</a>
+        <div class="nav-dropdown">
+          <a href="production">Production <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="production">All Production</a>
+            <a href="concerts">Concerts</a>
+            <a href="nightlife">Nightlife</a>
+            <a href="social">Social Content</a>
+          </div></div>
+        </div>
+        <a href="marketing">Marketing</a>
+        <div class="nav-dropdown">
+          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="roster">Roster</a>
+            <a href="label-press">Label Press</a>
+          </div></div>
+        </div>
+        <a href="about">About</a>
+        <a href="gallery">Gallery</a>
+        <a href="contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page" id="top">
+
+    <article class="epk reveal">
+      <a class="epk-back" href="roster">← Back to Roster</a>
+
+      <p class="epk-eyebrow">Leicester, England · Hip Hop &amp; Grime</p>
+      <h1 class="epk-title">One of the most compelling voices in UK hip hop and grime.</h1>
+
+      <div class="epk-lead">
+        <div class="epk-portrait">
+          <img src="images/jjesko-press.jpg" alt="JJ Esko" loading="lazy">
+        </div>
+        <div class="epk-body">
+          <p><strong>JJ Esko</strong> is a British rapper of Pakistani origin from Highfields, Leicester, England. Active since 2018, he has established himself as one of the most compelling and authentic voices in UK hip hop and grime — an artist whose music is inseparable from the life he has lived.</p>
+          <p>Esko released his debut single &lsquo;Winning&rsquo; in December 2018, quickly catching the attention of GRM Daily, one of the UK&rsquo;s leading urban music platforms. His follow-up, &lsquo;Opp Block&rsquo;, received a GRM Daily premiere and broke through, catching the ear of established UK rapper Geko, who personally reached out and invited Esko to join him on tour.</p>
+          <p>Drawing on personal experience — including periods of incarceration, loss, financial hardship, and street life in Leicester — Esko writes with a raw directness that resonates on a global scale. He has appeared on the BBC Asian Network (2019, 2022), Link Up TV, and GRM Daily, and has collaborated with internationally renowned artists including Imran Khan, Tegi Pannu, and Annural Khalid, cementing his reputation as a crossover force bridging UK rap and South Asian music.</p>
+          <p>Distributed through The Orchard, JJ Esko has amassed over 50 million streams, 27 million YouTube views, and a growing global fanbase across the UK, South Asia, and the wider diaspora. His album <em>Yakeen</em> debuted at #2 on the Spotify Top UK Albums chart, placing him directly alongside global heavyweights.</p>
+        </div>
+      </div>
+
+      <blockquote class="epk-quote">
+        <p>&ldquo;I rap what I live. I couldn&rsquo;t speak about a life I don&rsquo;t know.&rdquo;</p>
+        <cite>JJ Esko</cite>
+      </blockquote>
+
+      <section class="epk-section">
+        <h2 class="epk-h">By the Numbers</h2>
+        <div class="epk-grid epk-stats4">
+          <div><span class="epk-stat-num">50M+</span><span class="epk-stat-label">Overall Streams</span></div>
+          <div><span class="epk-stat-num">9M+</span><span class="epk-stat-label">Streams (Last 12 Months)</span></div>
+          <div><span class="epk-stat-num">140K</span><span class="epk-stat-label">Monthly Listeners</span></div>
+          <div><span class="epk-stat-num">835K</span><span class="epk-stat-label">Listeners (Last 12 Months)</span></div>
+          <div><span class="epk-stat-num">27.2M+</span><span class="epk-stat-label">YouTube Views</span></div>
+          <div><span class="epk-stat-num">47K</span><span class="epk-stat-label">YouTube Subscribers</span></div>
+          <div><span class="epk-stat-num">61.5K</span><span class="epk-stat-label">Instagram Followers</span></div>
+          <div><span class="epk-stat-num">#2</span><span class="epk-stat-label">Yakeen — Spotify UK Albums Debut</span></div>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">Yakeen — #2 Spotify Top UK Albums Debut</h2>
+        <p class="epk-body" style="margin:0;">JJ Esko&rsquo;s album <em>Yakeen</em> made an immediate and powerful statement upon release, debuting at #2 on the Spotify Top UK Albums chart. The achievement placed him alongside the biggest names in British music, outperforming global acts and mainstream artists across all genres. &lsquo;Yakeen&rsquo; — meaning &lsquo;belief&rsquo; or &lsquo;certainty&rsquo; in Urdu — is a statement of intent from an artist who has earned every bit of his platform through lived experience and relentless work.</p>
+        <div class="epk-figs">
+          <figure class="epk-fig">
+            <img src="images/jjesko-yakeen.jpg" alt="Yakeen album artwork" loading="lazy">
+            <figcaption>Yakeen — album artwork</figcaption>
+          </figure>
+          <figure class="epk-fig">
+            <img src="images/jjesko-chart.jpg" alt="Spotify Top Albums Debut UK chart showing Yakeen at number 2" loading="lazy">
+            <figcaption>Yakeen debuts at #2 on Spotify Top UK Albums, December 15–17</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">Key Releases &amp; Collaborations</h2>
+
+        <div class="epk-release">
+          <h3>Deeper Than Rap <span>— Album, 2019</span></h3>
+          <p>JJ Esko&rsquo;s debut album, released independently, which laid the foundation for his chart run and earned praise from GRM Daily and wider UK urban media.</p>
+        </div>
+        <div class="epk-release">
+          <h3>WYNB <span>— Single, 2020</span></h3>
+          <p>A boastful, bass-driven track rooted in personal experience. &lsquo;WYNB&rsquo; received major coverage from Link Up TV and Equate Magazine and marked a breakthrough moment in Esko&rsquo;s career.</p>
+        </div>
+        <div class="epk-release">
+          <h3>Collaboration with Imran Khan</h3>
+          <p>JJ Esko collaborated with Imran Khan — the global Bhangra and urban crossover star behind the worldwide smash &lsquo;Amplifier&rsquo; — fusing UK rap with South Asian sound and significantly broadening Esko&rsquo;s international reach.</p>
+        </div>
+        <div class="epk-release">
+          <h3>Collaboration with Tegi Pannu</h3>
+          <p>Esko linked up with one of the most in-demand voices in contemporary Punjabi music for a release that extended his crossover appeal across the UK and diaspora communities worldwide.</p>
+        </div>
+        <div class="epk-release">
+          <h3>Mistakes <span>— ft. Annural Khalid</span></h3>
+          <p>JJ Esko collaborated with Pakistani singer-songwriter Annural Khalid on the track &lsquo;Mistakes&rsquo;. Annural is best known for her viral sensation &lsquo;Jhol&rsquo;, one of the biggest Pakistani music hits of recent years. The collaboration bridges Esko&rsquo;s authentic UK street rap with the melodic richness of Pakistan&rsquo;s mainstream music scene.</p>
+        </div>
+        <div class="epk-release">
+          <h3>Akhiyan <span>— Single, May 2023</span></h3>
+          <p>Esko&rsquo;s highest charting single to date, peaking at #7 on the Official UK Asian Music Chart and spending 15 weeks on the chart.</p>
+        </div>
+        <div class="epk-release">
+          <h3>Time <span>— Single, 2023</span></h3>
+          <p>Featured by GRM Daily as a teaser for an upcoming project, &lsquo;Time&rsquo; demonstrated Esko&rsquo;s continued momentum and artistic evolution.</p>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">Official Chart History</h2>
+        <p class="epk-body" style="margin:0 0 22px;">10 singles charted in the Official UK Asian Music Chart Top 40 (2021–2025), with a best peak of #7.</p>
+        <div class="epk-table-wrap">
+          <table class="epk-table">
+            <thead>
+              <tr><th>Single</th><th class="num">Peak</th><th class="num">Weeks on Chart</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>With You <span>(Jan 2021)</span></td><td class="num">#23</td><td class="num">22</td></tr>
+              <tr><td>Gliding <span>(Jun 2021)</span></td><td class="num">#12</td><td class="num">19</td></tr>
+              <tr><td>Different <span>(Sep 2021)</span></td><td class="num">#40</td><td class="num">1</td></tr>
+              <tr><td>Drill N Rap <span>(Nov 2021)</span></td><td class="num">#23</td><td class="num">2</td></tr>
+              <tr><td>Lord Knows <span>(Dec 2021)</span></td><td class="num">#14</td><td class="num">18</td></tr>
+              <tr><td>So Long <span>(May 2022)</span></td><td class="num">#33</td><td class="num">1</td></tr>
+              <tr><td>Regrets <span>(Aug 2022)</span></td><td class="num">#13</td><td class="num">3</td></tr>
+              <tr><td>Roll With It <span>(Sep 2022)</span></td><td class="num">#15</td><td class="num">14</td></tr>
+              <tr><td>Same Old <span>(Oct 2022)</span></td><td class="num">#24</td><td class="num">2</td></tr>
+              <tr><td>No Cap <span>(Mar 2023)</span></td><td class="num">#29</td><td class="num">5</td></tr>
+              <tr><td>Back Then <span>— Pak-Man / JJ Esko (Mar 2023)</span></td><td class="num">#22</td><td class="num">4</td></tr>
+              <tr class="is-best"><td>Akhiyan <span>(May 2023) — career best</span></td><td class="num">#7</td><td class="num">15</td></tr>
+              <tr><td>No Love <span>(Dec 2023)</span></td><td class="num">#23</td><td class="num">7</td></tr>
+              <tr><td>Bad Habits <span>(Dec 2023)</span></td><td class="num">#40</td><td class="num">1</td></tr>
+              <tr><td>Kangna <span>(Sep 2024)</span></td><td class="num">#23</td><td class="num">2</td></tr>
+              <tr><td>Like That <span>(Feb 2025)</span></td><td class="num">#31</td><td class="num">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">Press &amp; Media</h2>
+        <ul class="epk-list">
+          <li><strong>Spotify</strong> — <em>Yakeen</em> debuted at #2 on the Spotify Top UK Albums chart (Dec 15–17).</li>
+          <li><strong>BBC Asian Network</strong> — featured February 2019 and May 2022 (DJ Limelight &amp; Kan D Man).</li>
+          <li><strong>GRM Daily</strong> — premiere for &lsquo;Opp Block&rsquo;; ongoing coverage including &lsquo;Time&rsquo; (2023).</li>
+          <li><strong>Link Up TV</strong> — featured for &lsquo;WYNB&rsquo; (October 2020).</li>
+          <li><strong>Equate Magazine</strong> — full feature interview, October 2020.</li>
+          <li><strong>Official Charts Company</strong> — full chart history at officialcharts.com.</li>
+        </ul>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">In His Own Words</h2>
+        <div class="epk-words">
+          <p>&ldquo;Music and money keep me motivated. Love my fans.&rdquo;</p>
+          <p>&ldquo;I&rsquo;ve been stabbed, been in and out of prison, lost loved ones, not had money, had money. I&rsquo;ve got a lot to speak about.&rdquo;</p>
+          <p>&ldquo;In five years I hope to have many number ones and a couple of worldwide tours under my belt. I&rsquo;d also like to open a studio for the youngers in my area.&rdquo;</p>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">Socials &amp; Distribution</h2>
+        <div class="epk-grid">
+          <div>
+            <span class="epk-field-label">Instagram</span>
+            <a class="epk-field-value" href="https://www.instagram.com/jj_esko" target="_blank" rel="noopener noreferrer">@jj_esko</a>
+          </div>
+          <div>
+            <span class="epk-field-label">Twitter / X</span>
+            <a class="epk-field-value" href="https://x.com/jj_esko" target="_blank" rel="noopener noreferrer">@jj_esko</a>
+          </div>
+          <div>
+            <span class="epk-field-label">YouTube</span>
+            <span class="epk-field-value">@jjesko</span>
+          </div>
+          <div>
+            <span class="epk-field-label">Official Charts</span>
+            <a class="epk-field-value" href="https://www.officialcharts.com/artist/59386/jj-esko/" target="_blank" rel="noopener noreferrer">officialcharts.com</a>
+          </div>
+          <div>
+            <span class="epk-field-label">Label</span>
+            <span class="epk-field-value">JJ Esko</span>
+          </div>
+          <div>
+            <span class="epk-field-label">Distribution</span>
+            <span class="epk-field-value">The Orchard</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="epk-section">
+        <h2 class="epk-h">For Inquiries — Contact Management</h2>
+        <p class="epk-body" style="margin:0 0 22px;">All press, booking, and business inquiries should be directed to JJ Esko&rsquo;s management.</p>
+        <div class="epk-grid">
+          <div>
+            <span class="epk-field-label">Management</span>
+            <span class="epk-field-value">Saad Metla</span>
+          </div>
+          <div>
+            <span class="epk-field-label">Team</span>
+            <span class="epk-field-value">Capital Flight NY</span>
+          </div>
+          <div>
+            <span class="epk-field-label">Email</span>
+            <a class="epk-field-value" href="mailto:saad@capitalflightny.com">saad@capitalflightny.com</a>
+          </div>
+        </div>
+
+        <div class="epk-actions">
+          <a class="epk-btn epk-btn-primary" href="mailto:saad@capitalflightny.com">Email Management</a>
+          <a class="epk-btn epk-btn-ghost" href="https://www.instagram.com/jj_esko" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </section>
+
+    </article>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        © 2026 Capital Flight New York
+      </div>
+
+      <nav class="footer-socials" aria-label="Social links">
+        <a
+          href="https://www.instagram.com/capitalflightny/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a
+          href="https://www.youtube.com/@CapitalFlightNY"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="6" width="19" height="12" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <polygon points="10,9 16,12 10,15" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a
+          href="https://www.linkedin.com/company/capital-flight-ny"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <rect x="6.5" y="10" width="2.5" height="7" fill="currentColor"/>
+            <circle cx="7.75" cy="7.5" r="1.3" fill="currentColor"/>
+            <path d="M12 10h2.2v1.2c.5-.8 1.4-1.4 2.8-1.4 2 0 3 1.2 3 3.5V17h-2.6v-3.3c0-1-.3-1.7-1.3-1.7s-1.6.7-1.6 1.7V17H12z" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a
+          href="mailto:production@capitalflightny.com"
+          aria-label="Email"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" fill="none"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+
+    <div class="mobile-menu-panel">
+      <button
+        class="mobile-menu-close"
+        id="mobileMenuClose"
+        aria-label="Close menu"
+        type="button"
+      >
+        Tap to close ✕
+      </button>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="https://cfny.framer.website/">Home</a>
+        <div class="nav-dropdown">
+          <a href="production">Production <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="production">All Production</a>
+            <a href="concerts">Concerts</a>
+            <a href="nightlife">Nightlife</a>
+            <a href="social">Social Content</a>
+          </div></div>
+        </div>
+        <a href="marketing">Marketing</a>
+        <div class="nav-dropdown">
+          <a href="label">Label <span class="dropdown-arrow">▾</span></a>
+          <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+            <a href="roster">Roster</a>
+            <a href="label-press">Label Press</a>
+          </div></div>
+        </div>
+        <a href="about">About</a>
+        <a href="gallery">Gallery</a>
+        <a href="contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sparticles@2.1.0/dist/sparticles.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -691,6 +691,11 @@ canvas.sparticles {
   filter: none;
 }
 
+/* Roster covers are square — 16/10 crops the wordmark off the top */
+[data-page="roster"] .project-thumb{
+  aspect-ratio: 1 / 1;
+}
+
 .project-info{
   position: relative;
   inset: auto;

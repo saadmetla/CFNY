@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capital Flight — DCOY Electronic Press Kit</title>
+  <title>Capital Flight — Babar Press Kit</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,6 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet"></noscript>
 
   <link rel="stylesheet" href="style.css?v=3">
-
   <style>
     :root { --epk-accent: #c9a46b; }
     .epk { max-width: 880px; margin: 0 auto; padding: 8px 0 48px; }
@@ -81,10 +80,30 @@
     @media (max-width: 620px) {
       .epk-grid { grid-template-columns: 1fr; }
     }
+    /* Babar's press photo is portrait — pair it with the bio instead of
+       a wide hero, which would crop his head or feet off */
+    .epk-lead {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 32px;
+      align-items: start;
+    }
+    .epk-portrait {
+      aspect-ratio: 880 / 1227; overflow: hidden;
+      border-radius: 20px; background: var(--card-thumb-bg);
+    }
+    .epk-portrait img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .epk-stats4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .epk-stats4 .epk-stat-num { font-size: clamp(26px, 3.4vw, 38px); }
+    .epk-list { margin: 0; padding-left: 20px; }
+    .epk-list li { margin: 0 0 12px; font-size: 15px; line-height: 1.7; color: var(--muted); }
+    .epk-list li:last-child { margin-bottom: 0; }
+    @media (max-width: 860px) { .epk-stats4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 700px) { .epk-lead { grid-template-columns: 1fr; gap: 24px; } }
   </style>
 </head>
 
-<body data-page="dcoy">
+<body data-page="babar">
 
   <!-- HEADER -->
   <header class="site-header" role="banner">
@@ -141,51 +160,51 @@
     <article class="epk reveal">
       <a class="epk-back" href="roster">← Back to Roster</a>
 
-      <p class="epk-eyebrow">Mississauga — Hip Hop / R&amp;B</p>
-      <h1 class="epk-title">A sound that pushes Punjabi artists into new spaces.</h1>
+      <p class="epk-eyebrow">Chicago, IL — Rap / Hip-Hop</p>
+      <h1 class="epk-title">The next generation of Chicago rap — gritty, melodic, undeniable.</h1>
 
-      <div class="epk-hero">
-        <img src="images/dcoy.jpg" alt="DCOY — Harjot and Naji" loading="lazy">
-      </div>
-      <p class="epk-caption">— Harjot &amp; Naji, Mississauga</p>
-
-      <section class="epk-section">
+      <div class="epk-lead">
+        <div class="epk-portrait">
+          <img src="images/babar-press.jpg" alt="Babar in Chicago at night" loading="lazy">
+        </div>
         <div class="epk-body">
-          <p>DCOY is the Mississauga-based hip hop and R&amp;B duo of Harjot and Naji. Sharp songwriting, strong production, and a natural chemistry between the two are creating a sound that feels rooted in Mississauga while pushing Punjabi artists into spaces they&rsquo;ve rarely occupied.</p>
-          <p>There&rsquo;s a confidence and ease to DCOY that sets the music apart — smooth melodies, sharp writing, and a distinct sense of personality drawn from their own experience and cultural identity. Rather than following the paths typically associated with Punjabi music, DCOY are making records that feel current, personal, and accessible to a wider audience.</p>
-          <p>Their music moves through relationships, ambition, nightlife, and the realities of growing up between cultures — personal without being confined to one audience. DCOY are building a sound that stays authentic to who they are while continuing to push forward creatively.</p>
+          <p><strong>Babar</strong> is a rising rap artist hailing from Chicago — a city that has shaped his sound, his hustle, and his story. With a distinct voice and an unrelenting drive, Babar has been building a dedicated following both on the streets and online.</p>
+          <p>Revered in his community, Babar has caught the attention of major industry figures — most notably the late PNB Rock, whose recognition speaks to the authenticity and rawness of Babar&rsquo;s artistry.</p>
+          <p>With nearly 1 million YouTube views and a growing digital footprint, Babar is poised to break through on a national scale. He represents the next generation of Chicago rap — gritty, melodic, and undeniable.</p>
+        </div>
+      </div>
+
+      <section class="epk-section">
+        <h2 class="epk-h">By the Numbers</h2>
+        <div class="epk-grid epk-stats4">
+          <div>
+            <span class="epk-stat-num">945K+</span>
+            <span class="epk-stat-label">YouTube Views</span>
+          </div>
+          <div>
+            <span class="epk-stat-num">141.9K</span>
+            <span class="epk-stat-label">TikTok Likes</span>
+          </div>
+          <div>
+            <span class="epk-stat-num">2,519</span>
+            <span class="epk-stat-label">IG Followers</span>
+          </div>
+          <div>
+            <span class="epk-stat-num">1,407</span>
+            <span class="epk-stat-label">TikTok Followers</span>
+          </div>
         </div>
       </section>
 
       <section class="epk-section">
-        <h2 class="epk-h">The Duo</h2>
-        <div class="epk-grid">
-          <div>
-            <h3 class="epk-member-name">Harjot</h3>
-            <p class="epk-member-role">Artist / Producer</p>
-            <a class="epk-handle" href="https://www.instagram.com/harjotchahal" target="_blank" rel="noopener noreferrer">@harjotchahal</a>
-          </div>
-          <div>
-            <h3 class="epk-member-name">Naji</h3>
-            <p class="epk-member-role">Artist</p>
-            <a class="epk-handle" href="https://www.instagram.com/nuvjeetgill" target="_blank" rel="noopener noreferrer">@nuvjeetgill</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="epk-section">
-        <h2 class="epk-h">Reach</h2>
-        <div class="epk-grid">
-          <div>
-            <span class="epk-stat-num">3K+</span>
-            <span class="epk-stat-label">Social Followers</span>
-          </div>
-          <div>
-            <span class="epk-stat-num">100K+</span>
-            <span class="epk-stat-label">Views</span>
-          </div>
-        </div>
-        <p class="epk-note">DCOY is building an audience organically across social platforms — more than 3,000 followers and over 100,000 views across their content.</p>
+        <h2 class="epk-h">Highlights</h2>
+        <ul class="epk-list">
+          <li>Recognized by the late PNB Rock — a respected voice in the rap industry whose endorsement carries significant weight.</li>
+          <li>Nearly 1 million organic YouTube views, demonstrating a loyal fanbase and strong video content.</li>
+          <li>141,900+ TikTok likes, showcasing viral potential and audience engagement on short-form content.</li>
+          <li>Active and growing presence across Instagram and TikTok with consistent content output.</li>
+          <li>Deeply embedded in the Chicago rap community, with grassroots support and street credibility.</li>
+        </ul>
       </section>
 
       <section class="epk-section">
@@ -193,19 +212,15 @@
         <div class="epk-grid">
           <div>
             <span class="epk-field-label">Instagram</span>
-            <a class="epk-field-value" href="https://www.instagram.com/dcoycollective" target="_blank" rel="noopener noreferrer">@dcoycollective</a>
+            <a class="epk-field-value" href="https://www.instagram.com/babarflow" target="_blank" rel="noopener noreferrer">@babarflow</a>
           </div>
           <div>
             <span class="epk-field-label">TikTok</span>
-            <a class="epk-field-value" href="https://www.tiktok.com/@dcoycollective" target="_blank" rel="noopener noreferrer">@dcoycollective</a>
+            <a class="epk-field-value" href="https://www.tiktok.com/@babarflow" target="_blank" rel="noopener noreferrer">@babarflow</a>
           </div>
           <div>
             <span class="epk-field-label">YouTube</span>
-            <a class="epk-field-value" href="https://www.youtube.com/@dcoycollective" target="_blank" rel="noopener noreferrer">@dcoycollective</a>
-          </div>
-          <div>
-            <span class="epk-field-label">SoundCloud</span>
-            <a class="epk-field-value" href="https://soundcloud.com/dcoycollective" target="_blank" rel="noopener noreferrer">@dcoycollective</a>
+            <a class="epk-field-value" href="https://www.youtube.com/@babarflow" target="_blank" rel="noopener noreferrer">@babarflow</a>
           </div>
         </div>
       </section>
@@ -229,7 +244,7 @@
 
         <div class="epk-actions">
           <a class="epk-btn epk-btn-primary" href="mailto:saad@capitalflightny.com">Email Management</a>
-          <a class="epk-btn epk-btn-ghost" href="https://www.instagram.com/dcoycollective" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a class="epk-btn epk-btn-ghost" href="https://www.instagram.com/babarflow" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </section>
 

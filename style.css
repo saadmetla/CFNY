@@ -332,12 +332,15 @@ canvas.sparticles {
   align-items: center;
 }
 
+/* Collapses via grid rows, not a fixed max-height, so the open menu is always
+   exactly as tall as its items — a capped height clipped the 4th Production link */
 .mobile-nav .nav-dropdown-menu{
   position: static;
   transform: none;
   opacity: 0;
   pointer-events: none;
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
   overflow: hidden;
   background: transparent;
   border: none;
@@ -345,13 +348,13 @@ canvas.sparticles {
   padding: 0;
   min-width: unset;
   width: 100%;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition: grid-template-rows 0.3s ease, opacity 0.3s ease;
 }
 
 .mobile-nav .nav-dropdown.is-open .nav-dropdown-menu{
   opacity: 1;
   pointer-events: auto;
-  max-height: 200px;
+  grid-template-rows: 1fr;
 }
 
 .mobile-nav .nav-dropdown-menu-inner{
@@ -361,6 +364,7 @@ canvas.sparticles {
   padding: 0;
   min-width: unset;
   width: 100%;
+  min-height: 0; /* lets the 0fr grid row actually collapse */
 }
 
 .mobile-nav .nav-dropdown-menu-inner a{
@@ -424,6 +428,11 @@ canvas.sparticles {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  /* an open submenu can push the nav past the viewport — let it scroll
+     instead of stranding the links below the fold */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   transition: opacity var(--transition), visibility var(--transition);
 }
 
@@ -434,7 +443,7 @@ canvas.sparticles {
 }
 
 .mobile-menu-backdrop{
-  position: absolute;
+  position: fixed; /* stays covering the viewport while the panel scrolls */
   inset: 0;
   background: var(--menu-overlay-bg);
   backdrop-filter: blur(var(--menu-overlay-blur));

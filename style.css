@@ -35,9 +35,11 @@
   --thumb-radius: 14px;
 
   /* header controls */
-  --header-bg: transparent;
+  /* Header is position:fixed — it needs a background, or page content
+     scrolls underneath and bleeds through the logo and nav */
+  --header-bg: rgba(0,0,0,0.78);
   --header-border: rgba(255,255,255,0.08);
-  --header-blur: 0px;
+  --header-blur: 14px;
   --header-padding-y: 16px;
   --header-padding-x: 20px;
   --header-gap: 20px;

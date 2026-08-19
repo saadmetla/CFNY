@@ -35,11 +35,9 @@
   --thumb-radius: 14px;
 
   /* header controls */
-  /* Header is position:fixed — it needs a background, or page content
-     scrolls underneath and bleeds through the logo and nav */
-  --header-bg: rgba(0,0,0,0.78);
+  --header-bg: transparent;
   --header-border: rgba(255,255,255,0.08);
-  --header-blur: 14px;
+  --header-blur: 0px;
   --header-padding-y: 16px;
   --header-padding-x: 20px;
   --header-gap: 20px;
@@ -180,8 +178,12 @@ canvas.sparticles {
    HEADER
 ================================================== */
 
+/* Absolute, not fixed: the header scrolls away with the page instead of
+   following the viewport. Out of flow, so .page's top padding still
+   clears it and no page needs a layout change. A fixed header here would
+   need an opaque background or content bleeds through it. */
 .site-header{
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
